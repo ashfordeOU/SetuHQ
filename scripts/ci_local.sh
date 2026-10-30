@@ -29,6 +29,10 @@ if [[ ! -x "$VENV/bin/python" ]]; then "$PY" -m venv "$VENV"; fi
 "$VENV/bin/python" -m pip install --quiet -e ".[dev]" -r requirements-readme.txt
 ok
 
+step "every Python file compiles under Python 3.11, the oldest version ci.yml tests (no 3.12-only f-string syntax)"
+git ls-files -z '*.py' | xargs -0 /usr/bin/python3.11 -m py_compile
+ok
+
 step "tests (python -m pytest -q, same as ci.yml)"
 "$VENV/bin/python" -m pytest -q -W ignore 2>&1 | tee -a "$LOG"
 step "slow tests (marker 'slow': the 200-trial FAP case; ci.yml leaves them out)"
@@ -53,6 +57,17 @@ ok
 
 step "README figures, brand files and screenshots are current (tools/gen_readme_assets.py --check)"
 "$VENV/bin/python" tools/gen_readme_assets.py --check 2>&1 | tee -a "$LOG"
+ok
+
+step "translations: en.arb is what the code declares, every language passes its checks, the memory is current (tools/i18n.py)"
+"$VENV/bin/python" tools/i18n.py extract --check 2>&1 | tee -a "$LOG"
+test "${PIPESTATUS[0]}" -eq 0
+"$VENV/bin/python" tools/i18n.py sync --check 2>&1 | tee -a "$LOG"
+test "${PIPESTATUS[0]}" -eq 0
+"$VENV/bin/python" tools/i18n.py check 2>&1 | tail -n 20 | tee -a "$LOG"
+test "${PIPESTATUS[0]}" -eq 0
+"$VENV/bin/python" tools/i18n.py tm --check 2>&1 | tee -a "$LOG"
+test "${PIPESTATUS[0]}" -eq 0
 ok
 
 if [[ "$QUICK" -eq 1 ]]; then
@@ -83,6 +98,10 @@ step "the site builds from the stored runs (setuhq site: every page, and each ru
   --validation docs/results/pi_men_validation.md --benchmark docs/results/injection_recovery_simulated_panel.md >> "$LOG" 2>&1
 ok
 
+step "translation coverage per language: messages, and the share of each language's page text (tools/i18n.py coverage)"
+"$VENV/bin/python" tools/i18n.py coverage --site site 2>&1 | tee -a "$LOG"
+ok
+
 step "no built page loads fonts or scripts from another site"
 if grep -rl "fonts.googleapis\|fonts.gstatic" site --include=*.html; then echo "external fonts found" | tee -a "$LOG"; exit 1; fi
 if grep -rlE '<script[^>]+src="(https?:)?//' site --include=*.html; then echo "external script found" | tee -a "$LOG"; exit 1; fi
@@ -93,7 +112,9 @@ for f in site/index.html site/404.html site/sitemap.xml site/robots.txt site/exp
          site/how-it-works/index.html site/evidence/index.html site/docs/index.html site/candidates/case-file/index.html \
          site/evidence/plates/index.html site/evidence/report/index.html site/app/index.html \
          site/candidates/wasp-126/case-file/index.html site/evidence/plates/toi-270/index.html site/evidence/report/hd-15337/index.html \
-         site/candidates/toi-236/dip-1/index.html; do
+         site/candidates/toi-236/dip-1/index.html site/evidence/stellar/index.html site/docs/stellar/index.html \
+         site/docs/cheops-proposals/index.html site/explore/tess-now/index.html site/candidates/be-the-vetter/index.html \
+         site/editions/index.html; do
   test -s "$f" || { echo "missing $f" | tee -a "$LOG"; exit 1; }
 done
 if grep -rl 'id="codenote"' site --include=*.html; then echo "a site-wide banner is back" | tee -a "$LOG"; exit 1; fi

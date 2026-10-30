@@ -25,6 +25,8 @@ and its Pause, a planet portrait and its Spin) runs through the same scheduler w
 
 from __future__ import annotations
 
+from setuhq.i18n import lk
+
 import hashlib
 import html
 import json
@@ -577,7 +579,7 @@ def figure(kind: str, params: dict, alt: str, caption: str, label: str = LABEL_A
     src = still or (still_href(params["look"], 512 if size > 160 else 160) if params.get("look") else "")
     # A planet's tag always links to the page that explains the pictures (an artist's impression, or the Solar
     # System references, which are illustrations).
-    tag = (f'<a class="stage-tag" href="{PICTURES}">{e(label)}</a>' if label == LABEL_ART or kind == "planet" else f'<span class="stage-tag">{e(label)}</span>')
+    tag = (f'<a class="stage-tag" href="{PICTURES}"{lk(label)}>{e(label)}</a>' if label == LABEL_ART or kind == "planet" else f'<span class="stage-tag"{lk(label)}>{e(label)}</span>')
     img = (f'<img class="rstill" src="{e(src)}" width="{size}" height="{size}" loading="lazy" decoding="async" alt="{e(alt)}">'
            if src else f'<img class="rstill" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" width="{size}" height="{size}" alt="{e(alt)}">')
     pri = ' data-priority="first"' if priority else ""

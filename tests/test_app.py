@@ -40,6 +40,7 @@ from setuhq.app import (
 from setuhq.cli import main
 from setuhq.docket import NO_STORED_CROSSMATCH
 from conftest import site_bundle
+from setuhq.i18n import unkey
 
 WIDGET_IDS = [w for w, _ in WIDGETS]
 
@@ -66,7 +67,9 @@ def catalog(tmp_path):
              "status": "new_candidate", "candidate_id": "tess-x-001", "found": "2026-10-17T00:00:00+00:00",
              "status_note": "candidate only, not confirmed"}
     known = dict(entry, tic=5678, candidate_id="tess-y-002", status="known_toi", depth_ppm=1600.0)
-    data = {"candidates": [entry, known], "targets_reviewed": 2, "updated": "2026-10-17T00:00:00+00:00",
+    # A private deployment's catalogue (embargo off), so the page's handling of a new_candidate entry is tested;
+    # the public catalogue never holds one (tests/test_embargo.py).
+    data = {"embargo": False, "candidates": [entry, known], "targets_reviewed": 2, "updated": "2026-10-17T00:00:00+00:00",
             "config": "discovery", "config_sha256": "abc",
             "runs": [{"time": "2026-10-17T00:00:00+00:00", "targets": [1234, 5678], "new": 1, "known": 1,
                       "errors": ["TIC 9: LookupError: no SPOC 120s light curves found for 'TIC 9'"]}]}
@@ -123,7 +126,7 @@ def test_five_sections_and_every_view_exist(run_dir, catalog, tmp_path):
     index = build_app(run_dir, tmp_path / "app", title="t", catalog_path=catalog)
     page = site_bundle(index)
     assert SECTIONS == [("explore", "Explore"), ("candidates", "Candidates"), ("how", "How it works"), ("evidence", "Evidence"), ("docs", "Docs")]
-    nav = re.search(r'<nav class="nav" aria-label="Main">.*?</nav>', index.read_text(), re.S).group(0)
+    nav = re.search(r'<nav class="nav" aria-label="Main">.*?</nav>', unkey(index.read_text()), re.S).group(0)
     for sid, label in SECTIONS:
         assert f'data-nav="{sid}">{label}</a>' in nav
     assert "#/" not in nav
@@ -538,7 +541,8 @@ def test_shared_layout_link_does_not_write_the_viewers_default():
     # (and the theme choice, in applyTheme, and the Learn path's progress, in learnSave).
     # (and Mission Control's saved default, in its "Save as my default" handler).
     # (and, in sessionStorage only, that the Sky's or Galaxy's survey-scan intro has played, in mxIntroEnd).
-    assert APP_JS.count("setItem(") == 5 and APP_JS.count("setItem(LAYOUT_KEY") == 1 and APP_JS.count("s.setItem(MC_KEY") == 1
+    # (and Be the vetter's own answers, under their own key, in vtWire: never a layout).
+    assert APP_JS.count("setItem(") == 6 and APP_JS.count("localStorage.setItem('setuhq-vetter'") == 1 and APP_JS.count("setItem(LAYOUT_KEY") == 1 and APP_JS.count("s.setItem(MC_KEY") == 1
     assert "sessionStorage.setItem('setuhq-intro-' + I.key, 'done')" in re.search(r"function mxIntroEnd\(I, skipped\)\{.*?\n\}\n", APP_JS, re.S).group(0)
     assert "s.setItem(LEARN_KEY" in re.search(r"function learnSave\(\)\{.*?\}\s*\}", APP_JS, re.S).group(0)
     from setuhq.site import SHELL_JS
@@ -1000,7 +1004,7 @@ def test_hero_qualifies_an_archive_match_in_the_lede_and_the_box(run_dir, tmp_pa
     assert plain["qualifier"] == f"Every one is a {UNCONFIRMED}." and plain["match"] is None
     data = app_data(run_dir, title="t")
     data["hero"] = matched
-    page = "".join(app_mod.route_sections(data).values())
+    page = unkey("".join(app_mod.route_sections(data).values()))
     lede = re.search(r'<p class="muted" style="margin:0;max-width:80ch">(.*?)</p>', page, re.S).group(1)
     assert "not that this run confirmed it." in lede
     box = re.search(r"<li><b>No confirmed planet.</b>(.*?)</li>", page, re.S).group(1)

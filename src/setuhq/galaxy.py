@@ -13,6 +13,8 @@ The Milky Way behind the map is drawn procedurally and is labelled as an artist'
 
 from __future__ import annotations
 
+from setuhq.i18n import N_, k as ik, span, t, th
+
 import csv
 import html
 import io
@@ -293,8 +295,8 @@ def galaxy_section(g: dict | None, eyebrow: str, unconfirmed: str, cov: dict | N
     note, note_detail = source_note(g.get("note"))
     feed = ", ".join(f"TIC {t}" for t in g["feed_tics"])
     return f"""<header class="headrow">
-        <div>{eyebrow}<h1 class="lead-h" id="h-galaxy" tabindex="-1">Every known exoplanet,<br><span class="grey">around the Sun.</span></h1>
-        <p>{c['kept']:,} planets around {c['hosts']:,} stars, placed where they are. SetuHQ did not find these planets; it maps them from {e(g['source_short'])}.</p></div>
+        <div>{eyebrow}<h1 class="lead-h" id="h-galaxy" tabindex="-1"><span{ik("gx.h1")}>{t("gx.h1", "Every known exoplanet,")}</span><br><span class="grey"{ik("gx.h1b")}>{t("gx.h1b", "around the Sun.")}</span></h1>
+        <p{ik("gx.intro", n=c['kept'], hosts=c['hosts'], source=g['source_short'])}>{th("gx.intro", "{n, number} planets around {hosts, number} stars, placed where they are. SetuHQ did not find these planets; it maps them from {source}.", n=c['kept'], hosts=c['hosts'], source=g['source_short'])}</p></div>
         <div class="segctl gxpresets" id="gxpresets" role="group" aria-label="Camera view">{presets}</div>
       </header>
       <div class="gxstage space" id="gxstage">
@@ -345,6 +347,7 @@ def galaxy_section(g: dict | None, eyebrow: str, unconfirmed: str, cov: dict | N
           {coverage_chips(cov, "gx")}
         </div>
       </details>
+      <div class="chips gxcam" id="gxcam" role="group" aria-label="Camera: focus and zoom"><button class="chip" type="button" data-gc="all">All</button><button class="chip" type="button" data-gc="star">Selected star</button><button class="chip" type="button" data-gc="in" aria-label="Zoom in">+</button><button class="chip" type="button" data-gc="out" aria-label="Zoom out">−</button><button class="chip" type="button" data-gc="reset">Reset view</button></div>
       <p class="gxkeys muted" id="gxkeys">Drag to orbit · scroll or pinch to zoom · double-click a star to centre on it · arrow keys orbit · + and − zoom · Enter selects the star under the reticle · Esc clears.</p>
       <div class="gxnotes">
         <p class="note"><b>{e(source_line(g))}</b> <a href="{e(g['url'])}" rel="noopener">{e(g['url'])}</a>.{note} {e(g['definition'])} The list includes {g['exocomets']} entries exoplanet.eu names as exocomets. {c['dropped_no_distance']:,} of its {c['rows']:,} planets have no stored distance and are not plotted.</p>{note_detail}
@@ -1319,6 +1322,9 @@ function gxStart(){
     const b = e.target.closest('button[data-gxp]'); if (!b) return;
     gxSelect(gx.sel, Number(b.dataset.gxp)); const nb = $(`#gxcard button[data-gxp="${b.dataset.gxp}"]`); if (nb) nb.focus();
   });
+  $('#gxcam').addEventListener('click', e => { const b = e.target.closest('[data-gc]'), o = b && b.dataset.gc; if (!o) return; if (gx.tour) gxTourEnd();
+    if (o === 'in' || o === 'out') gxZoom(o === 'in' ? .8 : 1.25); else if (o === 'star'){ if (gx.sel >= 0) gxFly(gxHostCam(gx.sel), 1400); else say('Select a star on the map first.'); }
+    else gxFly(gxPresetCam(o === 'all' ? 'galaxy' : gx.view.view), 1400); });
   $('#gxpresets').addEventListener('click', e => {
     const b = e.target.closest('button[data-gxview]'); if (!b) return;
     if (gx.tour) gxTourEnd();
@@ -1363,8 +1369,9 @@ function gxPinch(){ const p = [...gx.pointers.values()]; return Math.hypot(p[0][
 
 # ---------- survey coverage (scripts/survey_coverage.py writes it) ----------
 DEFAULT_COVERAGE = "docs/results/survey_coverage.json"
-COV_LAYERS = [("tess", "TESS sectors"), ("kepler", "Kepler field"), ("k2", "K2 campaigns"), ("corot", "CoRoT zones"),
-              ("bulge", "Bulge microlensing"), ("unmapped", "Unmapped by transit surveys")]
+COV_LAYERS = [("tess", N_("cov.tess", "TESS sectors")), ("kepler", N_("cov.kepler", "Kepler field")), ("k2", N_("cov.k2", "K2 campaigns")),
+              ("corot", N_("cov.corot", "CoRoT zones")), ("bulge", N_("cov.bulge", "Bulge microlensing")),
+              ("unmapped", N_("cov.unmapped", "Unmapped by transit surveys"))]
 COV_COLOUR = {"tess": "#0A84FF", "kepler": "#FFB340", "k2": "#30D158", "corot": "#BF5AF2", "bulge": "#FF6961",
               "unmapped": "#8E8E93"}
 
@@ -1550,7 +1557,7 @@ def coverage_chips(cov: dict | None, scope: str) -> str:
     if cov is None:
         return ""
     return (f'<div class="chips covchips" id="{scope}cov" role="group" aria-label="Survey coverage layers">'
-            + "".join(f'<button class="chip" type="button" data-cov="{k}" aria-pressed="false"><i style="background:{COV_COLOUR[k]}"></i>{html.escape(v)}</button>'
+            + "".join(f'<button class="chip" type="button" data-cov="{k}" aria-pressed="false"><i style="background:{COV_COLOUR[k]}"></i><span{ik("cov." + k)}>{html.escape(v)}</span></button>'
                       for k, v in COV_LAYERS) + "</div>")
 
 

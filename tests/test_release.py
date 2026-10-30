@@ -159,7 +159,8 @@ def test_pyproject_packaging():
         assert f"prune {d}\n" in manifest, d
 
 
-PACKAGE_DATA = ("claret2017_tess_quadratic.json", "secondary_calibration.json")
+PACKAGE_DATA = ("claret2017_tess_quadratic.json", "secondary_calibration.json", "reviewer_weights_full_panel.json",
+                "reviewer_weights_full_panel.calibration.json")
 
 
 @pytest.mark.parametrize("name", PACKAGE_DATA)

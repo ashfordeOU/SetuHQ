@@ -17,6 +17,7 @@ import pytest
 from setuhq import viz
 from setuhq.looks import teff_rgb
 from setuhq.names import ATTRIBUTION, PROBES_ONLY, dip_count
+from setuhq.i18n import unkey
 
 ROOT = Path(__file__).resolve().parents[1]
 SHOWCASE = ROOT / "docs/results/showcase.json"
@@ -158,7 +159,7 @@ def test_the_gallery_has_the_showcase_runs_in_order_with_their_counts_and_labels
     for art, run in zip(cards, runs):
         c = by_run[run]
         assert html_mod.escape(c["star"]) in art
-        assert c["count"] == dip_count([d["outcome"] for d in c["dips"]]) and html_mod.escape(c["count"]) in art
+        assert c["count"] == dip_count([d["outcome"] for d in c["dips"]]) and html_mod.escape(c["count"]) in re.sub(r"<[^>]+>", "", art)  # the count, as keyed parts
         assert (PROBES_ONLY in art) == (c["panel"] == "probes_only")
         assert "Model from stored values" in art and 'class="stage gstage"' in art
     # The caveats stay visible wherever those runs appear.

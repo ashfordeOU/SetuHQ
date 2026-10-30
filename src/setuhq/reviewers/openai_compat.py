@@ -19,7 +19,7 @@ import os
 from pathlib import Path
 
 from setuhq.reviewers.http import Transport, check_endpoint, post_json, redact
-from setuhq.reviewers.sentinel import KEY_ENV, RefusalError, Reply, SentinelReviewer
+from setuhq.reviewers.sentinel import KEY_ENV, RefusalError, Reply, SentinelReviewer, as_secret, key_value
 from setuhq.reviewers.task import ReviewError
 
 OPENAI_BASE_URL = "https://api.openai.com/v1"
@@ -30,14 +30,17 @@ class ChatCompletionsBackend:
 
     def __init__(self, *, provider: str, model: str, base_url: str, api_key_env: str | None,
                  auth: str = "bearer", query: dict | None = None, max_tokens: int = 4096,
-                 json_mode: bool = False, timeout: float = 120.0, transport: Transport | None = None):
+                 json_mode: bool = False, timeout: float = 120.0, transport: Transport | None = None,
+                 api_key: str | None = None):
         if not model:
             raise ValueError(f"a {provider} Sentinel needs a 'model' (a vision model id)")
         if not base_url:
             raise ValueError(f"a {provider} Sentinel needs a 'base_url'")
         if auth not in ("bearer", "api-key", "none"):
             raise ValueError(f"auth must be 'bearer', 'api-key' or 'none', not {auth!r}")
-        check_endpoint(base_url, query, api_key_env)  # no key in the URL or the query: environment only
+        # no key in the URL or the query: from the environment, or passed in code (api_key)
+        check_endpoint(base_url, query, api_key_env, extra_keys=[api_key] if api_key else ())
+        self._key = as_secret(api_key)
         self.provider = provider
         self.model = model
         self.base_url = base_url.rstrip("/")
@@ -50,7 +53,7 @@ class ChatCompletionsBackend:
         self.transport = transport
 
     def missing(self) -> str | None:
-        if self.auth != "none" and self.api_key_env and not os.environ.get(self.api_key_env):
+        if self.auth != "none" and self._key is None and self.api_key_env and not os.environ.get(self.api_key_env):
             return f"{self.api_key_env} is not set"
         return None
 
@@ -62,7 +65,7 @@ class ChatCompletionsBackend:
         return [system, user]
 
     def _headers(self) -> dict:
-        key = os.environ.get(self.api_key_env, "") if self.api_key_env else ""
+        key = key_value(self._key, self.api_key_env)
         if not key or self.auth == "none":
             return {}
         return {"api-key": key} if self.auth == "api-key" else {"Authorization": f"Bearer {key}"}
@@ -128,9 +131,10 @@ class OpenAIReviewer(SentinelReviewer):
     def __init__(self, reviewer_id: str, model: str = "", persona: str = "volunteer",
                  cache_dir: str | Path | None = None, max_tokens: int = 4096, retries: int = 3,
                  timeout: float = 120.0, base_url: str = OPENAI_BASE_URL, transport: Transport | None = None,
-                 kind: str = "openai"):
+                 kind: str = "openai", api_key: str | None = None):
         backend = ChatCompletionsBackend(provider="openai", model=model, base_url=base_url, api_key_env=KEY_ENV["openai"],
-                                         max_tokens=max_tokens, json_mode=True, timeout=timeout, transport=transport)
+                                         max_tokens=max_tokens, json_mode=True, timeout=timeout, transport=transport,
+                                         api_key=api_key)
         super().__init__(reviewer_id, backend, persona=persona, cache_dir=cache_dir, retries=retries, kind=kind)
 
 
@@ -141,8 +145,9 @@ class OpenAICompatibleReviewer(SentinelReviewer):
                  auth: str = "bearer", query: dict | None = None, persona: str = "volunteer",
                  cache_dir: str | Path | None = None, max_tokens: int = 4096, json_mode: bool = False,
                  retries: int = 3, timeout: float = 300.0, transport: Transport | None = None,
-                 kind: str = "openai_compatible"):
+                 kind: str = "openai_compatible", api_key: str | None = None):
         backend = ChatCompletionsBackend(provider="openai-compatible", model=model, base_url=base_url,
-                                         api_key_env=api_key_env, auth=auth if api_key_env else "none", query=query,
-                                         max_tokens=max_tokens, json_mode=json_mode, timeout=timeout, transport=transport)
+                                         api_key_env=api_key_env, auth=auth if (api_key_env or api_key) else "none", query=query,
+                                         max_tokens=max_tokens, json_mode=json_mode, timeout=timeout, transport=transport,
+                                         api_key=api_key)
         super().__init__(reviewer_id, backend, persona=persona, cache_dir=cache_dir, retries=retries, kind=kind)

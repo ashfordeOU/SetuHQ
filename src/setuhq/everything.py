@@ -16,6 +16,8 @@ flux-inverted copies of the same stars beside every class.
 
 from __future__ import annotations
 
+from setuhq.i18n import N_, k as ik, span, t, th
+
 import html
 import json
 from pathlib import Path
@@ -178,10 +180,10 @@ def sweep_line(meta: dict | None) -> str:
     c = meta["counts"]
     labels = {k["id"]: k["label"] for k in meta["classes"]}
     real = [labels[k].lower() for k in meta["order"] if k not in meta["noise_like"] and k != "unclassified"]
-    found = (f"{', '.join(real)} {'stands' if len(real) == 1 else 'stand'} out above chance so far" if real
-             else "nothing yet stands out above chance")
-    return (f'<p class="sweepline">We have searched {c["stars_searched"]:,} stars for anything that dims; {found}. '
-            f'<a href="#/variables">See the evidence ›</a></p>')
+    line = span("sweep.line", "We have searched {n, number} stars for anything that dims; {k, plural, =0 {nothing yet stands out above chance} "
+                "one {{list} stands out above chance so far} other {{list} stand out above chance so far}}.",
+                n=c["stars_searched"], k=len(real), list=", ".join(real))
+    return f'<p class="sweepline">{line} <a href="#/variables"{ik("sweep.evidence")}>{t("sweep.evidence", "See the evidence ›")}</a></p>'
 
 
 def sky_layer_svg(meta: dict | None) -> str:
@@ -274,8 +276,8 @@ def variables_section(meta: dict | None, eyebrow: str) -> str:
         coh_txt += (f' Limits: it finds a {chk["sinusoid_ppm"]:,.0f} ppm sinusoid in strong red noise only {case["variable"]}/{chk["n"]} '
                     f'times ({chk["script"]}), and cannot test periods longer than about {coh["testable_max_days"]:g} d in one sector.')
     return f"""<header class="headrow">
-        <div>{eyebrow}<h1 class="lead-h" id="h-variables" tabindex="-1">Everything that dims.<br><span class="grey">{c['entries']:,} entries, none thrown away.</span></h1>
-        <p>Every consensus dip of the panel, every brightening and every star's variability from the sweep, each classified by a stated rule, with its confidence, its cues and its provenance: the marks, the weights and the Sentinels' own words. {e(ATTRIBUTION)}</p></div>
+        <div>{eyebrow}<h1 class="lead-h" id="h-variables" tabindex="-1"><span{ik("var.h1")}>{t("var.h1", "Everything that dims.")}</span><br><span class="grey"{ik("var.h1b", n=c['entries'])}>{t("var.h1b", "{n, number} entries, none thrown away.", n=c['entries'])}</span></h1>
+        <p>{span("var.intro", "Every consensus dip of the panel, every brightening and every star's variability from the sweep, each classified by a stated rule, with its confidence, its cues and its provenance: the marks, the weights and the Sentinels' own words.")} <span{ik("honesty.attribution")}>{e(ATTRIBUTION)}</span></p></div>
       </header>
       {tabs("variables")}
       <p class="note"><b>A first slice, stated plainly.</b> {"; ".join(e(s) for s in meta["slices"])}. {c['stars_searched']:,} stars searched, {c['star_sectors_searched']:,} star-sectors, {c['dips_reviewed']:,} consensus dips reviewed{f", {sum(ns.values()):,} star-sectors recorded but not searched ({ns.get('no_data', 0)} no data, {ns.get('error', 0)} errors, {ns.get('pending', 0)} pending)" if sum(ns.values()) else ""}. This catalogue is separate from the discovery feed. <b>Nothing here is a new or confirmed planet.</b> A class is what the light curve's cues suggest; there is no pixel or centroid check, so a blended binary can look like anything.{e(verdict)}</p>
@@ -292,7 +294,7 @@ def variables_section(meta: dict | None, eyebrow: str) -> str:
           <a class="btn" href="/{VARIABLES_JSON}" download="setuhq-everything-that-dims.json">Download the catalogue (JSON)</a></div>
       </section>
       <section class="card vaobj" id="vaobj" aria-labelledby="h-vaobj" hidden><h2 id="h-vaobj" tabindex="-1">TIC</h2><div id="vaobjbody"></div></section>
-      <div class="valist" id="valist" aria-label="Entries"></div>
+      <div class="valist" id="valist" role="region" aria-label="Entries"></div>
       <p class="ctempty" id="vaempty" role="status" hidden>No entries match these filters. <a href="#/variables">Clear filters</a></p>
       <div class="vamore"><button class="btn" type="button" id="vamore" hidden>Show more</button></div>
       <section class="card" aria-labelledby="h-varules" style="display:grid;gap:8px">

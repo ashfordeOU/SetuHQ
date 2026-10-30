@@ -12,6 +12,8 @@ they are exaggerated. Only the transit chapter is something SetuHQ itself does.
 
 from __future__ import annotations
 
+from setuhq.i18n import N_, k as ik, lk, t
+
 import functools
 import html
 import json
@@ -752,11 +754,11 @@ SOURCES = {
     "albrecht": ("Albrecht, Dawson & Winn 2022, PASP 134, 082001 (obliquities)", "https://doi.org/10.1088/1538-3873/ac6c09"),
     "deming05": ("Deming et al. 2005, Nature 434, 740 (first thermal emission)", "https://doi.org/10.1038/nature03507"),
 }
-LABEL_ILL = "Illustration"
-LABEL_MODEL = "Model from stored values"
-LABEL_DATA = "Real data, cited"
-LABEL_SPEC = "Speculative model"
-LABEL_ART = "Artist's impression"  # planet art (setuhq.renderer.LABEL_ART): its tag links to /docs/pictures/
+LABEL_ILL = N_("label.illustration", "Illustration", note="One of the five figure labels: explains an idea, not data.")
+LABEL_MODEL = N_("label.model", "Model from stored values", note="Figure label: a model drawn from stored numbers, not an image.")
+LABEL_DATA = N_("label.real", "Real data, cited", note="Figure label: stored measurements, with their source.")
+LABEL_SPEC = N_("label.speculative", "Speculative model", note="Figure label: beyond what is measured.")
+LABEL_ART = N_("label.art", "Artist's impression", note="Figure label on planet pictures: not an observation.")  # planet art (setuhq.renderer.LABEL_ART): its tag links to /docs/pictures/
 LABELS = (LABEL_ART, LABEL_MODEL, LABEL_DATA, LABEL_ILL, LABEL_SPEC)  # the five honesty labels, in the order /docs/pictures/ explains them
 
 
@@ -779,9 +781,16 @@ def _num_rows(rows) -> str:
     out = []
     for label, value, how in rows:
         out.append(f"<tr><th scope='row'>{e(label)}</th><td class='num'>{e(value)}</td><td>{e(how)}</td></tr>")
-    return ("<div class='tablewrap' tabindex='0' role='region' aria-label='Numbers in this chapter'><table class='mxnums'>"
-            "<thead><tr><th scope='col'>Quantity</th><th scope='col' class='num'>Value</th><th scope='col'>From</th></tr></thead>"
+    return ("<div class='tablewrap' tabindex='0' role='region' aria-label='Numbers in this chapter' data-i18n-attr='aria-label:mx.numbers'><table class='mxnums'>"
+            "<thead><tr><th scope='col' data-i18n='mx.quantity'>Quantity</th><th scope='col' class='num' data-i18n='mx.value'>Value</th><th scope='col' data-i18n='mx.from'>From</th></tr></thead>"
             f"<tbody>{''.join(out)}</tbody></table></div>")
+
+
+N_("mx.numbers", "Numbers in this chapter")
+N_("mx.quantity", "Quantity")
+N_("mx.value", "Value")
+N_("mx.from", "From")
+N_("mx.speed", "Speed")
 
 
 def _fmt(x, d=2):
@@ -833,7 +842,7 @@ def honesty_label(label: str) -> str:
     """The one badge every drawing carries: illustration, model from stored values, real data, speculative, or an
     artist's impression."""
     lab_cls = {LABEL_ILL: "ill", LABEL_MODEL: "model", LABEL_DATA: "data", LABEL_SPEC: "spec", LABEL_ART: "art"}[label]
-    return f'<span class="mxlabel {lab_cls}">{html.escape(label)}</span>'
+    return f'<span class="mxlabel {lab_cls}"{lk(label)}>{html.escape(label)}</span>'
 
 
 def _stage(vis: str, label: str, desc: str, controls: str = "", tall: bool = False, static: bool = False, fid: str = "",
@@ -847,7 +856,7 @@ def _stage(vis: str, label: str, desc: str, controls: str = "", tall: bool = Fal
           <div class="mxcanvas"><canvas role="img" aria-label="{e(desc)}"></canvas></div>
           <div class="mxbadges">{honesty_label(label)}{art_tag}<span class="mxexag" aria-live="polite"></span></div>
           <div class="mxctl" role="group" aria-label="{'Controls' if static else 'Animation controls'}">
-            {'' if static else '<button class="btn mxplay" type="button" aria-pressed="false">Play</button><label class="mxspeed"><span>Speed</span><select><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><input class="mxscrub" type="range" min="0" max="1000" value="0" aria-label="Time" aria-valuetext="t = 0.00 of the ' + TUNIT.get(vis, "cycle") + '">'}
+            {'' if static else '<button class="btn mxplay" type="button" aria-pressed="false">Play</button><label class="mxspeed"><span data-i18n="mx.speed">Speed</span><select><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><input class="mxscrub" type="range" min="0" max="1000" value="0" aria-label="Time" aria-valuetext="t = 0.00 of the ' + TUNIT.get(vis, "cycle") + '">'}
             {controls}
           </div>
           <figcaption class="mxdesc">{e(desc)}</figcaption>
@@ -862,11 +871,11 @@ def system_stage(fid: str = "", desc: str = "A star and its planet, drawn from s
     return _stage("system", LABEL_MODEL, desc, SIZE_BUTTON + extra, tall=True, fid=fid, art=True)
 
 
-CHAPTERS = [("survey", "How a survey works"), ("transit", "Transit"), ("doppler", "Toward and away"),
-            ("rv", "Radial velocity"), ("astrometry", "Astrometry"), ("microlensing", "Microlensing"),
-            ("imaging", "Blocking starlight"), ("timing", "Timing and phase"), ("radio", "Radio"), ("falsepos", "False positives"),
-            ("spectroscopy", "Reading atmospheres"), ("molecules", "Molecules and life"), ("population", "Population"),
-            ("equations", "Equations of life"), ("history", "History and papers")]
+CHAPTERS = [("survey", N_("chapter.survey", "How a survey works")), ("transit", N_("chapter.transit", "Transit")), ("doppler", N_("chapter.doppler", "Toward and away")),
+            ("rv", N_("chapter.rv", "Radial velocity")), ("astrometry", N_("chapter.astrometry", "Astrometry")), ("microlensing", N_("chapter.microlensing", "Microlensing")),
+            ("imaging", N_("chapter.imaging", "Blocking starlight")), ("timing", N_("chapter.timing", "Timing and phase")), ("radio", N_("chapter.radio", "Radio")), ("falsepos", N_("chapter.falsepos", "False positives")),
+            ("spectroscopy", N_("chapter.spectroscopy", "Reading atmospheres")), ("molecules", N_("chapter.molecules", "Molecules and life")), ("population", N_("chapter.population", "Population")),
+            ("equations", N_("chapter.equations", "Equations of life")), ("history", N_("chapter.history", "History and papers"))]
 DEFAULT_POPULATION = "docs/results/population_stats.json"
 # The planets each chapter draws on or names; each links to its canonical page, and each page links back.
 CHAPTER_PLANETS = {
@@ -1046,7 +1055,7 @@ def _toc(ex: dict) -> str:
         art = (f'<span class="mxtocart">{star_svg(st[1], 32, uid=f"toc-{c}")}</span>' if st
                else f'<span class="mxtocart none" aria-hidden="true"></span>')
         star = f'<span class="mxtocs">{e(st[0])} · {st[1]:,.0f} K</span>' if st else '<span class="mxtocs">no single star</span>'
-        items.append(f'<li><a href="#/methods?ch={c}" data-ch="{c}">{art}<span class="mxtoct"><span class="mono">{i + 1:02d}</span> {e(t)}</span>{star}</a></li>')
+        items.append(f'<li><a href="#/methods?ch={c}" data-ch="{c}">{art}<span class="mxtoct"><span class="mono">{i + 1:02d}</span> <span{ik("chapter." + c)}>{e(t)}</span></span>{star}</a></li>')
     return "".join(items)
 
 
@@ -1090,7 +1099,7 @@ def _fp_example(app: dict | None, showcase_path: str = DEFAULT_SHOWCASE) -> str:
     alt = (f"{run['star']}: the star disc in its blackbody colour at {teff:,.0f} K, with a neutral grey disc on it labelled occulter not identified. "
            f"{line}.")
     return f"""<figure class="stage mxfpcase" aria-labelledby="cap-mxfp">
-        <span class="stage-tag">{LABEL_ILL}</span>
+        <span class="stage-tag"{ik("label.illustration")}>{LABEL_ILL}</span>
         <div class="mxfpart" role="img" aria-label="{e(alt)}">{star_svg(teff, r, uid="mxfp")}{occ}<span class="mxocclbl">occulter not identified</span></div>
         <figcaption id="cap-mxfp" class="readout"><b>{e(run['star'])}: {e(line)}.</b> {e(fp.get('disposition', 'FP'))} in the TOI table (TOI-{e(fp.get('toi', ''))}); SetuHQ's example run {e(run['run'])} caught it: {e(run.get('outcome') or '')}
           The star is drawn in its blackbody colour from its TIC Teff ({teff:,.0f} K, {e(src)}); the occulter is neutral and unlit, drawn at the fitted ratio {k:.3f} of the star's radius, because what eclipses the star is not identified. Source: {e(path)}. <a href="{e(case)}">Open its case file ›</a></figcaption>
@@ -1537,17 +1546,17 @@ def methods_section(ex: dict, g: dict | None, story: dict, coverage: dict | None
         nxt = CHAPTERS[i + 1] if i + 1 < len(CHAPTERS) else None
         cnt = count_line(METHOD_OF[cid]) if cid in ("transit", "rv") else ""
         pls = CHAPTER_PLANETS.get(cid) or []
-        planets = (f'<div class="pllinks mxplanets"><span>Planets in this chapter</span>{"".join(obj_link("planet", n, n + " ›") for n in pls)}</div>' if pls else "")
-        srcs = f'<details class="mxsources"><summary>Sources</summary><ul class="mxsrc">{_src(sources[cid])}</ul></details>' if sources[cid] else ""
+        planets = (f'<div class="pllinks mxplanets"><span{ik("methods.planets")}>{t("methods.planets", "Planets in this chapter")}</span>{"".join(obj_link("planet", n, n + " ›") for n in pls)}</div>' if pls else "")
+        srcs = f'<details class="mxsources"><summary{ik("methods.sources")}>{t("methods.sources", "Sources")}</summary><ul class="mxsrc">{_src(sources[cid])}</ul></details>' if sources[cid] else ""
         nav = (f'<nav class="mxnav" aria-label="Chapters">'
-               + (f'<a class="btn" href="#/methods?ch={prev[0]}">‹ {e(prev[1])}</a>' if prev else "<span></span>")
-               + (f'<a class="btn primary" href="#/methods?ch={nxt[0]}">{e(nxt[1])} ›</a>' if nxt else "") + "</nav>")
+               + (f'<a class="btn" href="#/methods?ch={prev[0]}">‹ <span{ik("chapter." + prev[0])}>{e(prev[1])}</span></a>' if prev else "<span></span>")
+               + (f'<a class="btn primary" href="#/methods?ch={nxt[0]}"><span{ik("chapter." + nxt[0])}>{e(nxt[1])}</span> ›</a>' if nxt else "") + "</nav>")
         sections.append(f'<article class="mxch" id="mx-{cid}" data-ch="{cid}" aria-labelledby="h-mx-{cid}" hidden>'
-                        f'<header><p class="eyebrow">Chapter {i + 1} of {len(CHAPTERS)}{(" · " + e(tags[cid])) if cid in tags else ""}</p>'
-                        f'<h2 id="h-mx-{cid}">{e(title)}</h2></header>{ch[cid]}{cnt}{planets}{srcs}{nav}</article>')
+                        f'<header><p class="eyebrow"><span{ik("methods.chapter_n", i=i + 1, n=len(CHAPTERS))}>{t("methods.chapter_n", "Chapter {i} of {n}", i=i + 1, n=len(CHAPTERS))}</span>{(" · " + e(tags[cid])) if cid in tags else ""}</p>'
+                        f'<h2 id="h-mx-{cid}"{ik("chapter." + cid)}>{e(title)}</h2></header>{ch[cid]}{cnt}{planets}{srcs}{nav}</article>')
     return f"""<header class="headrow">
-        <div>{eyebrow}<h1 class="lead-h" id="h-methods" tabindex="-1">How planets are found.<br><span class="grey">And how SetuHQ finds them.</span></h1>
-        <p>{len(CHAPTERS)} chapters, each an animated explainer with its physics and sources. Every drawing says whether it is an illustration, a model from stored values, or real data, and by how much it is exaggerated. Only the transit chapter is something SetuHQ itself does.</p></div>
+        <div>{eyebrow}<h1 class="lead-h" id="h-methods" tabindex="-1"><span{ik("methods.h1")}>{t("methods.h1", "How planets are found.")}</span><br><span class="grey"{ik("methods.h1b")}>{t("methods.h1b", "And how SetuHQ finds them.")}</span></h1>
+        <p{ik("methods.intro", n=len(CHAPTERS))}>{t("methods.intro", "{n} chapters, each an animated explainer with its physics and sources. Every drawing says whether it is an illustration, a model from stored values, or real data, and by how much it is exaggerated. Only the transit chapter is something SetuHQ itself does.", n=len(CHAPTERS))}</p></div>
       </header>
       <nav class="mxtoc" aria-label="Methods chapters"><ol>{toc}</ol></nav>
       {''.join(sections)}
@@ -1877,7 +1886,7 @@ function mxSetup(fig, extra){
 function mxPlay(st, on){
   if (st.still) return;
   st.playing = on;
-  const b = st.fig.querySelector('.mxplay'); b.textContent = on ? 'Pause' : 'Play'; b.setAttribute('aria-pressed', String(on));
+  const b = st.fig.querySelector('.mxplay'); b.textContent = on ? T('sky.pause', 'Pause') : T('sky.play', 'Play'); b.setAttribute('aria-pressed', String(on));
   mxKick(st);
 }
 function mxKick(st){ if (st.playing && st.on && st.visible && !document.hidden && !st.raf){ st.last = 0; st.raf = requestAnimationFrame(ts => mxFrame(st, ts)); } }

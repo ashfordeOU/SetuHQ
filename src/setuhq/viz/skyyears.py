@@ -22,12 +22,22 @@ import json
 import math
 
 from setuhq.design import METHOD
+from setuhq.i18n import N_, k as ik, ka, span
 from setuhq.story import SKY_R, SQRT2, mollweide
 from setuhq.viz import require_source
 
 METHODS = list(METHOD)  # the sky file's method index: design.METHOD's order
-LABEL = {"transit": "transit", "rv": "radial velocity", "imaging": "imaging", "microlensing": "microlensing",
-         "astrometry": "astrometry", "timing": "timing", "other": "other"}
+LABEL = {"transit": N_("method.transit", "transit"), "rv": N_("method.rv", "radial velocity"), "imaging": N_("method.imaging", "imaging"),
+         "microlensing": N_("method.microlensing", "microlensing"), "astrometry": N_("method.astrometry", "astrometry"),
+         "timing": N_("method.timing", "timing"), "other": N_("method.other", "other")}
+
+
+def method_label(m: str) -> str:
+    """A discovery method's word as keyed markup ("radial velocity")."""
+    return f'<span{ik("method." + m)}>{_html.escape(LABEL[m])}</span>'
+
+
+NOT_OURS = N_("cat.not_ours", "SetuHQ did not discover these planets.")
 STATIC_MAX = 1500  # points in the map drawn without JavaScript
 STATIC_COMPACT = 100  # the same, in the compact band (the home page keeps to its budget)
 YEAR_S = 0.42      # seconds per year while playing
@@ -85,6 +95,13 @@ def readout_text(c: dict[str, int]) -> str:
     return f"{sum(c.values()):,} planets shown · " + " · ".join(f"{LABEL[k]} {v:,}" for v, k in top)
 
 
+def readout_html(c: dict[str, int]) -> str:
+    """:func:`readout_text` as keyed markup."""
+    top = sorted(((v, k) for k, v in c.items() if v), reverse=True)[:4]
+    return (span("sky.shown", "{n, number} planets shown", n=sum(c.values())) + " · "
+            + " · ".join(f"{method_label(k)} {v:,}" for v, k in top))
+
+
 def html(data: dict, **opts) -> str:
     """The map. ``data``: ``source`` (printed) and the app data as ``app`` (its ``catalogue``, and the sky file's
     address in ``viz_files``), or the catalogue itself as ``catalogue``. ``compact=True``: the home page's and Methods'
@@ -112,16 +129,20 @@ def html(data: dict, **opts) -> str:
     compact = bool(opts.get("compact"))
     aria = (f"All-sky map (Mollweide, RA increasing to the left) of the {n:,} catalogued planets at their host stars' "
             f"positions, coloured by discovery method, as of {y1}: " + ", ".join(f"{LABEL[k]} {v:,}" for k, v in c.items() if v) + ".")
-    legend = "".join(f'<li><i style="background:{METHOD[m][0]}"></i>{e(LABEL[m])}</li>' for m in METHODS if c[m])
-    table = "".join(f'<tr><th scope="row">{e(LABEL[m])}</th><td>{c[m]:,}</td></tr>' for m in METHODS if c[m])
-    tools = (f'<div class="skytools"><button class="btn" type="button" data-sky="play" aria-pressed="false" hidden>Play</button>'
-             f'<button class="btn" type="button" data-sky="transit" aria-pressed="false" hidden>Transits only</button>'
-             f'<label class="skyscrub" hidden><span>Year</span><input type="range" data-sky="year" min="{y0}" max="{y1}" step="1" '
+    legend = "".join(f'<li><i style="background:{METHOD[m][0]}"></i>{method_label(m)}</li>' for m in METHODS if c[m])
+    table = "".join(f'<tr><th scope="row">{method_label(m)}</th><td>{c[m]:,}</td></tr>' for m in METHODS if c[m])
+    tools = (f'<div class="skytools"><button class="btn" type="button" data-sky="play" aria-pressed="false" hidden{ik("sky.play")}>{N_("sky.play", "Play")}</button>'
+             f'<button class="btn" type="button" data-sky="transit" aria-pressed="false" hidden{ik("sky.tonly")}>{N_("sky.tonly", "Transits only")}</button>'
+             f'<label class="skyscrub" hidden><span{ik("sky.year")}>{N_("sky.year", "Year")}</span><input type="range" data-sky="year" min="{y0}" max="{y1}" step="1" '
              f'value="{y1}" aria-valuetext="{y1}: {n:,} planets"></label></div>')
-    nojs = f'<span class="skynojs"> This still shows {shown:,} of them (every {step}th); the full map draws when the page\'s script runs.</span>' if step > 1 else ""
-    cap = (f'<ul class="skylegend" aria-label="Discovery method">{legend}</ul>'
-           f'<p class="skysrc">Each dot is a catalogued planet at its host star\'s position (RA and Dec, J2000), coloured by the method that '
-           f'found it, appearing in its discovery year.{nojs} SetuHQ did not discover these planets. Source: {e(data["source"])}.</p>')
+    nojs_text = span("sky.nojs", "This still shows {k, number} of them (every {step}th); the full map draws when the page\'s script runs.", k=shown, step=step)
+    nojs = (f' <span class="skynojs">{nojs_text}</span>'
+            if step > 1 else "")
+    sky_cap = span("sky.cap", "Each dot is a catalogued planet at its host star\'s position (RA and Dec, J2000), coloured by the method that found it, appearing in its discovery year.")
+    cap = (f'<ul class="skylegend" aria-label="Discovery method"{ka(aria_label="sky.legend")}>{legend}</ul>'
+           f'<p class="skysrc">{sky_cap}'
+           f'{nojs} <span{ik("cat.not_ours")}>{e(NOT_OURS)}</span> {span("limits.source", "Source: {s}.", s=data["source"])}</p>')
+    N_("sky.legend", "Discovery method")
     return (f'<figure class="skyyears{" compact" if opts.get("compact") else ""}" id="{uid}" data-viz="skyyears" data-src="{e(src)}" '
             f'data-y0="{y0}" data-y1="{y1}">'
             f'<div class="stage skystage"><div class="skybox">'
@@ -130,12 +151,13 @@ def html(data: dict, **opts) -> str:
             f'<path d="{graticule(not compact)}" stroke="rgba(120,140,180,.13)" stroke-width=".8" fill="none"/>'
             f'<g class="skydots" stroke-width="2.4" stroke-linecap="round">{dots}</g></svg>'
             f'{opts.get("overlay") or ""}</div>'
-            f'<span class="stage-tag">Real data, cited</span><span class="skyyear" aria-hidden="true">{y1}</span></div>'
-            f'{tools}<p class="readout skyread">{e(readout_text(c))}</p><p class="sr" data-sky="live" aria-live="polite"></p>'
+            f'<span class="stage-tag" data-i18n="label.real">Real data, cited</span><span class="skyyear" aria-hidden="true">{y1}</span></div>'
+            f'{tools}<p class="readout skyread">{readout_html(c)}</p><p class="sr" data-sky="live" aria-live="polite"></p>'
             f'<figcaption>{cap}</figcaption>'
             + ("" if compact else  # the compact band's counts by method are in the map's label and the readout
-               f'<details class="skytable"><summary>Planets by discovery method, as of {y1}</summary><table class="pltable"><thead><tr>'
-               f'<th scope="col">Method</th><th scope="col">Planets</th></tr></thead><tbody>{table}<tr><th scope="row">All</th><td>{n:,}</td></tr>'
+               f'<details class="skytable"><summary>{span("sky.table", "Planets by discovery method, as of {y}", y=str(y1))}</summary><table class="pltable"><thead><tr>'
+               f'<th scope="col"{ik("sky.col.method")}>{N_("sky.col.method", "Method")}</th><th scope="col"{ik("sky.col.planets")}>{N_("sky.col.planets", "Planets")}</th></tr></thead>'
+               f'<tbody>{table}<tr><th scope="row"{ik("sky.all")}>{N_("sky.all", "All")}</th><td>{n:,}</td></tr>'
                f'</tbody></table></details>') + '</figure>')
 
 
@@ -172,7 +194,9 @@ JS = r"""
     for (let k = 0; k < 30; k++){ const f = 2 * th + Math.sin(2 * th) - Math.PI * Math.sin(phi); th -= f / (2 + 2 * Math.cos(2 * th) + 1e-12); }
     return [(R * 2 * S2 / Math.PI * lam * Math.cos(th) + 460) / 920, (235 - R * S2 * Math.sin(th)) / 470];
   }
-  const fmtN = n => n.toLocaleString('en-GB');
+  const TT = (id, en, a) => (window.SetuI18n ? SetuI18n.T(id, en, a) : en.replace(/\{(\w+)[^}]*\}/g, (m, k) => a && k in a ? a[k] : m)).replace(/&#(\d+);/g, (x, d) => String.fromCharCode(d));
+  const LANG = () => (window.SetuI18n && SetuI18n.lang) || 'en', KEYS = __KEYS__;
+  const fmtN = n => n.toLocaleString(LANG() === 'en' ? 'en-GB' : LANG());
   function wire(fig){
     if (fig._sky || !fig.dataset.src || !window.fetch) return;
     const S = fig._sky = {vis: false, pts: null, playing: false, year: +fig.dataset.y1, tonly: false, t: 0, last: 0, said: 0, raf: 0, held: 0};
@@ -197,7 +221,7 @@ JS = r"""
       const c = cols.map(() => 0); let n = 0;
       for (const a of S.pts){ if (a[3] > S.year) break; if (S.tonly && a[2] !== S.tr) continue; c[a[2]]++; n++; }
       const top = c.map((v, k) => [v, k]).filter(a => a[0]).sort((a, b) => b[0] - a[0]).slice(0, 4);
-      return [n, `${fmtN(n)} planets shown${S.tonly ? ' (transits only)' : ''} · ` + top.map(([v, k]) => `${labels[k]} ${fmtN(v)}`).join(' · ')];
+      return [n, TT('sky.shown', '{n, number} planets shown', {n}) + (S.tonly ? TT('sky.tonly_note', ' (transits only)') : '') + ' · ' + top.map(([v, k]) => `${TT('method.' + KEYS[k], labels[k])} ${fmtN(v)}`).join(' · ')];
     }
     function draw(){
       if (!cv || !S.pts) return;
@@ -212,11 +236,11 @@ JS = r"""
       }
       ctx.globalAlpha = 1;
       const [n, t] = summary(); out.textContent = t; tag.textContent = String(S.year);
-      rng.value = String(S.year); rng.setAttribute('aria-valuetext', `${S.year}: ${fmtN(n)} planets`);
+      rng.value = String(S.year); rng.setAttribute('aria-valuetext', TT('sky.valuetext', '{y}: {n, number} planets', {y: String(S.year), n}));
       // The live region speaks only while playing, at most once every 2 s; a scrubbed year is read from the slider.
       const now = performance.now(); if (S.playing && now - S.said > 2000){ S.said = now; live.textContent = t; }
     }
-    function setPlay(){ play.textContent = S.playing ? 'Pause' : 'Play'; play.setAttribute('aria-pressed', String(S.playing)); }
+    function setPlay(){ play.textContent = S.playing ? TT('sky.pause', 'Pause') : TT('sky.play', 'Play'); play.setAttribute('aria-pressed', String(S.playing)); }
     function frame(now){
       S.raf = 0; if (!S.playing || !S.vis || document.hidden) return;
       const dt = Math.min(100, now - (S.last || now)); S.last = now;
@@ -239,4 +263,4 @@ JS = r"""
   window.SetuSky.wire();
 })();
 """.replace("__YEAR_S__", str(YEAR_S)).replace("__SKY_R__", repr(SKY_R)).replace(
-    "__COLS__", json.dumps([METHOD[m][0] for m in METHODS])).replace("__LABELS__", json.dumps([LABEL[m] for m in METHODS]))
+    "__COLS__", json.dumps([METHOD[m][0] for m in METHODS])).replace("__LABELS__", json.dumps([LABEL[m] for m in METHODS])).replace("__KEYS__", json.dumps(METHODS))

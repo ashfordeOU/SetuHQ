@@ -1,0 +1,3909 @@
+{
+ "@@locale": "ja",
+ "@@x-source-locale": "en",
+ "cat.h1": "既知のすべての系外惑星。",
+ "@cat.h1": {
+  "x-review": "machine",
+  "x-source": "c12b2894d2"
+ },
+ "cat.h1b": "{n, number} 件の記録を検索できます。",
+ "@cat.h1b": {
+  "x-review": "machine",
+  "x-source": "0082f39a49"
+ },
+ "cat.intro": "{source} にある {n, number} 個の惑星すべて。距離が保存されておらず銀河マップに配置できない {nodist, number} 個も含みます。SetuHQ はこれらの惑星を発見していません。目録にまとめているだけです。",
+ "@cat.intro": {
+  "x-review": "machine",
+  "x-source": "ca9826547d"
+ },
+ "cat.not_ours": "SetuHQ はこれらの惑星を発見していません。",
+ "@cat.not_ours": {
+  "x-review": "machine",
+  "x-source": "759a661951"
+ },
+ "cf.h1": "すべてのシグナル、その減光、そして各判定の裏にあるチェック。",
+ "@cf.h1": {
+  "x-review": "machine",
+  "x-source": "2b73eb58d2"
+ },
+ "cf.intro": "この減光を含む実行のケースファイル：すべてのシグナルとその減光、審査の結果、トランジットの帯、判定の記録。審査を通過したシグナルはどれも{status}です。棄却されたもの、要レビューのものはその状態で示します。",
+ "@cf.intro": {
+  "x-review": "machine",
+  "x-source": "252d456e94"
+ },
+ "cf.link": "ケースファイル ›",
+ "@cf.link": {
+  "x-review": "machine",
+  "x-source": "ceac0b11e3"
+ },
+ "chapter.astrometry": "位置天文学",
+ "@chapter.astrometry": {
+  "x-review": "machine",
+  "x-source": "8a0961eea7"
+ },
+ "chapter.doppler": "近づき、遠ざかる",
+ "@chapter.doppler": {
+  "x-review": "machine",
+  "x-source": "982502489b"
+ },
+ "chapter.equations": "生命の方程式",
+ "@chapter.equations": {
+  "x-review": "machine",
+  "x-source": "a586047366"
+ },
+ "chapter.falsepos": "偽陽性",
+ "@chapter.falsepos": {
+  "x-review": "machine",
+  "x-source": "04819af0c8"
+ },
+ "chapter.history": "歴史と論文",
+ "@chapter.history": {
+  "x-review": "machine",
+  "x-source": "c6638a4574"
+ },
+ "chapter.imaging": "星の光をさえぎる",
+ "@chapter.imaging": {
+  "x-review": "machine",
+  "x-source": "6464ce5238"
+ },
+ "chapter.microlensing": "重力マイクロレンズ",
+ "@chapter.microlensing": {
+  "x-review": "machine",
+  "x-source": "7713c65bef"
+ },
+ "chapter.molecules": "分子と生命",
+ "@chapter.molecules": {
+  "x-review": "machine",
+  "x-source": "d0ac3c4b97"
+ },
+ "chapter.population": "惑星の集団",
+ "@chapter.population": {
+  "x-review": "machine",
+  "x-source": "5b828861ae"
+ },
+ "chapter.radio": "電波",
+ "@chapter.radio": {
+  "x-review": "machine",
+  "x-source": "2a7dfeb2f2"
+ },
+ "chapter.rv": "視線速度",
+ "@chapter.rv": {
+  "x-review": "machine",
+  "x-source": "5605460ec2"
+ },
+ "chapter.spectroscopy": "大気を読む",
+ "@chapter.spectroscopy": {
+  "x-review": "machine",
+  "x-source": "e57371d577"
+ },
+ "chapter.survey": "サーベイのしくみ",
+ "@chapter.survey": {
+  "x-review": "machine",
+  "x-source": "418a56729e"
+ },
+ "chapter.timing": "タイミングと位相",
+ "@chapter.timing": {
+  "x-review": "machine",
+  "x-source": "f5f7adb77b"
+ },
+ "chapter.transit": "トランジット",
+ "@chapter.transit": {
+  "x-review": "machine",
+  "x-source": "99da84d9ad"
+ },
+ "cli.argparse.argument": "引数 %(argument_name)s: %(message)s",
+ "@cli.argparse.argument": {
+  "x-review": "machine",
+  "x-source": "2ee7b9a91a"
+ },
+ "cli.argparse.choice": "無効な選択: %(value)r (%(choices)s から選んでください)",
+ "@cli.argparse.choice": {
+  "x-review": "machine",
+  "x-source": "9dbc964dd3"
+ },
+ "cli.argparse.error": "%(prog)s: エラー: %(message)s\n",
+ "@cli.argparse.error": {
+  "x-review": "machine",
+  "x-source": "954b9f0ae6"
+ },
+ "cli.argparse.help": "このヘルプを表示して終了する",
+ "@cli.argparse.help": {
+  "x-review": "machine",
+  "x-source": "608017daf4"
+ },
+ "cli.argparse.one": "引数が 1 つ必要です",
+ "@cli.argparse.one": {
+  "x-review": "machine",
+  "x-source": "d5d4f7b111"
+ },
+ "cli.argparse.options": "オプション",
+ "@cli.argparse.options": {
+  "x-review": "machine",
+  "x-source": "a793ab8fcc"
+ },
+ "cli.argparse.positional": "位置引数",
+ "@cli.argparse.positional": {
+  "x-review": "machine",
+  "x-source": "a5f91c7a58"
+ },
+ "cli.argparse.required": "次の引数が必要です: %s",
+ "@cli.argparse.required": {
+  "x-review": "machine",
+  "x-source": "25fb5034ca"
+ },
+ "cli.argparse.unrecognized": "認識できない引数: %s",
+ "@cli.argparse.unrecognized": {
+  "x-review": "machine",
+  "x-source": "5ed6ba5c37"
+ },
+ "cli.argparse.usage": "使い方:",
+ "@cli.argparse.usage": {
+  "x-review": "machine",
+  "x-source": "d85f7a9a6f"
+ },
+ "cli.argparse.version": "プログラムのバージョン番号を表示して終了する",
+ "@cli.argparse.version": {
+  "x-review": "machine",
+  "x-source": "d534d67f66"
+ },
+ "cli.cmd.app": "'setuhq site' と同じ (サイトが 1 つのアプリページだった頃の旧名)",
+ "@cli.cmd.app": {
+  "x-review": "machine",
+  "x-source": "f119fa15f1"
+ },
+ "cli.cmd.batch": "ターゲットのリストに discover の流れを実行する (キャッシュあり、再開可能)",
+ "@cli.cmd.batch": {
+  "x-review": "machine",
+  "x-source": "40b27855e9"
+ },
+ "cli.cmd.benchmark": "設定したパネルの注入・回収ベンチマーク",
+ "@cli.cmd.benchmark": {
+  "x-review": "machine",
+  "x-source": "4c26cdd1fc"
+ },
+ "cli.cmd.binaries": "食連星と楕円体変光・反射変光: 周期、食、副食の位相 (e cos w の手がかり)、形態。理由付きの候補フラグ",
+ "@cli.cmd.binaries": {
+  "x-review": "machine",
+  "x-source": "0abdc48c4a"
+ },
+ "cli.cmd.bundle": "スイープのセクター記録を、内容ハッシュで封印した貢献バンドルとして書き出す",
+ "@cli.cmd.bundle": {
+  "x-review": "machine",
+  "x-source": "9852df2e94"
+ },
+ "cli.cmd.calibrate": "注入によってレビュアーの重みを推定する",
+ "@cli.cmd.calibrate": {
+  "x-review": "machine",
+  "x-source": "207a6e9d1b"
+ },
+ "cli.cmd.check-sweep": "すべての貢献が取り込まれて欠けていないこと、カタログが検証済みのソースから再構築したものと一致することをチェックする",
+ "@cli.cmd.check-sweep": {
+  "x-review": "machine",
+  "x-source": "5634f750a9"
+ },
+ "cli.cmd.cheops": "CHEOPS Guest Observers Running Call: 提案準備パックを書く",
+ "@cli.cmd.cheops": {
+  "x-review": "machine",
+  "x-source": "4f36cba2a0"
+ },
+ "cli.cmd.crossmatch": "実行のターゲットを NASA Exoplanet Archive に問い合わせ、crossmatch.json を保存する",
+ "@cli.cmd.crossmatch": {
+  "x-review": "machine",
+  "x-source": "3b450e6853"
+ },
+ "cli.cmd.dashboard": "実行と任意の発見カタログから対話型ダッシュボードを作る",
+ "@cli.cmd.dashboard": {
+  "x-review": "machine",
+  "x-source": "75a27378f8"
+ },
+ "cli.cmd.discover": "予定された発見探索のバッチを 1 回実行し、カタログを更新する",
+ "@cli.cmd.discover": {
+  "x-review": "machine",
+  "x-source": "c89cac74a5"
+ },
+ "cli.cmd.docket": "実行の候補ケースファイル表示を作る",
+ "@cli.cmd.docket": {
+  "x-review": "machine",
+  "x-source": "6d3fd99980"
+ },
+ "cli.cmd.export": "ExoFOP CTOI 形式の表と予測トランジット窓を実行ごとに書き出す",
+ "@cli.cmd.export": {
+  "x-review": "machine",
+  "x-source": "20cf1a8c0c"
+ },
+ "cli.cmd.flares": "恒星フレアを検出する: 形態、エネルギー、完全性、ヌル検定",
+ "@cli.cmd.flares": {
+  "x-review": "machine",
+  "x-source": "9d57912ca7"
+ },
+ "cli.cmd.ingest": "貢献バンドルを検証し、クレジット付きでカタログに統合する",
+ "@cli.cmd.ingest": {
+  "x-review": "machine",
+  "x-source": "d729fd0e7d"
+ },
+ "cli.cmd.leaderboard": "固定した実 TOI ベンチマークの保留半分で提出物を採点する、または保存済みの全提出物から docs/leaderboard を作り直す",
+ "@cli.cmd.leaderboard": {
+  "x-review": "machine",
+  "x-source": "eff0c84e54"
+ },
+ "cli.cmd.lint": "提案書のテキスト (または pypdf による PDF) を匿名性を損なうものについて走査する。補助であり保証ではない",
+ "@cli.cmd.lint": {
+  "x-review": "machine",
+  "x-source": "dec0a3adc2"
+ },
+ "cli.cmd.mcp": "setuhq-mcp と同様に stdio で MCP サーバーを起動する (mcp 追加機能が必要: pip install 'setuhq[mcp]')",
+ "@cli.cmd.mcp": {
+  "x-review": "machine",
+  "x-source": "36efd33521"
+ },
+ "cli.cmd.plate": "印刷用プレートのページを作る: 星ごとに 1 枚、キャプション付き",
+ "@cli.cmd.plate": {
+  "x-review": "machine",
+  "x-source": "54445abdca"
+ },
+ "cli.cmd.propose": "観測提案を準備する (準備パック。何も提出しない)",
+ "@cli.cmd.propose": {
+  "x-review": "machine",
+  "x-source": "f565d45d49"
+ },
+ "cli.cmd.pulsations": "周波数解析: プリホワイトニング、結合周波数、背景、numax/Δν、タイプ",
+ "@cli.cmd.pulsations": {
+  "x-review": "machine",
+  "x-source": "6f493bd600"
+ },
+ "cli.cmd.rebuild": "保存済みの実行を、保存された分類から再審査する (フィット、FAP、フラグ)",
+ "@cli.cmd.rebuild": {
+  "x-review": "machine",
+  "x-source": "aaf332ed6a"
+ },
+ "cli.cmd.report": "実行ディレクトリから静的 HTML レポートサイトを作る",
+ "@cli.cmd.report": {
+  "x-review": "machine",
+  "x-source": "52964d6b1b"
+ },
+ "cli.cmd.rotation": "黒点変調からの自転周期 (Lomb-Scargle と ACF)、セクターごと。約 13 d を超える周期は測定しない",
+ "@cli.cmd.rotation": {
+  "x-review": "machine",
+  "x-source": "ce419593f9"
+ },
+ "cli.cmd.run": "設定ファイルのターゲットでパイプラインを実行する",
+ "@cli.cmd.run": {
+  "x-review": "machine",
+  "x-source": "ebbdd3027a"
+ },
+ "cli.cmd.site": "1 つ以上の実行からウェブサイト (全ページ、共有ファイル、レポート、プレート、ケースファイル) を作る",
+ "@cli.cmd.site": {
+  "x-review": "machine",
+  "x-source": "bdfe2af14f"
+ },
+ "cli.cmd.sweep": "TESS セクターの SPOC 2 分ターゲットを探索して変光カタログに入れる (再開可能)",
+ "@cli.cmd.sweep": {
+  "x-review": "machine",
+  "x-source": "7da0597b32"
+ },
+ "cli.cmd.transients": "非周期的な増光: 立ち上がり、減衰、振幅、クラスの手がかり、誤警報の選別。SPOC 光度曲線または任意位置の TESScut 切り出しで",
+ "@cli.cmd.transients": {
+  "x-review": "machine",
+  "x-source": "edf6a53e13"
+ },
+ "cli.desc.propose.cheops": "SetuHQ は独立しており、ESA、CHEOPS ミッション、CHEOPS コンソーシアムとは提携しておらず、それらの承認を受けておらず、それらに代わって運営されてもいません。ESA の Target Checker、Visibility Tool、Exposure Time Calculator、Scheduling Feasibility Checker、Policies & Procedures 文書に代わるものではありません。公式の公募とツールが優先します。",
+ "@cli.desc.propose.cheops": {
+  "x-review": "machine",
+  "x-source": "cceac73b43"
+ },
+ "cli.desc.setuhq": "コマンドラインインターフェース: ``setuhq run``、``setuhq benchmark``、``setuhq calibrate``、``setuhq site``、``setuhq plate`` など。",
+ "@cli.desc.setuhq": {
+  "x-review": "machine",
+  "x-source": "b77812ae01"
+ },
+ "cli.opt.batch.max-targets": "このセッションでこの数のターゲットの後に停止する",
+ "@cli.opt.batch.max-targets": {
+  "x-review": "machine",
+  "x-source": "d73a203b72"
+ },
+ "cli.opt.batch.retries": "失敗したターゲットを後のセッションで再試行する回数",
+ "@cli.opt.batch.retries": {
+  "x-review": "machine",
+  "x-source": "c1df123c33"
+ },
+ "cli.opt.batch.sectors": "ターゲットごとの最新セクター数",
+ "@cli.opt.batch.sectors": {
+  "x-review": "machine",
+  "x-source": "9847836fea"
+ },
+ "cli.opt.batch.targets": "TIC ID のテキストファイル (1 行に 1 つ)",
+ "@cli.opt.batch.targets": {
+  "x-review": "machine",
+  "x-source": "12cb2ebf9d"
+ },
+ "cli.opt.batch.tic": "TIC ID",
+ "@cli.opt.batch.tic": {
+  "x-review": "machine",
+  "x-source": "1ec96f2b2c"
+ },
+ "cli.opt.batch.toi-cache": "フィードの項目に known_toi または new_candidate を付けるための、キャッシュ済みアーカイブ TOI 表",
+ "@cli.opt.batch.toi-cache": {
+  "x-review": "machine",
+  "x-source": "ce354b2d0e"
+ },
+ "cli.opt.batch.weights": "レビュアーの重みの JSON",
+ "@cli.opt.batch.weights": {
+  "x-review": "machine",
+  "x-source": "53409ff573"
+ },
+ "cli.opt.benchmark.out": "書き出す markdown ファイル",
+ "@cli.opt.benchmark.out": {
+  "x-review": "machine",
+  "x-source": "eb949f2129"
+ },
+ "cli.opt.benchmark.weights": "重みの JSON",
+ "@cli.opt.benchmark.weights": {
+  "x-review": "machine",
+  "x-source": "5a7dbbe171"
+ },
+ "cli.opt.binaries.cache": "キャッシュのルート (MAST ファイル、TIC 値)",
+ "@cli.opt.binaries.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.binaries.exptime": "TESS のケイデンス (秒)",
+ "@cli.opt.binaries.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.binaries.out": "JSON 記録をここに書く",
+ "@cli.opt.binaries.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.binaries.sector": "TESS セクター (既定: すべての SPOC セクター)",
+ "@cli.opt.binaries.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.binaries.target": "TIC ID (例 'TIC 441420236')、SPOC *_lc.fits ファイル、または CSV (time, flux[, flux_err])",
+ "@cli.opt.binaries.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.binaries.transit-duration": "その継続時間 (d)",
+ "@cli.opt.binaries.transit-duration": {
+  "x-review": "machine",
+  "x-source": "14084d1df6"
+ },
+ "cli.opt.binaries.transit-epoch": "そのトランジット中心時刻 (BTJD)",
+ "@cli.opt.binaries.transit-epoch": {
+  "x-review": "machine",
+  "x-source": "8e38587901"
+ },
+ "cli.opt.binaries.transit-period": "トランジット候補の周期 (d) における参考の審査ヒント",
+ "@cli.opt.binaries.transit-period": {
+  "x-review": "machine",
+  "x-source": "2c253e7f29"
+ },
+ "cli.opt.bundle.contributor": "クレジットする名前 (自由に選べます。サイトに表示されます)",
+ "@cli.opt.bundle.contributor": {
+  "x-review": "machine",
+  "x-source": "52709c8c8b"
+ },
+ "cli.opt.bundle.out": "書き出すバンドルのディレクトリ",
+ "@cli.opt.bundle.out": {
+  "x-review": "machine",
+  "x-source": "0fd5207362"
+ },
+ "cli.opt.bundle.record": "セクター記録 (例 my-sweep/sector_0005.json.gz)",
+ "@cli.opt.bundle.record": {
+  "x-review": "machine",
+  "x-source": "277968793c"
+ },
+ "cli.opt.calibrate.image-dir": "レビュアーが必要とする場合に較正画像を描画する場所",
+ "@cli.opt.calibrate.image-dir": {
+  "x-review": "machine",
+  "x-source": "8ddc793e3a"
+ },
+ "cli.opt.calibrate.out": "書き出す重みの JSON",
+ "@cli.opt.calibrate.out": {
+  "x-review": "machine",
+  "x-source": "d107a13850"
+ },
+ "cli.opt.check-sweep.fix": "検証済みのソースから catalogue.json を作り直す",
+ "@cli.opt.check-sweep.fix": {
+  "x-review": "machine",
+  "x-source": "f89150012c"
+ },
+ "cli.opt.check-sweep.ledger-base": "この取り込み台帳が拡張のみ許される git ref。'auto' はベースブランチ (SETUHQ_BASE、GITHUB_BASE_REF、またはリモートの既定) との merge-base。CI が設定されているとき、ベースがなければ失敗する",
+ "@cli.opt.check-sweep.ledger-base": {
+  "x-review": "machine",
+  "x-source": "f6b4b1fabb"
+ },
+ "cli.opt.cheops.denoise": "--flares と併用: 先にウェーブレットでノイズ除去",
+ "@cli.opt.cheops.denoise": {
+  "x-review": "machine",
+  "x-source": "bd0a95d70e"
+ },
+ "cli.opt.cheops.file-key": "1 回の訪問 (CH_PR..._TG..._V....)",
+ "@cli.opt.cheops.file-key": {
+  "x-review": "machine",
+  "x-source": "e108c5fdc1"
+ },
+ "cli.opt.cheops.flares": "各訪問でフレアも検出する",
+ "@cli.opt.cheops.flares": {
+  "x-review": "machine",
+  "x-source": "1b9e23c896"
+ },
+ "cli.opt.cheops.offline": "キャッシュのみ、ネットワークなし",
+ "@cli.opt.cheops.offline": {
+  "x-review": "machine",
+  "x-source": "7fb233fb38"
+ },
+ "cli.opt.cheops.out": "JSON 記録をここに書く",
+ "@cli.opt.cheops.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.cheops.points": "トレンド除去後の点を記録に含める",
+ "@cli.opt.cheops.points": {
+  "x-review": "machine",
+  "x-source": "de5db37740"
+ },
+ "cli.opt.cheops.target": "星の名前、または度単位の 'RA DEC'",
+ "@cli.opt.cheops.target": {
+  "x-review": "machine",
+  "x-source": "19a2fbdcf5"
+ },
+ "cli.opt.crossmatch.star": "星の名前 (hostname または pl_name)。TIC ターゲットは tic_id でも照合する",
+ "@cli.opt.crossmatch.star": {
+  "x-review": "machine",
+  "x-source": "25164e4aa2"
+ },
+ "cli.opt.dashboard.catalog": "含める発見カタログの JSON",
+ "@cli.opt.dashboard.catalog": {
+  "x-review": "machine",
+  "x-source": "941f727440"
+ },
+ "cli.opt.discover.publish-new": "非公開の運用のみ: 既知の TOI に一致しないシグナルをカタログに残す。既定ではすべての公開出力から保留される (非公開のレビュー用)。公開の流れでは決して渡さない",
+ "@cli.opt.discover.publish-new": {
+  "x-review": "machine",
+  "x-source": "fa834dcccf"
+ },
+ "cli.opt.docket.allow-missing-crossmatch": "保存済みのアーカイブ照合が使えなくても作る。その場合ページは保存されたエラーを表示する",
+ "@cli.opt.docket.allow-missing-crossmatch": {
+  "x-review": "machine",
+  "x-source": "ea4922a1f2"
+ },
+ "cli.opt.docket.refresh-crossmatch": "先に 'setuhq crossmatch' を実行する: アーカイブに問い合わせ crossmatch.json を保存する",
+ "@cli.opt.docket.refresh-crossmatch": {
+  "x-review": "machine",
+  "x-source": "16850a4df3"
+ },
+ "cli.opt.docket.star": "アーカイブ照合に使う星の名前 (hostname または pl_name)。TIC ターゲットは tic_id でも照合する",
+ "@cli.opt.docket.star": {
+  "x-review": "machine",
+  "x-source": "fa232a85fb"
+ },
+ "cli.opt.export.allow-unchecked": "TOI の重複チェックができなくても書き出す (各行にそう記す)",
+ "@cli.opt.export.allow-unchecked": {
+  "x-review": "machine",
+  "x-source": "00695ab022"
+ },
+ "cli.opt.export.days": "トランジット窓をどこまで先まで予測するか",
+ "@cli.opt.export.days": {
+  "x-review": "machine",
+  "x-source": "331c4f1544"
+ },
+ "cli.opt.export.toi-cache": "キャッシュ済みのアーカイブ TOI 表 (なければ取得してここに書く)",
+ "@cli.opt.export.toi-cache": {
+  "x-review": "machine",
+  "x-source": "a99eb8c584"
+ },
+ "cli.opt.flares.cache": "キャッシュのルート (MAST ファイル、TIC 値)",
+ "@cli.opt.flares.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.flares.completeness": "注入・回収の試行回数 N (各 10 フレア)",
+ "@cli.opt.flares.completeness": {
+  "x-review": "machine",
+  "x-source": "138f48258e"
+ },
+ "cli.opt.flares.denoise": "先に定常ウェーブレットでノイズ除去 (setuhq[wavelets] が必要)",
+ "@cli.opt.flares.denoise": {
+  "x-review": "machine",
+  "x-source": "923a73f3ed"
+ },
+ "cli.opt.flares.distance-pc": "TIC の距離を上書き (pc)",
+ "@cli.opt.flares.distance-pc": {
+  "x-review": "machine",
+  "x-source": "5f618e8fe1"
+ },
+ "cli.opt.flares.exptime": "TESS のケイデンス (秒)",
+ "@cli.opt.flares.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.flares.mission": "検出の既定値と波長帯を決める",
+ "@cli.opt.flares.mission": {
+  "x-review": "machine",
+  "x-source": "707cfede2f"
+ },
+ "cli.opt.flares.no-null": "フラックス反転のヌル検定を省く",
+ "@cli.opt.flares.no-null": {
+  "x-review": "machine",
+  "x-source": "15da4f002c"
+ },
+ "cli.opt.flares.out": "JSON 記録をここに書く",
+ "@cli.opt.flares.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.flares.radius": "TIC の半径を上書き (太陽半径)",
+ "@cli.opt.flares.radius": {
+  "x-review": "machine",
+  "x-source": "2333e6c1d4"
+ },
+ "cli.opt.flares.sector": "TESS セクター (既定: すべての SPOC セクター)",
+ "@cli.opt.flares.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.flares.target": "TIC ID (例 'TIC 441420236')、SPOC *_lc.fits ファイル、または CSV (time, flux[, flux_err])",
+ "@cli.opt.flares.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.flares.teff": "TIC の Teff を上書き (K)",
+ "@cli.opt.flares.teff": {
+  "x-review": "machine",
+  "x-source": "f8dce33e3f"
+ },
+ "cli.opt.flares.tmag": "TIC の TESS 等級を上書き",
+ "@cli.opt.flares.tmag": {
+  "x-review": "machine",
+  "x-source": "5d89050461"
+ },
+ "cli.opt.ingest.accept-sentinels": "Sentinels を含むバンドルを受け入れる。その減光はここでは再探索できない (カタログにそう記す)",
+ "@cli.opt.ingest.accept-sentinels": {
+  "x-review": "machine",
+  "x-source": "43052bd204"
+ },
+ "cli.opt.ingest.attested-by": "バンドルを送った人の GitHub ログイン (プルリクエストの作成者)",
+ "@cli.opt.ingest.attested-by": {
+  "x-review": "machine",
+  "x-source": "99ebfcc35a"
+ },
+ "cli.opt.ingest.bundle": "バンドルのディレクトリまたは .zip",
+ "@cli.opt.ingest.bundle": {
+  "x-review": "machine",
+  "x-source": "8a6728595c"
+ },
+ "cli.opt.ingest.verify-lightcurves": "惑星候補を含むもの、またはヌルを超えるクラスの項目を含むものすべてに加えて、無作為に取得して再探索する星セクターの数 (既定: max(3, 5%%))。すべての項目が一致しなければならない",
+ "@cli.opt.ingest.verify-lightcurves": {
+  "x-review": "machine",
+  "x-source": "a8325b1730"
+ },
+ "cli.opt.leaderboard.submission": "提出物の JSON (docs/leaderboard/README.md)。表を作り直すときは省略",
+ "@cli.opt.leaderboard.submission": {
+  "x-review": "machine",
+  "x-source": "0a572af021"
+ },
+ "cli.opt.leaderboard.submissions": "作り直すときに採点する提出物のディレクトリ",
+ "@cli.opt.leaderboard.submissions": {
+  "x-review": "machine",
+  "x-source": "d14c33cf89"
+ },
+ "cli.opt.plate.allow-missing-crossmatch": "保存済みのアーカイブ照合が使えなくても作る。その場合ページは保存されたエラーを表示する",
+ "@cli.opt.plate.allow-missing-crossmatch": {
+  "x-review": "machine",
+  "x-source": "ea4922a1f2"
+ },
+ "cli.opt.plate.catalog": "発見カタログの JSON: その星々もプレートを得て、時の川に加わる",
+ "@cli.opt.plate.catalog": {
+  "x-review": "machine",
+  "x-source": "e0f0c444fc"
+ },
+ "cli.opt.plate.star": "アーカイブ照合に使う星の名前 ('setuhq docket' と同じ)",
+ "@cli.opt.plate.star": {
+  "x-review": "machine",
+  "x-source": "5a6e358f96"
+ },
+ "cli.opt.propose.cheops.author-name": "匿名性リントが指摘すべき名前 (繰り返し可。パックには決して書かない)",
+ "@cli.opt.propose.cheops.author-name": {
+  "x-review": "machine",
+  "x-source": "4155c649d2"
+ },
+ "cli.opt.propose.cheops.coord-source": "--ra/--dec の出典 (ExoFOP と Gaia の位置は元期が違うため拒否)",
+ "@cli.opt.propose.cheops.coord-source": {
+  "x-review": "machine",
+  "x-source": "60a0952794"
+ },
+ "cli.opt.propose.cheops.cycle": "提出サイクル YYYY-MM (既定: そのプログラムの次に開くもの)",
+ "@cli.opt.propose.cheops.cycle": {
+  "x-review": "machine",
+  "x-source": "0fd6ca07d8"
+ },
+ "cli.opt.propose.cheops.dec": "あなたの赤緯 (度、ICRS、J2000)",
+ "@cli.opt.propose.cheops.dec": {
+  "x-review": "machine",
+  "x-source": "c89b51ca1f"
+ },
+ "cli.opt.propose.cheops.depth-ppm": "イベントの深さ (トランジット、食) またはフレア振幅 (ppm)",
+ "@cli.opt.propose.cheops.depth-ppm": {
+  "x-review": "machine",
+  "x-source": "f68df536ad"
+ },
+ "cli.opt.propose.cheops.duration-hours": "イベントの継続時間 (時間)",
+ "@cli.opt.propose.cheops.duration-hours": {
+  "x-review": "machine",
+  "x-source": "5e5ef3e71f"
+ },
+ "cli.opt.propose.cheops.efficiency": "仮定する観測効率 (仮の値。Visibility Tool から自分の値を取ってください)",
+ "@cli.opt.propose.cheops.efficiency": {
+  "x-review": "machine",
+  "x-source": "365381f043"
+ },
+ "cli.opt.propose.cheops.flare-rate": "振幅を超えるフレアの 1 日あたりの数 (--event flare 用)",
+ "@cli.opt.propose.cheops.flare-rate": {
+  "x-review": "machine",
+  "x-source": "83b5c5aff0"
+ },
+ "cli.opt.propose.cheops.gmag": "Gaia G 等級 (既定: SIMBAD の値)",
+ "@cli.opt.propose.cheops.gmag": {
+  "x-review": "machine",
+  "x-source": "1501588e77"
+ },
+ "cli.opt.propose.cheops.institution": "匿名性リントが指摘すべき機関 (繰り返し可。パックには決して書かない)",
+ "@cli.opt.propose.cheops.institution": {
+  "x-review": "machine",
+  "x-source": "c02f921244"
+ },
+ "cli.opt.propose.cheops.name": "runs/propose/ 下のパック名 (既定 cheops-<target>-<cycle>)",
+ "@cli.opt.propose.cheops.name": {
+  "x-review": "machine",
+  "x-source": "31cda5b062"
+ },
+ "cli.opt.propose.cheops.no-cache": "cache/cheops-propose/ を読み書きしない",
+ "@cli.opt.propose.cheops.no-cache": {
+  "x-review": "machine",
+  "x-source": "082b236e30"
+ },
+ "cli.opt.propose.cheops.offline": "ネットワーク要求をしない (キャッシュのみ。チェックは 'not checked' と表示)",
+ "@cli.opt.propose.cheops.offline": {
+  "x-review": "machine",
+  "x-source": "fa7a0c88a2"
+ },
+ "cli.opt.propose.cheops.orbits": "要求する予定の軌道数 (プログラムの上限と照合)",
+ "@cli.opt.propose.cheops.orbits": {
+  "x-review": "machine",
+  "x-source": "8d710414cd"
+ },
+ "cli.opt.propose.cheops.out": "作成するパックのディレクトリ (既定 runs/propose/<name>。上書きはしない)",
+ "@cli.opt.propose.cheops.out": {
+  "x-review": "machine",
+  "x-source": "fc29338ed1"
+ },
+ "cli.opt.propose.cheops.period": "周期 (日)",
+ "@cli.opt.propose.cheops.period": {
+  "x-review": "machine",
+  "x-source": "0f00d3ed0b"
+ },
+ "cli.opt.propose.cheops.period-err": "その 1σ 誤差 (日)",
+ "@cli.opt.propose.cheops.period-err": {
+  "x-review": "machine",
+  "x-source": "e090374184"
+ },
+ "cli.opt.propose.cheops.ra": "SIMBAD の値の代わりに使う、あなたの赤経 (度、ICRS、J2000)",
+ "@cli.opt.propose.cheops.ra": {
+  "x-review": "machine",
+  "x-source": "7452b9af9c"
+ },
+ "cli.opt.propose.cheops.snr": "イベントの目標 S/N (既定 10)",
+ "@cli.opt.propose.cheops.snr": {
+  "x-review": "machine",
+  "x-source": "1bed72cce4"
+ },
+ "cli.opt.propose.cheops.t0": "トランジット中心時刻、BJD_TDB (または BTJD)",
+ "@cli.opt.propose.cheops.t0": {
+  "x-review": "machine",
+  "x-source": "3583f77acc"
+ },
+ "cli.opt.propose.cheops.t0-err": "その 1σ 誤差 (日)",
+ "@cli.opt.propose.cheops.t0-err": {
+  "x-review": "machine",
+  "x-source": "e090374184"
+ },
+ "cli.opt.propose.cheops.target": "SIMBAD が知っているターゲット名 (例 'TOI-1987'、'HD 39091'、'TIC 349088467')",
+ "@cli.opt.propose.cheops.target": {
+  "x-review": "machine",
+  "x-source": "dc643ed38a"
+ },
+ "cli.opt.propose.cheops.window-end": "観測の最終日 (既定 2029-12-31)",
+ "@cli.opt.propose.cheops.window-end": {
+  "x-review": "machine",
+  "x-source": "bb4ef3a3e8"
+ },
+ "cli.opt.propose.cheops.window-start": "観測の初日 (既定: サイクルの最も早い開始日)",
+ "@cli.opt.propose.cheops.window-start": {
+  "x-review": "machine",
+  "x-source": "f1537bbf4b"
+ },
+ "cli.opt.propose.lint.author-name": "指摘する名前、よくある表記ゆれも含む (繰り返し可)",
+ "@cli.opt.propose.lint.author-name": {
+  "x-review": "machine",
+  "x-source": "896776ed61"
+ },
+ "cli.opt.propose.lint.institution": "指摘する機関 (繰り返し可)",
+ "@cli.opt.propose.lint.institution": {
+  "x-review": "machine",
+  "x-source": "7dfbfc57ef"
+ },
+ "cli.opt.pulsations.cache": "キャッシュのルート (MAST ファイル、TIC 値)",
+ "@cli.opt.pulsations.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.pulsations.exptime": "TESS のケイデンス (秒)",
+ "@cli.opt.pulsations.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.pulsations.fmax": "最高周波数 (d⁻¹。既定はナイキスト)",
+ "@cli.opt.pulsations.fmax": {
+  "x-review": "machine",
+  "x-source": "1d96a068e1"
+ },
+ "cli.opt.pulsations.fmin": "最低周波数 (d⁻¹)",
+ "@cli.opt.pulsations.fmin": {
+  "x-review": "machine",
+  "x-source": "e982706993"
+ },
+ "cli.opt.pulsations.out": "JSON 記録をここに書く",
+ "@cli.opt.pulsations.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.pulsations.sector": "TESS セクター (既定: すべての SPOC セクター)",
+ "@cli.opt.pulsations.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.pulsations.solar": "numax/Δν の解析を常に行う",
+ "@cli.opt.pulsations.solar": {
+  "x-review": "machine",
+  "x-source": "0cc921a51c"
+ },
+ "cli.opt.pulsations.surrogates": "偽周波数率のための赤色ノイズのサロゲート",
+ "@cli.opt.pulsations.surrogates": {
+  "x-review": "machine",
+  "x-source": "2d606e2fee"
+ },
+ "cli.opt.pulsations.target": "TIC ID (例 'TIC 441420236')、SPOC *_lc.fits ファイル、または CSV (time, flux[, flux_err])",
+ "@cli.opt.pulsations.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.pulsations.teff": "タイプ推定に使う Teff (K) (既定: TIC)",
+ "@cli.opt.pulsations.teff": {
+  "x-review": "machine",
+  "x-source": "3cd47aa62d"
+ },
+ "cli.opt.report.benchmark": "埋め込むベンチマークの markdown",
+ "@cli.opt.report.benchmark": {
+  "x-review": "machine",
+  "x-source": "50a27fedb7"
+ },
+ "cli.opt.report.out": "書き出すサイトのディレクトリ",
+ "@cli.opt.report.out": {
+  "x-review": "machine",
+  "x-source": "439462c999"
+ },
+ "cli.opt.report.validation": "埋め込む検証の markdown",
+ "@cli.opt.report.validation": {
+  "x-review": "machine",
+  "x-source": "8ea7211541"
+ },
+ "cli.opt.rotation.cache": "キャッシュのルート (MAST ファイル、TIC 値)",
+ "@cli.opt.rotation.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.rotation.exptime": "TESS のケイデンス (秒)",
+ "@cli.opt.rotation.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.rotation.out": "JSON 記録をここに書く",
+ "@cli.opt.rotation.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.rotation.sector": "TESS セクター (既定: すべての SPOC セクター)",
+ "@cli.opt.rotation.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.rotation.target": "TIC ID (例 'TIC 441420236')、SPOC *_lc.fits ファイル、または CSV (time, flux[, flux_err])",
+ "@cli.opt.rotation.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.run.cache": "Claude の応答のキャッシュのルート",
+ "@cli.opt.run.cache": {
+  "x-review": "machine",
+  "x-source": "eeda390458"
+ },
+ "cli.opt.run.calibrated-weights": "レビュアー ID が設定と一致するとき既定で使う較正済みの重み",
+ "@cli.opt.run.calibrated-weights": {
+  "x-review": "machine",
+  "x-source": "0d6473928d"
+ },
+ "cli.opt.run.out": "出力ディレクトリ",
+ "@cli.opt.run.out": {
+  "x-review": "machine",
+  "x-source": "7e0ee3625e"
+ },
+ "cli.opt.run.uniform-weights": "すべてのレビュアーの重みを 1.0 にする",
+ "@cli.opt.run.uniform-weights": {
+  "x-review": "machine",
+  "x-source": "db3384cb7c"
+ },
+ "cli.opt.run.weights": "'setuhq calibrate' によるレビュアーの重みの JSON ファイル (既定を上書き)",
+ "@cli.opt.run.weights": {
+  "x-review": "machine",
+  "x-source": "802d0e0a5b"
+ },
+ "cli.opt.setuhq.lang": "出力とヘルプの言語 (en, nl, pl, pt, fi, sv, da, nb, cs, uk, ru, de, fr, es, et, ja, zh-Hans)。指定がなければ SETUHQ_LANG、LC_ALL、LC_MESSAGES、LANG の順。既定は英語。ファイルと JSON は英語のまま",
+ "@cli.opt.setuhq.lang": {
+  "x-review": "machine",
+  "x-source": "02f46f5ea1"
+ },
+ "cli.opt.site.allow-missing-crossmatch": "保存済みのアーカイブ照合が使えなくても作る。その場合ページは保存されたエラーを表示する",
+ "@cli.opt.site.allow-missing-crossmatch": {
+  "x-review": "machine",
+  "x-source": "ea4922a1f2"
+ },
+ "cli.opt.site.benchmark": "実行レポート用のベンチマークのメモ",
+ "@cli.opt.site.benchmark": {
+  "x-review": "machine",
+  "x-source": "8c60c65795"
+ },
+ "cli.opt.site.catalog": "候補ページと実行ページ用の発見カタログの JSON",
+ "@cli.opt.site.catalog": {
+  "x-review": "machine",
+  "x-source": "3c64583755"
+ },
+ "cli.opt.site.no-extras": "実行レポート、プレート、単独のケースファイルを省く",
+ "@cli.opt.site.no-extras": {
+  "x-review": "machine",
+  "x-source": "ea0dea2308"
+ },
+ "cli.opt.site.out": "サイトのルートフォルダー (setuhq.com では site/)",
+ "@cli.opt.site.out": {
+  "x-review": "machine",
+  "x-source": "ff9482ee28"
+ },
+ "cli.opt.site.run_dir": "保存済みの実行: 最初に主となる実行 (天球マップ、パネル、ホームページの参照チェック)、次にほかの例の実行。それぞれが減光のページ、ケースファイル、プレート、レポートを得る",
+ "@cli.opt.site.run_dir": {
+  "x-review": "machine",
+  "x-source": "935df39235"
+ },
+ "cli.opt.site.showcase": "例の実行の説明と文献との比較 (scripts/showcase_compare.py)",
+ "@cli.opt.site.showcase": {
+  "x-review": "machine",
+  "x-source": "a8d2fbc8b7"
+ },
+ "cli.opt.site.star": "ケースファイルのアーカイブ照合に使う星の名前 ('setuhq docket' と同じ)",
+ "@cli.opt.site.star": {
+  "x-review": "machine",
+  "x-source": "3a81206f9b"
+ },
+ "cli.opt.site.sweep": "「暗くなるものすべて」、ホームのカウンター、天球の層に使うスイープカタログ (setuhq sweep)",
+ "@cli.opt.site.sweep": {
+  "x-review": "machine",
+  "x-source": "2cbca7c299"
+ },
+ "cli.opt.site.validation": "実行レポート用の検証のメモ",
+ "@cli.opt.site.validation": {
+  "x-review": "machine",
+  "x-source": "3aa3ee0254"
+ },
+ "cli.opt.site.weights": "証拠ページに表示する較正済みレビュアー重みの JSON",
+ "@cli.opt.site.weights": {
+  "x-review": "machine",
+  "x-source": "17d9554285"
+ },
+ "cli.opt.sweep.cache": "キャッシュのルート: ターゲットのリスト、光度曲線ファイル、星ごとの記録",
+ "@cli.opt.sweep.cache": {
+  "x-review": "machine",
+  "x-source": "4ceefeb748"
+ },
+ "cli.opt.sweep.classified-commit": "--reclassify と併用: そうした記録を最後に分類した git リビジョン",
+ "@cli.opt.sweep.classified-commit": {
+  "x-review": "machine",
+  "x-source": "a041546a77"
+ },
+ "cli.opt.sweep.config": "スイープの設定 (例 configs/sweep.toml (Probes) または configs/sweep_sentinels.toml)",
+ "@cli.opt.sweep.config": {
+  "x-review": "machine",
+  "x-source": "7d010ce268"
+ },
+ "cli.opt.sweep.contributor": "このスイープにクレジットする名前",
+ "@cli.opt.sweep.contributor": {
+  "x-review": "machine",
+  "x-source": "2d65f8895f"
+ },
+ "cli.opt.sweep.limit": "セクターのターゲットをスイープ順にいくつ扱うか",
+ "@cli.opt.sweep.limit": {
+  "x-review": "machine",
+  "x-source": "b2105a1cbf"
+ },
+ "cli.opt.sweep.min-interval": "MAST への要求の間隔 (秒、最小)",
+ "@cli.opt.sweep.min-interval": {
+  "x-review": "machine",
+  "x-source": "1e29475701"
+ },
+ "cli.opt.sweep.no-control": "各星のフラックス反転の対照実行を省く",
+ "@cli.opt.sweep.no-control": {
+  "x-review": "machine",
+  "x-source": "0af9322de6"
+ },
+ "cli.opt.sweep.out": "セクター記録と catalogue.json の書き出し先",
+ "@cli.opt.sweep.out": {
+  "x-review": "machine",
+  "x-source": "74a76b8e20"
+ },
+ "cli.opt.sweep.reclassify": "保存済みの星セクターに分類規則を再適用する (variables.py を変更した後のみ)",
+ "@cli.opt.sweep.reclassify": {
+  "x-review": "machine",
+  "x-source": "86ff3a8c91"
+ },
+ "cli.opt.sweep.rule-change": "--reclassify と併用: 規則の何が変わったか (変更ごとに繰り返す)",
+ "@cli.opt.sweep.rule-change": {
+  "x-review": "machine",
+  "x-source": "a0203dbc98"
+ },
+ "cli.opt.sweep.search-commit": "--reclassify と併用: 1 つのコードだけを記す記録を探索した git リビジョン",
+ "@cli.opt.sweep.search-commit": {
+  "x-review": "machine",
+  "x-source": "139e54a5b2"
+ },
+ "cli.opt.sweep.time-budget-min": "この分数を過ぎたら新しい星を始めない",
+ "@cli.opt.sweep.time-budget-min": {
+  "x-review": "machine",
+  "x-source": "838fb96162"
+ },
+ "cli.opt.sweep.weights": "較正済みの重み。ファイルにないレビュアーの重みは 1.0",
+ "@cli.opt.sweep.weights": {
+  "x-review": "machine",
+  "x-source": "015b47d6f0"
+ },
+ "cli.opt.sweep.workers": "同時に星を探索するプロセス数 (ダウンロードは 1 つずつ)",
+ "@cli.opt.sweep.workers": {
+  "x-review": "machine",
+  "x-source": "8046b64f2f"
+ },
+ "cli.opt.transients.cache": "キャッシュのルート (MAST ファイル、TIC 値、切り出し)",
+ "@cli.opt.transients.cache": {
+  "x-review": "machine",
+  "x-source": "4994163c4f"
+ },
+ "cli.opt.transients.dec": "Dec (度)",
+ "@cli.opt.transients.dec": {
+  "x-review": "machine",
+  "x-source": "9b73841e14"
+ },
+ "cli.opt.transients.exptime": "TESS のケイデンス (秒)",
+ "@cli.opt.transients.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.transients.keep-cutout": "ダウンロードした切り出しをキャッシュに残す",
+ "@cli.opt.transients.keep-cutout": {
+  "x-review": "machine",
+  "x-source": "30d3ece3c5"
+ },
+ "cli.opt.transients.out": "JSON 記録をここに書く",
+ "@cli.opt.transients.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.transients.ra": "RA (度): フルフレーム画像の TESScut 切り出しで測光する",
+ "@cli.opt.transients.ra": {
+  "x-review": "machine",
+  "x-source": "80c280d2d9"
+ },
+ "cli.opt.transients.sector": "TESS セクター (--ra/--dec と併用: 切り出す 1 セクター)",
+ "@cli.opt.transients.sector": {
+  "x-review": "machine",
+  "x-source": "471c0813f6"
+ },
+ "cli.opt.transients.size": "切り出しの大きさ (ピクセル、既定 11)",
+ "@cli.opt.transients.size": {
+  "x-review": "machine",
+  "x-source": "c0ba5e1825"
+ },
+ "cli.opt.transients.target": "TIC ID、SPOC *_lc.fits ファイル、または CSV (--ra/--dec を使うときは省略)",
+ "@cli.opt.transients.target": {
+  "x-review": "machine",
+  "x-source": "eb65265df5"
+ },
+ "cli.opt.transients.time": "--ra/--dec を使い --sector がないとき: この BTJD を含むセクター",
+ "@cli.opt.transients.time": {
+  "x-review": "machine",
+  "x-source": "59af8e0810"
+ },
+ "cli.out.asset_budget": "アセットの予算超過: {line}",
+ "@cli.out.asset_budget": {
+  "x-review": "machine",
+  "x-source": "1a08ee7ef2"
+ },
+ "cli.out.catalogue_site": "カタログ {catalogue}、サイト {site}",
+ "@cli.out.catalogue_site": {
+  "x-review": "machine",
+  "x-source": "45ece88b52"
+ },
+ "cli.out.classifications": "分類: {n}",
+ "@cli.out.classifications": {
+  "x-review": "machine",
+  "x-source": "0f32738b00"
+ },
+ "cli.out.consensus": "合意イベント: {n} ({k} 件が審査を通過)",
+ "@cli.out.consensus": {
+  "x-review": "machine",
+  "x-source": "0e7161a11f"
+ },
+ "cli.out.dashboard": "ダッシュボードを {path} に書きました",
+ "@cli.out.dashboard": {
+  "x-review": "machine",
+  "x-source": "794588aab9"
+ },
+ "cli.out.discover": "この実行でレビューしたターゲット: {n}、既知の TOI との一致: {k}",
+ "@cli.out.discover": {
+  "x-review": "machine",
+  "x-source": "e86d5ed05d"
+ },
+ "cli.out.docket": "ケースファイルを {path} に書きました",
+ "@cli.out.docket": {
+  "x-review": "machine",
+  "x-source": "3461730266"
+ },
+ "cli.out.lightcurves": "光度曲線: {n}",
+ "@cli.out.lightcurves": {
+  "x-review": "machine",
+  "x-source": "b98d2bfa2b"
+ },
+ "cli.out.outputs": "出力は {path}",
+ "@cli.out.outputs": {
+  "x-review": "machine",
+  "x-source": "ad5b1626c3"
+ },
+ "cli.out.page_budget": "ページごとの予算超過: {line}",
+ "@cli.out.page_budget": {
+  "x-review": "machine",
+  "x-source": "719f1ca170"
+ },
+ "cli.out.plates": "プレートを {path} に書きました",
+ "@cli.out.plates": {
+  "x-review": "machine",
+  "x-source": "3fd4254e8b"
+ },
+ "cli.out.rebuilt": "{n} 件の合意イベントを作り直しました ({k} 件が審査を通過)、{path}",
+ "@cli.out.rebuilt": {
+  "x-review": "machine",
+  "x-source": "06707f0892"
+ },
+ "cli.out.site": "サイトを {path} に書きました",
+ "@cli.out.site": {
+  "x-review": "machine",
+  "x-source": "e59ebe1ee1"
+ },
+ "cli.out.subjects": "対象:     {n}",
+ "@cli.out.subjects": {
+  "x-review": "machine",
+  "x-source": "184630bc2c"
+ },
+ "cli.out.weights": "レビュアーの重み: {source}",
+ "@cli.out.weights": {
+  "x-review": "machine",
+  "x-source": "1089f763c0"
+ },
+ "cli.out.weights_written": "重みを {path} に、率を {rates} に書きました",
+ "@cli.out.weights_written": {
+  "x-review": "machine",
+  "x-source": "6828f69f91"
+ },
+ "cov.bulge": "バルジのマイクロレンズ",
+ "@cov.bulge": {
+  "x-review": "machine",
+  "x-source": "bd05242cca"
+ },
+ "cov.corot": "CoRoT の領域",
+ "@cov.corot": {
+  "x-review": "machine",
+  "x-source": "41d07bad32"
+ },
+ "cov.k2": "K2 キャンペーン",
+ "@cov.k2": {
+  "x-review": "machine",
+  "x-source": "848c24db6a"
+ },
+ "cov.kepler": "Kepler の視野",
+ "@cov.kepler": {
+  "x-review": "machine",
+  "x-source": "147a21f59a"
+ },
+ "cov.tess": "TESS セクター",
+ "@cov.tess": {
+  "x-review": "machine",
+  "x-source": "c63d55d777"
+ },
+ "cov.unmapped": "トランジット探査の対象外",
+ "@cov.unmapped": {
+  "x-review": "machine",
+  "x-source": "261bc97dee"
+ },
+ "desc.catalogue": "exoplanet.eu のすべての惑星。検索と並べ替えができ、それぞれに専用ページがあります。SetuHQ はこれらの惑星を発見していません。",
+ "@desc.catalogue": {
+  "x-review": "machine",
+  "x-source": "4321b00077"
+ },
+ "desc.docs": "SetuHQ をインストールし、星を探索し、スイープを貢献し、MCP で AI アシスタントをつなぎ、データをダウンロードします。",
+ "@desc.docs": {
+  "x-review": "machine",
+  "x-source": "242925f427"
+ },
+ "desc.editions": "SetuHQ のエディション: 無料のオープンコア (AGPL-3.0 または商用ライセンス)、SetuHQ Pro (開発中、契約ベース)、個別調査。価格の掲載はなく、有料の道はすべてメッセージから始まります。",
+ "@desc.editions": {
+  "x-review": "machine",
+  "x-source": "34320f5c27"
+ },
+ "desc.explorer": "実行の減光とそのケースファイル、そして探索フィードの {n, plural, other {# 件の項目}}。候補は未確認であり、どれも確認された惑星ではありません。",
+ "@desc.explorer": {
+  "x-review": "machine",
+  "x-source": "12bbc1141b"
+ },
+ "desc.galaxy": "距離が保存されている既知の系外惑星すべてを、太陽のまわりに 3D で、発見方法と年ごとに配置。",
+ "@desc.galaxy": {
+  "x-review": "machine",
+  "x-source": "1d04a19fb8"
+ },
+ "desc.leaderboard": "実 TOI ベンチマークの保留半分で盲検採点した手法。Wilson 95% 区間付き。",
+ "@desc.leaderboard": {
+  "x-review": "machine",
+  "x-source": "f63d09cd7f"
+ },
+ "desc.methods": "「しくみ」全 {n} 章の第 {i} 章: {title}。物理と出典を添えたアニメーション解説。",
+ "@desc.methods": {
+  "x-review": "machine",
+  "x-source": "72765a8c0c"
+ },
+ "desc.mission": "選んだ 1 つの星で連動する、SetuHQ の表示のタイル型ワークスペース: 銀河、天球、光度曲線、カタログ、パネルのフィード。",
+ "@desc.mission": {
+  "x-review": "machine",
+  "x-source": "aea05e50d5"
+ },
+ "desc.overview": "{tagline} 較正済みの Sentinels と Probes のパネルが TESS の光度曲線を読み、すべての判定を説明します。SetuHQ の結果はすべて{status}です。",
+ "@desc.overview": {
+  "x-review": "machine",
+  "x-source": "e4c31340b2"
+ },
+ "desc.pictures": "SetuHQ の絵の描き方: 星は黒体の色で、惑星は測定された半径と照射から選んだ想像図として。すべての規則と出典付き。",
+ "@desc.pictures": {
+  "x-review": "machine",
+  "x-source": "f81ce510dd"
+ },
+ "desc.planets": "各候補の深さが惑星だった場合に何を意味するか: 惑星と星の半径比、そして惑星の大きさを示さない理由。",
+ "@desc.planets": {
+  "x-review": "machine",
+  "x-source": "33a6642674"
+ },
+ "desc.propose": "setuhq propose cheops で CHEOPS Guest Observers の提案を準備: 規則とターゲットをチェックし、何も提出しない起草補助。",
+ "@desc.propose": {
+  "x-review": "machine",
+  "x-source": "415a0f0956"
+ },
+ "desc.runs": "すべての探索実行、保存されたままのエラー、候補ページの裏にある設定。",
+ "@desc.runs": {
+  "x-review": "machine",
+  "x-source": "2fc865ecd8"
+ },
+ "desc.sentinels": "すべての判定の裏にいるレビュアー、その較正、そして実際の TESS Objects of Interest でパネルが盲検でどう採点されるか。{attribution}",
+ "@desc.sentinels": {
+  "x-review": "machine",
+  "x-source": "6325eab793"
+ },
+ "desc.sky": "実行の星を全天マップに、パネルが印を付けた減光とサーベイが観測した領域とともに表示。{headline}",
+ "@desc.sky": {
+  "x-review": "machine",
+  "x-source": "22c5e64296"
+ },
+ "desc.stellar": "フレア、脈動、CHEOPS 光度曲線、食連星、自転、突発天体: SetuHQ の各恒星ツールがどこまで検証されたか。数えたすべてのチェックと実際の TESS データの図付き。",
+ "@desc.stellar": {
+  "x-review": "machine",
+  "x-source": "fd3ad97a67"
+ },
+ "desc.stellardocs": "SetuHQ の恒星コマンドを実行: フレア、脈動、公開 CHEOPS 光度曲線、食連星、自転、突発天体。検証状況と、CHEOPS データに関する ESA の条件付き。",
+ "@desc.stellardocs": {
+  "x-review": "machine",
+  "x-source": "69d64ce7ce"
+ },
+ "desc.tessnow": "TESS 衛星がセクターごとにどこを向くか、公開された観測計画から: 天球マップ上の 4 つのカメラ視野と、その中のカタログ済みの星。ライブのテレメトリではありません。",
+ "@desc.tessnow": {
+  "x-review": "machine",
+  "x-source": "b892187187"
+ },
+ "desc.variables": "SetuHQ による TESS セクターのスイープ: 見つかり分類されたすべての減光。各クラスはそれ自身のヌルと比べられます。",
+ "@desc.variables": {
+  "x-review": "machine",
+  "x-source": "ec6feba9c3"
+ },
+ "desc.vetter": "SetuHQ の例の実行から保存された実際の減光を見て、通過・要レビュー・棄却を判断し、審査の結論を確かめます。学習用の演習で、回答は収集しません。",
+ "@desc.vetter": {
+  "x-review": "machine",
+  "x-source": "a0ad69fc0e"
+ },
+ "dip.state.cand": "候補、未確認",
+ "@dip.state.cand": {
+  "x-review": "machine",
+  "x-source": "fda6f263a4"
+ },
+ "dip.state.open": "要レビュー、未決",
+ "@dip.state.open": {
+  "x-review": "machine",
+  "x-source": "5c42a6d0b9"
+ },
+ "dip.state.rej": "審査で棄却、候補ではない",
+ "@dip.state.rej": {
+  "x-review": "machine",
+  "x-source": "0c75827454"
+ },
+ "dip.tag.cand": "候補",
+ "@dip.tag.cand": {
+  "x-review": "machine",
+  "x-source": "dda18a0e21"
+ },
+ "dip.tag.open": "要レビュー",
+ "@dip.tag.open": {
+  "x-review": "machine",
+  "x-source": "5588be887f"
+ },
+ "dip.tag.rej": "棄却",
+ "@dip.tag.rej": {
+  "x-review": "machine",
+  "x-source": "20cd938a2e"
+ },
+ "dips.cand": "{n, plural, other {候補 # 件}}",
+ "@dips.cand": {
+  "x-review": "machine",
+  "x-source": "0ff385febf"
+ },
+ "dips.flag": "{n, plural, other {要レビュー # 件}}",
+ "@dips.flag": {
+  "x-review": "machine",
+  "x-source": "1d74535739"
+ },
+ "dips.n": "{n, plural, other {減光 # 件}}",
+ "@dips.n": {
+  "x-review": "machine",
+  "x-source": "d34249d767"
+ },
+ "dips.rej": "{n, plural, other {棄却 # 件}}",
+ "@dips.rej": {
+  "x-review": "machine",
+  "x-source": "9fdbc5d13a"
+ },
+ "docs.contribute": "スイープを貢献する",
+ "@docs.contribute": {
+  "x-review": "machine",
+  "x-source": "3118488db2"
+ },
+ "docs.contribute.a": "貢献のしかた ›",
+ "@docs.contribute.a": {
+  "x-review": "machine",
+  "x-source": "fefd95f45c"
+ },
+ "docs.contribute.p": "自分のマシンで TESS セクターの一部を探索し、結果をクレジット付きで送ります。",
+ "@docs.contribute.p": {
+  "x-review": "machine",
+  "x-source": "7636e0e0dd"
+ },
+ "docs.data": "データとファイル",
+ "@docs.data": {
+  "x-review": "machine",
+  "x-source": "1544ff48d7"
+ },
+ "docs.data.a": "ダウンロード ›",
+ "@docs.data.a": {
+  "x-review": "machine",
+  "x-source": "8e6ab2918b"
+ },
+ "docs.data.p": "このサイトのすべてのカタログのダウンロードと、証拠の裏にあるレポート。",
+ "@docs.data.p": {
+  "x-review": "machine",
+  "x-source": "a7dd9ada99"
+ },
+ "docs.editions": "エディション",
+ "@docs.editions": {
+  "x-review": "machine",
+  "x-source": "c6a48dcca4"
+ },
+ "docs.editions.a": "エディションを比べる ›",
+ "@docs.editions.a": {
+  "x-review": "machine",
+  "x-source": "90fe459127"
+ },
+ "docs.editions.p": "オープンコアは無料です。SetuHQ Pro (開発中) と個別調査は契約ベースで、価格の掲載はありません。どれもメッセージから始まります。",
+ "@docs.editions.p": {
+  "x-review": "machine",
+  "x-source": "a4c5119805"
+ },
+ "docs.h1": "自分で動かす。",
+ "@docs.h1": {
+  "x-review": "machine",
+  "x-source": "a1737d6898"
+ },
+ "docs.install": "インストールと初回の実行",
+ "@docs.install": {
+  "x-review": "machine",
+  "x-source": "ea230bebae"
+ },
+ "docs.intro": "SetuHQ はオープンソースです。インストールして、このサイトが示すのと同じパネルで星の光度曲線を探索し、空のスイープを貢献し、あるいは AI アシスタントに使わせることができます。",
+ "@docs.intro": {
+  "x-review": "machine",
+  "x-source": "7d1db3c963"
+ },
+ "docs.mcp": "アシスタントから使う",
+ "@docs.mcp": {
+  "x-review": "machine",
+  "x-source": "ee854c3928"
+ },
+ "docs.mcp.a": "MCP でつなぐ ›",
+ "@docs.mcp.a": {
+  "x-review": "machine",
+  "x-source": "c393096cc9"
+ },
+ "docs.mcp.h": "AI アシスタントから使う (MCP)",
+ "@docs.mcp.h": {
+  "x-review": "machine",
+  "x-source": "f46e936a3b"
+ },
+ "docs.mcp.p": "MCP サーバーを使うと、アシスタントが SetuHQ 自身のコードを実行し、その結果を読めます。",
+ "@docs.mcp.p": {
+  "x-review": "machine",
+  "x-source": "eb88b7d692"
+ },
+ "docs.pictures": "絵の描き方",
+ "@docs.pictures": {
+  "x-review": "machine",
+  "x-source": "e2d864dc53"
+ },
+ "docs.pictures.a": "絵について ›",
+ "@docs.pictures.a": {
+  "x-review": "machine",
+  "x-source": "d4afb0f5d1"
+ },
+ "docs.pictures.p": "星は黒体の色で、惑星は測定された半径と照射から選んだ想像図として。すべての規則と出典。",
+ "@docs.pictures.p": {
+  "x-review": "machine",
+  "x-source": "7c281d6576"
+ },
+ "docs.prov": "技術的な詳細: 図の出どころ",
+ "@docs.prov": {
+  "x-review": "machine",
+  "x-source": "1cfbcdad80"
+ },
+ "docs.python": "SetuHQ には Python {v} 以降が必要です。",
+ "@docs.python": {
+  "x-review": "machine",
+  "x-source": "3159020543"
+ },
+ "docs.runfiles": "実行 {run} の<a href=\"{report}\">実行レポート</a>、<a href=\"{plates}\">プレート</a>、<a href=\"{cf}\">ケースファイル</a>。",
+ "@docs.runfiles": {
+  "x-review": "machine",
+  "x-source": "065db1dbf8"
+ },
+ "docs.start": "はじめに",
+ "@docs.start": {
+  "x-review": "machine",
+  "x-source": "61e8d44ad4"
+ },
+ "docs.start.a": "インストールと初回の実行 ›",
+ "@docs.start.a": {
+  "x-review": "machine",
+  "x-source": "468f664b71"
+ },
+ "docs.start.p": "インストールしたら、このサイトの例の実行と同じように、任意の TESS の星の光度曲線を探索します。",
+ "@docs.start.p": {
+  "x-review": "machine",
+  "x-source": "2e8b6ed67a"
+ },
+ "ed.compare": "エディションを比べる",
+ "@ed.compare": {
+  "x-review": "machine",
+  "x-source": "0a79392035"
+ },
+ "ed.compare.p": "行に沿って読むと 3 つを比べられます。",
+ "@ed.compare.p": {
+  "x-review": "machine",
+  "x-source": "59ba9870b5"
+ },
+ "ed.h1": "エディション。",
+ "@ed.h1": {
+  "x-review": "machine",
+  "x-source": "d98733b93e"
+ },
+ "ed.intro": "エンジン全体が無料で、これからも無料です。Ashforde OÜ は機能制限ではなく、商用ライセンス、SetuHQ Pro、個別調査によってこれを支えています。このサイトに価格の掲載はなく、有料の道はすべてメッセージから始まります。",
+ "@ed.intro": {
+  "x-review": "machine",
+  "x-source": "d588b090c3"
+ },
+ "ex.h1": "{stars, plural, =1 {1 つの例の星} other {# つの例の星}}から開ける {n, plural, other {# 件の減光}}。",
+ "@ex.h1": {
+  "x-review": "machine",
+  "x-source": "ad8e8b5e42"
+ },
+ "ex.intro": "各例の星の TESS 光度曲線でパネルが印を付けた減光を、星ごとにまとめ、審査の結果ごとに数えたもの。審査を通過した減光は{status}、要レビューのものは未決、棄却されたものは候補ではありません。どれも確認された惑星ではありません。1 つを開いて再生を見るか、ケースファイルで判定の裏のすべてのチェックを見てください。",
+ "@ex.intro": {
+  "x-review": "machine",
+  "x-source": "3a25873c3b"
+ },
+ "ex.more": " さらに下: ほかの星からの探索フィードの {n} 件の項目 (まだケースファイルはありません)。",
+ "@ex.more": {
+  "x-review": "machine",
+  "x-source": "96432c834d"
+ },
+ "fold.a": "畳み込みなし: 時間順",
+ "@fold.a": {
+  "x-review": "machine",
+  "x-source": "ca7c3036c1"
+ },
+ "fold.b": "{p} 日の周期で畳み込み",
+ "@fold.b": {
+  "x-review": "machine",
+  "x-source": "92616c60e0"
+ },
+ "fold.fold": "周期で畳み込む",
+ "@fold.fold": {
+  "x-review": "machine",
+  "x-source": "4458109b7d"
+ },
+ "fold.folded": "{p} 日の周期で<b>畳み込み</b>",
+ "@fold.folded": {
+  "x-review": "machine",
+  "x-source": "4ed8a2a718"
+ },
+ "fold.said": "{p} 日で畳み込み: 減光は 0 時間の位置に現れます。",
+ "@fold.said": {
+  "x-review": "machine",
+  "x-source": "c0920801da"
+ },
+ "fold.said_time": "時間順: 各トランジットはほかの点に混じった数個の点です。",
+ "@fold.said_time": {
+  "x-review": "machine",
+  "x-source": "a90b68372c"
+ },
+ "fold.short": "{n, number} 点を {p} d で畳み込み: {depth} ppm、{t14} h の減光。出典: {run}。",
+ "@fold.short": {
+  "x-review": "machine",
+  "x-source": "8958c78471"
+ },
+ "fold.source": "出典: {s}",
+ "@fold.source": {
+  "x-review": "machine",
+  "x-source": "7015dd2710"
+ },
+ "fold.unfold": "時間順に戻す",
+ "@fold.unfold": {
+  "x-review": "machine",
+  "x-source": "73824685c9"
+ },
+ "fold.unfolded": "<b>畳み込みなし</b> · 時間順の {d} 日間",
+ "@fold.unfolded": {
+  "x-review": "machine",
+  "x-source": "5fc4a52069"
+ },
+ "footer.all_chapters": "全 {n} 章",
+ "@footer.all_chapters": {
+  "x-review": "machine",
+  "x-source": "177340a477"
+ },
+ "footer.contribute": "スイープの貢献",
+ "@footer.contribute": {
+  "x-review": "machine",
+  "x-source": "960b0242d4"
+ },
+ "footer.data": "データのダウンロード",
+ "@footer.data": {
+  "x-review": "machine",
+  "x-source": "47e65bf65c"
+ },
+ "footer.nav": "サイト",
+ "@footer.nav": {
+  "x-review": "machine",
+  "x-source": "fa7955814e"
+ },
+ "footer.overview": "概要",
+ "@footer.overview": {
+  "x-review": "machine",
+  "x-source": "d4b1ea5708"
+ },
+ "footer.pictures": "絵の描き方 ›",
+ "@footer.pictures": {
+  "x-review": "machine",
+  "x-source": "f4d87c6ca3"
+ },
+ "footer.source": "ソースコード",
+ "@footer.source": {
+  "x-review": "machine",
+  "x-source": "bf046c7395"
+ },
+ "gal.example": "例の実行",
+ "@gal.example": {
+  "x-review": "machine",
+  "x-source": "ed62203839"
+ },
+ "gal.noart": "候補には惑星の絵を付けません。",
+ "@gal.noart": {
+  "x-review": "machine",
+  "x-source": "9d55cea042"
+ },
+ "gal.note": "各ステージ: 実行が保存した Teff における黒体の色で描いた星の円盤と、実行がフィットした Rp/R★ で影として測定したもの (実行が見逃した惑星は破線の輪郭)。大きさは円盤に対して縮尺どおりですが、円盤上の位置は説明用です。",
+ "@gal.note": {
+  "x-review": "machine",
+  "x-source": "bbb017f062"
+ },
+ "gal.sectors": "{mission} {n, plural, other {セクター}} {list}",
+ "@gal.sectors": {
+  "x-review": "machine",
+  "x-source": "737f03f940"
+ },
+ "gal.stages": "ステージ: {s}。",
+ "@gal.stages": {
+  "x-review": "machine",
+  "x-source": "b469db30f4"
+ },
+ "gx.h1": "既知のすべての系外惑星を、",
+ "@gx.h1": {
+  "x-review": "machine",
+  "x-source": "22fff7c222"
+ },
+ "gx.h1b": "太陽のまわりに。",
+ "@gx.h1b": {
+  "x-review": "machine",
+  "x-source": "0513cb70f1"
+ },
+ "gx.intro": "{hosts, number} 個の星をめぐる {n, number} 個の惑星を、実際の位置に配置。SetuHQ がこれらの惑星を見つけたのではなく、{source} から地図にしています。",
+ "@gx.intro": {
+  "x-review": "machine",
+  "x-source": "b60778b897"
+ },
+ "hero.disc": "{star} の星の円盤は黒体の色で描かれ、惑星は想像図です ({look})。",
+ "@hero.disc": {
+  "x-review": "machine",
+  "x-source": "f391f5d10f"
+ },
+ "hero.model": "保存値によるモデル。",
+ "@hero.model": {
+  "x-review": "machine",
+  "x-source": "761a8963d7"
+ },
+ "hero.pause": "一時停止",
+ "@hero.pause": {
+  "x-review": "machine",
+  "x-source": "858e4ba7a2"
+ },
+ "hint.dismiss": "ヒントを閉じる: {h}",
+ "@hint.dismiss": {
+  "x-review": "machine",
+  "x-source": "704395b8f4"
+ },
+ "hint.orbits": "大きさは縮尺どおりではありません · 位相は説明用",
+ "@hint.orbits": {
+  "x-review": "machine",
+  "x-source": "f31d20fed2"
+ },
+ "home.band.counters": "数えた証拠",
+ "@home.band.counters": {
+  "x-review": "machine",
+  "x-source": "5f2b5a53a9"
+ },
+ "home.band.counters.e": "すべての数字がその根拠につながります",
+ "@home.band.counters.e": {
+  "x-review": "machine",
+  "x-source": "6d25c68528"
+ },
+ "home.band.fold": "惑星はどうやってノイズに隠れるか",
+ "@home.band.fold": {
+  "x-review": "machine",
+  "x-source": "79677ced9c"
+ },
+ "home.band.fold.e": "実データ",
+ "@home.band.fold.e": {
+  "x-review": "machine",
+  "x-source": "6a758a8937"
+ },
+ "home.band.lineup": "例の惑星を縮尺どおりに",
+ "@home.band.lineup": {
+  "x-review": "machine",
+  "x-source": "aaf6e55de4"
+ },
+ "home.band.lineup.e": "縮尺どおりの惑星",
+ "@home.band.lineup.e": {
+  "x-review": "machine",
+  "x-source": "f48421d1f6"
+ },
+ "home.band.panel": "誰が減光をレビューするか",
+ "@home.band.panel": {
+  "x-review": "machine",
+  "x-source": "fd782b5776"
+ },
+ "home.band.panel.e": "パネル",
+ "@home.band.panel.e": {
+  "x-review": "machine",
+  "x-source": "5326ad997a"
+ },
+ "home.band.sky": "既知の各惑星の主星を、見つかった年ごとに",
+ "@home.band.sky": {
+  "x-review": "machine",
+  "x-source": "25fe759e36"
+ },
+ "home.band.sky.e": "天球",
+ "@home.band.sky.e": {
+  "x-review": "machine",
+  "x-source": "587ffab2a1"
+ },
+ "home.band.tempstrip": "{n, plural, =1 {例の星の色} other {# つの例の星: {lo, number, integer} K から {hi, number, integer} K、1 つのパイプライン}}",
+ "@home.band.tempstrip": {
+  "x-review": "machine",
+  "x-source": "705ec8da04"
+ },
+ "home.band.tempstrip.e": "例の星たちの色",
+ "@home.band.tempstrip.e": {
+  "x-review": "machine",
+  "x-source": "d93001b796"
+ },
+ "home.ctr.benchmark": "盲検ベンチマークに含まれる実際の TESS Objects of Interest",
+ "@home.ctr.benchmark": {
+  "x-review": "machine",
+  "x-source": "9672338f63"
+ },
+ "home.ctr.catalogue": "SetuHQ が照合に使うカタログの惑星",
+ "@home.ctr.catalogue": {
+  "x-review": "machine",
+  "x-source": "01f04bca08"
+ },
+ "home.ctr.chapters": "惑星の見つけ方を描いた図解の章",
+ "@home.ctr.chapters": {
+  "x-review": "machine",
+  "x-source": "865afa5050"
+ },
+ "home.ctr.completeness": "保留した既知の惑星のうち盲検で見つかった割合 (Wilson 95% 区間)",
+ "@home.ctr.completeness": {
+  "x-review": "machine",
+  "x-source": "9439e30e8b"
+ },
+ "home.ctr.fetched": "{source}、{date, date} 取得",
+ "@home.ctr.fetched": {
+  "x-review": "machine",
+  "x-source": "3fd1f86614"
+ },
+ "home.ctr.fetched_file": "{source}、{date, date} 取得 ({file})",
+ "@home.ctr.fetched_file": {
+  "x-review": "machine",
+  "x-source": "6d503bce8f"
+ },
+ "home.ctr.heldout": "ベンチマークの保留半分 ({file})",
+ "@home.ctr.heldout": {
+  "x-review": "machine",
+  "x-source": "f9bd8675c1"
+ },
+ "home.do.docs": "自分で動かす",
+ "@home.do.docs": {
+  "x-review": "machine",
+  "x-source": "b3ab2275bd"
+ },
+ "home.do.docs.d": "SetuHQ をインストールし、星を探索し、空のスイープを貢献し、または MCP で AI アシスタントをつなぎます。",
+ "@home.do.docs.d": {
+  "x-review": "machine",
+  "x-source": "e150d9ac61"
+ },
+ "home.do.explorer": "候補を見る",
+ "@home.do.explorer": {
+  "x-review": "machine",
+  "x-source": "db92ac3570"
+ },
+ "home.do.explorer.d": "例の星の TESS 光度曲線でパネルが印を付けた減光。それぞれに完全なケースファイル付き。候補であり、確認された惑星ではありません。",
+ "@home.do.explorer.d": {
+  "x-review": "machine",
+  "x-source": "b2310d28d3"
+ },
+ "home.do.methods": "しくみを学ぶ",
+ "@home.do.methods": {
+  "x-review": "machine",
+  "x-source": "e2c2e9609b"
+ },
+ "home.do.methods.d": "星のふらつきから大気の読み取りまで、惑星の見つけ方を描いた 15 の図解の章。",
+ "@home.do.methods.d": {
+  "x-review": "machine",
+  "x-source": "a4ab0f8d7a"
+ },
+ "home.do.sentinels": "証拠を確かめる",
+ "@home.do.sentinels": {
+  "x-review": "machine",
+  "x-source": "16cc8485e7"
+ },
+ "home.do.sentinels.d": "実在の既知天体でパネルがどう採点されるか: 盲検ベンチマーク、公開リーダーボード、較正。",
+ "@home.do.sentinels.d": {
+  "x-review": "machine",
+  "x-source": "728efa2330"
+ },
+ "home.do.sky": "空を探索する",
+ "@home.do.sky": {
+  "x-review": "machine",
+  "x-source": "0e734b0e38"
+ },
+ "home.do.sky.d": "銀河の 3D マップ上の既知の系外惑星すべて、TESS が観測した空、検索できる既知惑星のカタログ。",
+ "@home.do.sky.d": {
+  "x-review": "machine",
+  "x-source": "33d22aaaf3"
+ },
+ "home.dohere": "ここでできること",
+ "@home.dohere": {
+  "x-review": "machine",
+  "x-source": "c2f1fa481b"
+ },
+ "home.examples": "実例: {n, plural, other {# つの星}}、1 つのパイプライン",
+ "@home.examples": {
+  "x-review": "machine",
+  "x-source": "31c4bc580e"
+ },
+ "home.examples.p": "それぞれは MAST の公開 TESS 光度曲線による保存済みの実行で、データ、設定、コードにハッシュが付いています。すべての減光は審査の結果ごとに数えられ、候補は未確認のまま、棄却された減光は候補ではありません。",
+ "@home.examples.p": {
+  "x-review": "machine",
+  "x-source": "d13aa1075e"
+ },
+ "home.hero.h1": "空を、レビューする。",
+ "@home.hero.h1": {
+  "x-review": "machine",
+  "x-source": "c537af3dcb"
+ },
+ "home.hero.more": "{n, plural, other {# つの実例を見る ›}}",
+ "@home.hero.more": {
+  "x-review": "machine",
+  "x-source": "50e5398098"
+ },
+ "home.hero.sub": "SetuHQ は任意の TESS の星の公開光度曲線からトランジットを探します。較正済みの Sentinels (AI レビュアー) と Probes (決定論的な検出器) のパネルが減光に印を付け、審査がすべての判定を説明します。惑星であるとわかるまで、何も惑星とは呼びません。",
+ "@home.hero.sub": {
+  "x-review": "machine",
+  "x-source": "acf4d55d13"
+ },
+ "home.honest.archive": "<b>アーカイブの値のみ。</b>このページは検出を主張しません。TOI やアーカイブとの一致は、保存された周期を公表値と比べたものです。",
+ "@home.honest.archive": {
+  "x-review": "machine",
+  "x-source": "9caca54a23"
+ },
+ "home.honest.h": "このページが主張しないこと",
+ "@home.honest.h": {
+  "x-review": "machine",
+  "x-source": "738097d05c"
+ },
+ "home.honest.image": "<b>惑星の画像ではありません。</b>惑星の絵は、測定された半径と照射から選んだ想像図です。<a href=\"/docs/pictures/\">絵の描き方 ›</a>",
+ "@home.honest.image": {
+  "x-review": "machine",
+  "x-source": "e6974ba935"
+ },
+ "home.honest.panel": "パネルは Sentinels と Probes です:",
+ "@home.honest.panel": {
+  "x-review": "machine",
+  "x-source": "a9433f2186"
+ },
+ "home.honest.people": "パネルに人間はいません。",
+ "@home.honest.people": {
+  "x-review": "machine",
+  "x-source": "7ffee760a9"
+ },
+ "home.honest.planet": "<b>確認された惑星はありません。</b>ここにある減光、シグナル、フィードの項目はすべて{status}です。審査の通過は確認ではありません。{match, select, none {} other {{match} との一致は、その惑星がすでに知られていることを示すもので、この実行が確認したという意味ではありません。}}",
+ "@home.honest.planet": {
+  "x-review": "machine",
+  "x-source": "fddd51a0e3"
+ },
+ "home.honest.sizes": "<b>惑星の大きさはありません。</b>恒星半径が保存されていないため、深さからわかるのは惑星と星の半径比だけです。半径比のページに計算を示しています。",
+ "@home.honest.sizes": {
+  "x-review": "machine",
+  "x-source": "99d745ec98"
+ },
+ "home.honest.weights": " その重みは、それぞれ {n} 本の信号を埋め込んだ光度曲線と {n} 本の空の光度曲線による較正に基づくため、おおまかなものです。",
+ "@home.honest.weights": {
+  "x-review": "machine",
+  "x-source": "46497d8bc1"
+ },
+ "home.more.sky": "空を探索する ›",
+ "@home.more.sky": {
+  "x-review": "machine",
+  "x-source": "86786f5a19"
+ },
+ "home.more.transit": "トランジットの見つけ方 ›",
+ "@home.more.transit": {
+  "x-review": "machine",
+  "x-source": "04e504e9e8"
+ },
+ "home.proof": "参照の実行が示すもの",
+ "@home.proof": {
+  "x-review": "machine",
+  "x-source": "d58bf9bb5f"
+ },
+ "home.refcheck": "参照チェック: 既知の惑星 {planet} を実行 {run} で再び検出",
+ "@home.refcheck": {
+  "x-review": "machine",
+  "x-source": "e700c0ebab"
+ },
+ "home.refrun": "参照の実行: {run}",
+ "@home.refrun": {
+  "x-review": "machine",
+  "x-source": "b698a243c0"
+ },
+ "honesty.attribution": "Sentinels は既定で Claude (Anthropic) で動作します。ほかのプロバイダーにも対応し、ラベルを付けています。Probes は決定論的なマッチドフィルター検出器です。",
+ "@honesty.attribution": {
+  "x-review": "machine",
+  "x-source": "7793394412"
+ },
+ "honesty.cheops_disclaimer": "SetuHQ は独立しており、ESA、CHEOPS ミッション、CHEOPS コンソーシアムとは提携しておらず、それらの承認を受けておらず、それらに代わって運営されてもいません。",
+ "@honesty.cheops_disclaimer": {
+  "x-review": "machine",
+  "x-source": "f163955866"
+ },
+ "honesty.embargo": "既知の TOI に一致しないシグナルは非公開のレビューのために保留され、レビューと報告の後にのみ公開されます。",
+ "@honesty.embargo": {
+  "x-review": "machine",
+  "x-source": "7ab637a8c0"
+ },
+ "honesty.footer": "このサイトにある SetuHQ の結果はすべて候補であり、確認された惑星ではありません。AGPL-3.0 のオープンソース。SetuHQ のデータは CC BY 4.0。「SetuHQ」と Setu のマークは Ashforde OÜ の商標です。",
+ "@honesty.footer": {
+  "x-review": "machine",
+  "x-source": "69d7e6d4fb"
+ },
+ "honesty.no_detection": "アーカイブの値のみ。このページは検出を主張しません。",
+ "@honesty.no_detection": {
+  "x-review": "machine",
+  "x-source": "fe680cebf0"
+ },
+ "honesty.none_confirmed": "独立した追観測が確認するまで、どれも確認された惑星ではありません。",
+ "@honesty.none_confirmed": {
+  "x-review": "machine",
+  "x-source": "3509876ac0"
+ },
+ "honesty.probes_only": "Probes のみ。この例では Sentinels を実行していません",
+ "@honesty.probes_only": {
+  "x-review": "machine",
+  "x-source": "3cfb53c6a7"
+ },
+ "honesty.tess_pointing": "公開された観測計画による指向であり、ライブのテレメトリではありません",
+ "@honesty.tess_pointing": {
+  "x-review": "machine",
+  "x-source": "6faac5a432"
+ },
+ "honesty.transients_aid": "突発天体ツールは探索の補助であり、その候補は目で見てチェックする必要があります。検出、クラスの手がかり、誤警報の選別は検証されていません。",
+ "@honesty.transients_aid": {
+  "x-review": "machine",
+  "x-source": "61272b381e"
+ },
+ "honesty.unconfirmed": "候補、未確認",
+ "@honesty.unconfirmed": {
+  "x-review": "machine",
+  "x-source": "fda6f263a4"
+ },
+ "i18n.mtnote": "この翻訳は機械翻訳の支援を受けたもので、まだネイティブ話者のレビューを受けていません。<a rel=\"noopener\" href=\"https://github.com/ashfordeOU/SetuHQ/blob/main/docs/TRANSLATING.md\">修正を歓迎します</a>。",
+ "@i18n.mtnote": {
+  "x-review": "machine",
+  "x-source": "3803a5c5dc"
+ },
+ "i18n.picker.label": "言語: {name}",
+ "@i18n.picker.label": {
+  "x-review": "machine",
+  "x-source": "d99eed9b59"
+ },
+ "i18n.picker.note": "英語以外の言語はすべて機械翻訳の支援を受けたもので、まだネイティブ話者のレビューを受けていません。<a rel=\"noopener\" href=\"https://github.com/ashfordeOU/SetuHQ/blob/main/docs/TRANSLATING.md\">修正を歓迎します</a>。",
+ "@i18n.picker.note": {
+  "x-review": "machine",
+  "x-source": "b19e30478b"
+ },
+ "i18n.suggest.dismiss": "閉じる",
+ "@i18n.suggest.dismiss": {
+  "x-review": "machine",
+  "x-source": "48845bff33"
+ },
+ "i18n.suggest.go": "日本語で読む",
+ "@i18n.suggest.go": {
+  "x-review": "machine",
+  "x-source": "a9d0b8e36c"
+ },
+ "i18n.suggest.label": "言語",
+ "@i18n.suggest.label": {
+  "x-review": "machine",
+  "x-source": "a4fe65264e"
+ },
+ "i18n.suggest.text": "このページは日本語でも読めます。",
+ "@i18n.suggest.text": {
+  "x-review": "machine",
+  "x-source": "4d512860c4"
+ },
+ "label.art": "想像図",
+ "@label.art": {
+  "x-review": "machine",
+  "x-source": "8b1a9bc32a"
+ },
+ "label.illustration": "説明図",
+ "@label.illustration": {
+  "x-review": "machine",
+  "x-source": "c659a0d0ed"
+ },
+ "label.model": "保存値によるモデル",
+ "@label.model": {
+  "x-review": "machine",
+  "x-source": "f99882758e"
+ },
+ "label.real": "実データ、出典付き",
+ "@label.real": {
+  "x-review": "machine",
+  "x-source": "6f75938cc8"
+ },
+ "label.speculative": "推測的なモデル",
+ "@label.speculative": {
+  "x-review": "machine",
+  "x-source": "d1d38cf39a"
+ },
+ "lb.h1": "実際の TOI で盲検採点した手法。",
+ "@lb.h1": {
+  "x-review": "machine",
+  "x-source": "d7943ed0f0"
+ },
+ "lb.intro": "固定した実 TOI ベンチマークの公開リーダーボード: 各提出物が検出したイベントを、リーダーボード自身が保留半分だけで採点し、Wilson 95% 区間を付けたもの。合成光度曲線で Probe のしきい値を調整する注入しきい値スイープ (docs/threshold_sweep.md) とは別物です。",
+ "@lb.intro": {
+  "x-review": "machine",
+  "x-source": "8e62d2c060"
+ },
+ "lb.note": "明示したベンチマークでの測定であり、ここに発見はありません。",
+ "@lb.note": {
+  "x-review": "machine",
+  "x-source": "272d460db4"
+ },
+ "learn.again": "ステップ 1 からやり直す",
+ "@learn.again": {
+  "x-review": "machine",
+  "x-source": "1b91302a8f"
+ },
+ "learn.all": "全 {n} ステップ",
+ "@learn.all": {
+  "x-review": "machine",
+  "x-source": "e15530dfee"
+ },
+ "learn.back": "‹ 戻る",
+ "@learn.back": {
+  "x-review": "machine",
+  "x-source": "9c47d2b08c"
+ },
+ "learn.cleared": "学習パスの進み具合を消去しました。",
+ "@learn.cleared": {
+  "x-review": "machine",
+  "x-source": "8b76618ea1"
+ },
+ "learn.complete": " · パス完了",
+ "@learn.complete": {
+  "x-review": "machine",
+  "x-source": "d1a143524c"
+ },
+ "learn.continue": "続ける: {step}",
+ "@learn.continue": {
+  "x-review": "machine",
+  "x-source": "859ee5370f"
+ },
+ "learn.count": "{n} 件中 {k} 件を閲覧",
+ "@learn.count": {
+  "x-review": "machine",
+  "x-source": "5475c68b5f"
+ },
+ "learn.finish": "終了 ›",
+ "@learn.finish": {
+  "x-review": "machine",
+  "x-source": "d7473131de"
+ },
+ "learn.finish_label": "パスを終了する",
+ "@learn.finish_label": {
+  "x-review": "machine",
+  "x-source": "b841a0b2c4"
+ },
+ "learn.h": "学習パス",
+ "@learn.h": {
+  "x-review": "machine",
+  "x-source": "7f9d3aa634"
+ },
+ "learn.intro": "サーベイのしくみから既知の系外惑星すべてまでの {n} ステップ。任意です: 順番どおりでも飛ばしても構いません。開いたページはどれも数えられます。進み具合はこのブラウザーに残ります。",
+ "@learn.intro": {
+  "x-review": "machine",
+  "x-source": "b22e135d6a"
+ },
+ "learn.kind.catalogue": "カタログ",
+ "@learn.kind.catalogue": {
+  "x-review": "machine",
+  "x-source": "1034513950"
+ },
+ "learn.kind.ch": "手法の章",
+ "@learn.kind.ch": {
+  "x-review": "machine",
+  "x-source": "8cb87af4b5"
+ },
+ "learn.kind.galaxy": "銀河",
+ "@learn.kind.galaxy": {
+  "x-review": "machine",
+  "x-source": "9b81c03539"
+ },
+ "learn.kind.run": "SetuHQ の実行",
+ "@learn.kind.run": {
+  "x-review": "machine",
+  "x-source": "12eeea4754"
+ },
+ "learn.leave": "やめる",
+ "@learn.leave": {
+  "x-review": "machine",
+  "x-source": "fc6e4a408d"
+ },
+ "learn.leave_label": "パスをやめる",
+ "@learn.leave_label": {
+  "x-review": "machine",
+  "x-source": "49324ad9ff"
+ },
+ "learn.left": "学習パスを離れました。進み具合は保持されます。",
+ "@learn.left": {
+  "x-review": "machine",
+  "x-source": "9ef4f1079c"
+ },
+ "learn.next": "次へ",
+ "@learn.next": {
+  "x-review": "machine",
+  "x-source": "1ff57a29d7"
+ },
+ "learn.next_btn": "次へ ›",
+ "@learn.next_btn": {
+  "x-review": "machine",
+  "x-source": "868d16703d"
+ },
+ "learn.next_label": "次へ: {step}",
+ "@learn.next_label": {
+  "x-review": "machine",
+  "x-source": "19282226b1"
+ },
+ "learn.pos": "{n} 件中 {i}",
+ "@learn.pos": {
+  "x-review": "machine",
+  "x-source": "2eb6f9a3c3"
+ },
+ "learn.progress": "学習パスの進み具合",
+ "@learn.progress": {
+  "x-review": "machine",
+  "x-source": "0e0d6f67aa"
+ },
+ "learn.reset": "進み具合をリセット",
+ "@learn.reset": {
+  "x-review": "machine",
+  "x-source": "0b026c02ba"
+ },
+ "learn.seen": "、閲覧済み",
+ "@learn.seen": {
+  "x-review": "machine",
+  "x-source": "bd1c8d37d4"
+ },
+ "learn.start": "パスを始める",
+ "@learn.start": {
+  "x-review": "machine",
+  "x-source": "43f89ceb20"
+ },
+ "learn.step.catalogue": "すべての記録を検索",
+ "@learn.step.catalogue": {
+  "x-review": "machine",
+  "x-source": "b6e0434eab"
+ },
+ "learn.step.galaxy": "太陽のまわりの既知の系外惑星すべて",
+ "@learn.step.galaxy": {
+  "x-review": "machine",
+  "x-source": "633c7d2992"
+ },
+ "learn.step.transit": "SetuHQ 自身のトランジット: ケースファイル",
+ "@learn.step.transit": {
+  "x-review": "machine",
+  "x-source": "e521fd3e8b"
+ },
+ "learn.unseen": "、未閲覧",
+ "@learn.unseen": {
+  "x-review": "machine",
+  "x-source": "a9473125f4"
+ },
+ "limits.art": "観測ではありません: 測定された半径と照射から選んだ見た目です。",
+ "@limits.art": {
+  "x-review": "machine",
+  "x-source": "ec71f17b2e"
+ },
+ "limits.caption": "キャプションのとおり",
+ "@limits.caption": {
+  "x-review": "machine",
+  "x-source": "dee533d112"
+ },
+ "limits.illustration": "考え方の説明であり、データではありません。",
+ "@limits.illustration": {
+  "x-review": "machine",
+  "x-source": "c4c6c22d05"
+ },
+ "limits.model": "保存された数値から描いたモデルであり、天体の画像ではありません。",
+ "@limits.model": {
+  "x-review": "machine",
+  "x-source": "9f137900ab"
+ },
+ "limits.real": "保存された測定値を、保存されたとおりにビン化または畳み込んだもの。",
+ "@limits.real": {
+  "x-review": "machine",
+  "x-source": "1e9288318d"
+ },
+ "limits.source": "出典: {s}。",
+ "@limits.source": {
+  "x-review": "machine",
+  "x-source": "cba3864e3a"
+ },
+ "limits.speculative": "測定を超えたもの: 可能性であり、結果ではありません。",
+ "@limits.speculative": {
+  "x-review": "machine",
+  "x-source": "3fe7418bc2"
+ },
+ "limits.summary": "出典 / 限界",
+ "@limits.summary": {
+  "x-review": "machine",
+  "x-source": "ecbcc39e74"
+ },
+ "lu.cap": "縮尺どおり: 地球半径 1 つ分の幅は列全体で同じなので、{big} は {small} の {x} 倍の幅です。各画像は測定された半径と計算された照射から選んだ想像図で、組成は測定されていません。地球、海王星、木星は太陽系の基準です (海を描いているのは地球だけ)。半径: {src} (1 RJ = 11.209 R⊕)。",
+ "@lu.cap": {
+  "x-review": "machine",
+  "x-source": "3cdd1c02b9"
+ },
+ "lu.earth": "地球",
+ "@lu.earth": {
+  "x-review": "machine",
+  "x-source": "b7c9b5ccd3"
+ },
+ "lu.jupiter": "木星",
+ "@lu.jupiter": {
+  "x-review": "machine",
+  "x-source": "27ce2df068"
+ },
+ "lu.neptune": "海王星",
+ "@lu.neptune": {
+  "x-review": "machine",
+  "x-source": "d98d070c39"
+ },
+ "mc.intro": "どのペインでも星を選ぶと、すべてのペインと切り離したウィンドウが追従します。",
+ "@mc.intro": {
+  "x-review": "machine",
+  "x-source": "e6a5c8f840"
+ },
+ "mcp.honesty.candidate": "発見ではなく候補です: SetuHQ は公開 TESS データの減光を見つけて審査します。惑星の確認には、他者による追観測 (視線速度、撮像、統計的検証) が必要です。",
+ "@mcp.honesty.candidate": {
+  "x-review": "machine",
+  "x-source": "2109188b0d"
+ },
+ "mcp.honesty.catalogue": "カタログの値は出典の測定値を保存されたとおりに示したもので、欠けた値は推測しません。SetuHQ はこれらの惑星を発見していません。",
+ "@mcp.honesty.catalogue": {
+  "x-review": "machine",
+  "x-source": "01e280f468"
+ },
+ "mcp.honesty.computed": "与えられた入力から SetuHQ 自身のコードでいま計算したもの。保存されレビューされた結果ではありません。",
+ "@mcp.honesty.computed": {
+  "x-review": "machine",
+  "x-source": "8ba17ff89a"
+ },
+ "mcp.honesty.formula": "教科書の式を書かれたとおりに評価したもの。理想化した場合を表し、測定ではありません。",
+ "@mcp.honesty.formula": {
+  "x-review": "machine",
+  "x-source": "cd6187025a"
+ },
+ "mcp.honesty.panel": "Sentinels は人間ではなく AI モデルです (既定は Claude。ほかのプロバイダーはラベル付き)。ベンチマークされたのは Claude だけです。Probes は決定論的なマッチドフィルター検出器です。",
+ "@mcp.honesty.panel": {
+  "x-review": "machine",
+  "x-source": "9d2e4debf5"
+ },
+ "mcp.honesty.stored": "保存されたファイルから読んだもので、何も再計算していません。",
+ "@mcp.honesty.stored": {
+  "x-review": "machine",
+  "x-source": "333f8aa8d7"
+ },
+ "mcp.honesty.unreviewed": "これはレビュアーのパネルが見ていません: 検出器と審査の出力だけです。",
+ "@mcp.honesty.unreviewed": {
+  "x-review": "machine",
+  "x-source": "832585f3e6"
+ },
+ "mcp.instructions": "SetuHQ は、Sentinels (AI モデル。既定は Claude、ほかのプロバイダーはラベル付き) と Probes (決定論的な検出器) からなるレビュアーパネルで、公開されている NASA TESS の光度曲線からトランジットを探し、各減光を審査しフィットします。推測する代わりにこれらのツールを呼び出してください: SetuHQ 自身のコードを実行するか、保存されレビューされた結果を読みます。どの回答にも来歴と正直さのラベルが付いています。報告するときはそれを残してください。SetuHQ が見つけるものはすべて候補であり、発見ではありません。ユーザーの明示的な承認なしに、外部へ何かを提出、投稿、送信しないでください。",
+ "@mcp.instructions": {
+  "x-review": "machine",
+  "x-source": "8dcede2e8e"
+ },
+ "mcp.tool.benchmark_results": "保存されたベンチマークまたは検証の結果: real_tois (662 TOI の盲検ベンチマーク)、leaderboard (実 TOI の\nリーダーボード)、injection (Probes の注入・回収)、pi_men_validation、weights (較正)、または\nthreshold_sweep (合成。リーダーボードではない)。保存されたとおりに返します。",
+ "@mcp.tool.benchmark_results": {
+  "x-review": "machine",
+  "x-source": "a8f12a0af7"
+ },
+ "mcp.tool.cheops_proposal_pack": "CHEOPS Guest Observers の提案の「準備」パック (``propose.pack.build_pack``) を新しい\nruns/propose/<run_name> に書きます (既にあれば拒否。その外には何も書かず、キャッシュもしません): Running Call の規則の\nチェック (軌道の上限、Large プログラムの 4 月/10 月規則、パリ時間での次の締め切り、最も早い開始)、\nターゲットの状況 (公開 Reserved Target List、公開 CHEOPS アーカイブのメタデータ、SIMBAD/MAST の J2000\n座標)、SetuHQ の保存済みの証拠、精度と軌道数のおおまかな「見積もり」、匿名性リント付きの匿名化した\n草稿、ESA の手順チェックリスト。公開ページだけを読み、ログインも提出も決してしません。SetuHQ は ESA と\nCHEOPS ミッションから独立しています: 公式の公募と ESA のツールが優先します。",
+ "@mcp.tool.cheops_proposal_pack": {
+  "x-review": "machine",
+  "x-source": "d9fdc80788"
+ },
+ "mcp.tool.compute_fap": "最も強い周期シグナルの経験的な誤警報確率 (``search.false_alarm_probability``):\n赤色ノイズを保つブロックブートストラップによる BLS の再実行。上限あり: N 回の試行では 1/(N + 1) 未満は報告せず、\nGumbel の裾は目安とラベル付けします。N は 1 回の呼び出しにつき 2000 まで。",
+ "@mcp.tool.compute_fap": {
+  "x-review": "machine",
+  "x-source": "01f4019412"
+ },
+ "mcp.tool.find_eclipsing_binary": "光度曲線中の食連星と楕円体変光・反射変光 (``binaries.analyse``):\nボックス探索とピリオドグラムからの軌道周期 (偶奇の差がある場合や極小が等しい場合は倍にし、その場合は\nあいまいと記す)、主食と副食 (位相、深さ、幅、有意性)、e·cosω の手がかり付きの副食の\n位相、ヒューリスティックな形態クラス、理由付きの食連星候補フラグ。トランジット候補の周期、元期、\n継続時間を与えると、SetuHQ の審査では使わない参考の審査ヒント (偶奇の深さ、任意位相の副食、\n楕円体と反射の振幅) も返します。時間は日 (TESS では BTJD)。",
+ "@mcp.tool.find_eclipsing_binary": {
+  "x-review": "machine",
+  "x-source": "e45be3cbe7"
+ },
+ "mcp.tool.find_flares": "光度曲線中の恒星フレアを検出し特徴づけます (``flares.detect_flares``): フレアを保つトレンド\n除去、シグマクリッピングによる候補 (Chang et al. 2015 の基準)、任意のウェーブレットによるノイズ除去 (Poyatos et al.\n2025)、BIC で選んだ多成分モデルによる Mendoza et al. 2022 テンプレートのフィット、立ち上がりと減衰の時間、\n振幅、FWHM、等価継続時間、そして Teff と半径を与えた場合はエネルギー (9000 K の黒体)。また\nフラックス反転のヌル検定も行います。時間は日 (TESS では BTJD)。ミッション TESS または CHEOPS が既定値を決めます。",
+ "@mcp.tool.find_flares": {
+  "x-review": "machine",
+  "x-source": "d650c20040"
+ },
+ "mcp.tool.find_transients": "光度曲線中の非周期的な増光 (``transients.find_transients``) を 3 つの時間スケールで。それぞれ\nピーク、振幅、立ち上がりと減衰の時間、FWHM、クラスの手がかり (flare-like、extragalactic-transient-like、\nasteroid-crossing-like、momentum-dump-like、scattered-light-like、periodic-variability-like) とその理由付き。\n最後の 4 つはおそらく誤警報です。difference_flux=True は e-/s の差分撮像光度曲線用。\n運動量放出と散乱光の時刻 (TESS 品質ビット 32、2048、4096) が選別を鋭くします。すべてのイベントは\n突発天体の候補であり、新しい天体でも確認された天体でもありません。時間は日 (TESS では BTJD)。",
+ "@mcp.tool.find_transients": {
+  "x-review": "machine",
+  "x-source": "54243a74ac"
+ },
+ "mcp.tool.fit_transit": "1 回のトランジットのまわりで SetuHQ の周縁減光トランジットモデル (``transitfit.fit_transit``) をフィットします: 深さ、T14、\n衝突パラメータ b、中心時刻、Rp/R★、トランジット密度 ρ★。それぞれ誤差と範囲付き。周縁減光は\n星の Teff と log g に対する Claret 2017 (与えなければ太陽型)。t0、継続時間、深さは初期推定値です。",
+ "@mcp.tool.fit_transit": {
+  "x-review": "machine",
+  "x-source": "3b77980915"
+ },
+ "mcp.tool.get_candidate": "完全な来歴付きの合意減光 1 件: 保存された候補 (審査、フィット、FAP、各レビュアーの印の\n監査)、実行のマニフェスト (コード、設定ハッシュ、SHA-256 付きの入力、プロバイダーとモデル付きのレビュアー)、そして\n各レビュアーによる対象の保存済み分類 (ラベル、印、根拠、プロバイダー、モデル)。",
+ "@mcp.tool.get_candidate": {
+  "x-review": "machine",
+  "x-source": "78f0b83b1a"
+ },
+ "mcp.tool.get_cheops_lightcurve": "CHEOPS アーカイブから DACE 経由で取得するターゲットの公開 CHEOPS DRP 光度曲線 (``cheops.get_cheops_lightcurve``;\nキャッシュになければ ``pip install 'setuhq[cheops]'`` とネットワークが必要): 位置で探した訪問、専有期間中のものは\n除外、それぞれ一度だけ取得してキャッシュ、ロール角・背景・重心の系統誤差を相関除去 (項は\nBIC で選択)。各訪問の来歴 (プログラム、ファイルキー、観測 ID、クレジット)、トレンド除去の要約、\ninclude_points を指定すれば BTJD でのトレンド除去後の点を返します。ESA の謝辞と SetuHQ の免責事項を含みます。",
+ "@mcp.tool.get_cheops_lightcurve": {
+  "x-review": "machine",
+  "x-source": "06ff3dcf79"
+ },
+ "mcp.tool.get_planet": "1 つの惑星の保存済みカタログ記録とその主星の記録 (名前の完全一致。先に search_catalogue を使ってください)。",
+ "@mcp.tool.get_planet": {
+  "x-review": "machine",
+  "x-source": "97084f4fb5"
+ },
+ "mcp.tool.get_star": "主星の保存済み記録と、そのまわりのカタログ済みの惑星すべて (星の名前の完全一致)。",
+ "@mcp.tool.get_star": {
+  "x-review": "machine",
+  "x-source": "df7232ade1"
+ },
+ "mcp.tool.habitable_zone": "星のハビタブルゾーンの境界 (AU) (``methods.hz_distance_au``、Kopparapu et al. 2014、1 M⊕):\n最近の金星と暴走温室 (内側)、最大温室と初期火星 (外側)。",
+ "@mcp.tool.habitable_zone": {
+  "x-review": "machine",
+  "x-source": "3608921db8"
+ },
+ "mcp.tool.list_candidates": "保存された実行の合意減光。それぞれが審査を通過したかとそのフラグ付き (``candidates.json``)。",
+ "@mcp.tool.list_candidates": {
+  "x-review": "machine",
+  "x-source": "0443efd099"
+ },
+ "mcp.tool.microlensing_magnification": "衝突パラメータ u (アインシュタイン半径単位) における点レンズの増光率 A(u) = (u² + 2) / (u √(u² + 4))\n(``methods.paczynski``)。",
+ "@mcp.tool.microlensing_magnification": {
+  "x-review": "machine",
+  "x-source": "29faa074dc"
+ },
+ "mcp.tool.pulsation_spectrum": "光度曲線の周波数解析 (``pulsations.analyse``): Lomb-Scargle 振幅スペクトル、S/N 4 までの\n非線形多正弦波再フィットによる反復プリホワイトニング (Breger et al. 1993)、結合周波数の\nフラグ、Harvey 型の粒状斑背景、太陽型振動子の numax/Δν、不確かさ付きのヒューリスティックな\n変光タイプ。周波数は d⁻¹ と µHz、時間は日。n_surrogates > 0 で\n赤色ノイズのヌル検定を実行 (最大 20)。",
+ "@mcp.tool.pulsation_spectrum": {
+  "x-review": "machine",
+  "x-source": "97767afcfb"
+ },
+ "mcp.tool.rotation_period": "黒点変調からの恒星の自転周期 (``rotation.measure``): Lomb-Scargle ピリオドグラムと\n自己相関関数。不確かさ、半分・倍のエイリアス処理、検出フラグ付き。TESS の 1 セクターでは\n約 13 日より長い周期は測れず、限界を超えるものとして報告します。1 セクターを渡してください (または\nセクター間のオフセットに注意して自分でつないだ光度曲線)。時間は日。",
+ "@mcp.tool.rotation_period": {
+  "x-review": "machine",
+  "x-source": "2d6e72833f"
+ },
+ "mcp.tool.run_pipeline_csv": "CSV 光度曲線 (time, flux[, flux_err]) で完全なパイプライン (``pipeline.run_pipeline``) を実行し、\n新しい実行ディレクトリ runs/mcp/<run_name> に書きます (既にあれば拒否: 何も上書きしません)。sentinels=True でなければ\nProbes のみ。その場合 Sentinels はキー、SDK、CLI がある場所でのみ動きます (マニフェストに\n省いたものと理由を記します)。",
+ "@mcp.tool.run_pipeline_csv": {
+  "x-review": "machine",
+  "x-source": "6a2a86935b"
+ },
+ "mcp.tool.run_pipeline_tess": "TIC ID とセクターについて MAST から TESS SPOC 光度曲線をダウンロードし (``loaders.load_tess``。ネットワークと ``pip install -e '.[tess]'`` が必要)、\nそれに対してパイプラインを新しい runs/mcp/<run_name> に実行します (既存の\nディレクトリには決して書きません)。sentinels=True でなければ Probes のみ。",
+ "@mcp.tool.run_pipeline_tess": {
+  "x-review": "machine",
+  "x-source": "421d6522fe"
+ },
+ "mcp.tool.rv_semi_amplitude": "惑星を 1 つ持つ星の視線速度半振幅 K (m/s) (``methods.rv_semi_amplitude``)。",
+ "@mcp.tool.rv_semi_amplitude": {
+  "x-review": "machine",
+  "x-source": "0342cc898c"
+ },
+ "mcp.tool.search_catalogue": "惑星名または星名 (または別名、例えば TIC ID) で系外惑星カタログを検索します。任意で\n発見方法 (``transit``、``rv``、``imaging``、``microlensing``、``astrometry``、``timing``) でも絞り込めます。``catalogue.catalogue_filter`` をラップします。",
+ "@mcp.tool.search_catalogue": {
+  "x-review": "machine",
+  "x-source": "27fc845629"
+ },
+ "mcp.tool.sentinel_providers": "SetuHQ が対応する Sentinel のプロバイダー、それぞれの設定方法、ここで動かせるかどうか (キーの\n変数が設定されているか、SDK や CLI があるか)。キーは決して返しません。",
+ "@mcp.tool.sentinel_providers": {
+  "x-review": "machine",
+  "x-source": "d8e703706c"
+ },
+ "mcp.tool.transit_depth": "中心トランジットの深さ: 幾何学的な (Rp/R★)² と、星の Teff に対する TESS の二次周縁減光を含めた値\n(``methods.transit_flux`` の z = 0、Claret 2017 の係数)。Rp/R★ か、地球半径単位の Rp と\n太陽半径単位の R★ を与えてください。",
+ "@mcp.tool.transit_depth": {
+  "x-review": "machine",
+  "x-source": "6b52c6ad8e"
+ },
+ "mcp.tool.vet_lightcurve": "光度曲線から周期的なトランジットを探し (BLS、``search.bls_search``)、SetuHQ の審査で減光 1 件を審査します\n(``vet.vet_event``: SNR、継続時間、端、偶奇の深さ、副食)。減光は\nt_start/t_end で与えるか、省いて最も強い周期シグナルの最初のトランジットを審査します。光度曲線は\nパイプラインと同じように準備されます (クリーニング、トレンド除去、ビン化)。",
+ "@mcp.tool.vet_lightcurve": {
+  "x-review": "machine",
+  "x-source": "645c79cc54"
+ },
+ "method.astrometry": "位置天文",
+ "@method.astrometry": {
+  "x-review": "machine",
+  "x-source": "ec74d70d9e"
+ },
+ "method.imaging": "直接撮像",
+ "@method.imaging": {
+  "x-review": "machine",
+  "x-source": "f6e9cec92c"
+ },
+ "method.microlensing": "マイクロレンズ",
+ "@method.microlensing": {
+  "x-review": "machine",
+  "x-source": "8f7b755044"
+ },
+ "method.other": "その他",
+ "@method.other": {
+  "x-review": "machine",
+  "x-source": "d9298a10d1"
+ },
+ "method.rv": "視線速度",
+ "@method.rv": {
+  "x-review": "machine",
+  "x-source": "0ec51a755a"
+ },
+ "method.timing": "タイミング",
+ "@method.timing": {
+  "x-review": "machine",
+  "x-source": "f6cfb8c3f1"
+ },
+ "method.transit": "トランジット",
+ "@method.transit": {
+  "x-review": "machine",
+  "x-source": "068b7e6c97"
+ },
+ "methods.chapter_n": "全 {n} 章の第 {i} 章",
+ "@methods.chapter_n": {
+  "x-review": "machine",
+  "x-source": "417be5d799"
+ },
+ "methods.h1": "惑星はどう見つかるか。",
+ "@methods.h1": {
+  "x-review": "machine",
+  "x-source": "583ac6e306"
+ },
+ "methods.h1b": "そして SetuHQ はどう見つけるか。",
+ "@methods.h1b": {
+  "x-review": "machine",
+  "x-source": "99b2b42598"
+ },
+ "methods.intro": "全 {n} 章。それぞれ物理と出典を添えたアニメーション解説です。どの図も、説明図か、保存値によるモデルか、実データか、そしてどれだけ誇張しているかを示します。SetuHQ 自身が行うのはトランジットの章の内容だけです。",
+ "@methods.intro": {
+  "x-review": "machine",
+  "x-source": "c0a3069175"
+ },
+ "methods.planets": "この章の惑星",
+ "@methods.planets": {
+  "x-review": "machine",
+  "x-source": "6be85af173"
+ },
+ "methods.sources": "出典",
+ "@methods.sources": {
+  "x-review": "machine",
+  "x-source": "caf85b0888"
+ },
+ "mx.from": "出典",
+ "@mx.from": {
+  "x-review": "machine",
+  "x-source": "2181976934"
+ },
+ "mx.numbers": "この章の数値",
+ "@mx.numbers": {
+  "x-review": "machine",
+  "x-source": "2d0a4d13b4"
+ },
+ "mx.quantity": "量",
+ "@mx.quantity": {
+  "x-review": "machine",
+  "x-source": "822bab8d41"
+ },
+ "mx.speed": "速さ",
+ "@mx.speed": {
+  "x-review": "machine",
+  "x-source": "c372fee9b4"
+ },
+ "mx.value": "値",
+ "@mx.value": {
+  "x-review": "machine",
+  "x-source": "8e37953d23"
+ },
+ "nav.candidates": "候補",
+ "@nav.candidates": {
+  "x-review": "machine",
+  "x-source": "fdc9c0f69d"
+ },
+ "nav.docs": "ドキュメント",
+ "@nav.docs": {
+  "x-review": "machine",
+  "x-source": "7af023c430"
+ },
+ "nav.evidence": "証拠",
+ "@nav.evidence": {
+  "x-review": "machine",
+  "x-source": "03867aea70"
+ },
+ "nav.explore": "探索",
+ "@nav.explore": {
+  "x-review": "machine",
+  "x-source": "3b73900b8d"
+ },
+ "nav.how": "しくみ",
+ "@nav.how": {
+  "x-review": "machine",
+  "x-source": "9c870aa6e5"
+ },
+ "nf.candidates": "例の実行が見つけたすべての減光とそのチェック。",
+ "@nf.candidates": {
+  "x-review": "machine",
+  "x-source": "1347c55237"
+ },
+ "nf.docs": "SetuHQ をインストールして自分で動かす。",
+ "@nf.docs": {
+  "x-review": "machine",
+  "x-source": "ae69454d62"
+ },
+ "nf.evidence": "レビュアー、ベンチマーク、実行。",
+ "@nf.evidence": {
+  "x-review": "machine",
+  "x-source": "b14b42d506"
+ },
+ "nf.explore": "天球、銀河、カタログ済みのすべての惑星。",
+ "@nf.explore": {
+  "x-review": "machine",
+  "x-source": "05950074cc"
+ },
+ "nf.h1": "このページはここにはありません。",
+ "@nf.h1": {
+  "x-review": "machine",
+  "x-source": "3ba2f76d61"
+ },
+ "nf.home": "ホームページへ",
+ "@nf.home": {
+  "x-review": "machine",
+  "x-source": "adceddedfd"
+ },
+ "nf.how": "惑星の見つけ方を描いた 15 の章。",
+ "@nf.how": {
+  "x-review": "machine",
+  "x-source": "b04ce55cc1"
+ },
+ "nf.intro": "アドレスの入力ミスか、サイトの再編成でページが移動した可能性があります。古いアドレスは自動で転送されますが、このアドレスには新しい行き先がありません。",
+ "@nf.intro": {
+  "x-review": "machine",
+  "x-source": "76142af35c"
+ },
+ "nf.search": "惑星、星、ページを検索",
+ "@nf.search": {
+  "x-review": "machine",
+  "x-source": "36738611e1"
+ },
+ "obj.cls.bymass": " (質量による)",
+ "@obj.cls.bymass": {
+  "x-review": "machine",
+  "x-source": "0fefa83c19"
+ },
+ "obj.cls.earth": "地球サイズ",
+ "@obj.cls.earth": {
+  "x-review": "machine",
+  "x-source": "793cad2691"
+ },
+ "obj.cls.giant": "巨大ガス惑星",
+ "@obj.cls.giant": {
+  "x-review": "machine",
+  "x-source": "dc4da1dee3"
+ },
+ "obj.cls.nep": "海王星型",
+ "@obj.cls.nep": {
+  "x-review": "machine",
+  "x-source": "d9aa819eb6"
+ },
+ "obj.cls.none": "クラスを決められません (半径も質量も保存されていません)",
+ "@obj.cls.none": {
+  "x-review": "machine",
+  "x-source": "4c2ce50d4a"
+ },
+ "obj.cls.subnep": "サブネプチューン",
+ "@obj.cls.subnep": {
+  "x-review": "machine",
+  "x-source": "a17b446d03"
+ },
+ "obj.cls.super": "スーパーアース",
+ "@obj.cls.super": {
+  "x-review": "machine",
+  "x-source": "c9402130b8"
+ },
+ "obj.discovered": "{year} 年発見",
+ "@obj.discovered": {
+  "x-review": "machine",
+  "x-source": "aeef0079ed"
+ },
+ "obj.discovered_none": "発見年は保存されていません",
+ "@obj.discovered_none": {
+  "x-review": "machine",
+  "x-source": "ceb1245b3e"
+ },
+ "obj.host": "主星とほかの惑星",
+ "@obj.host": {
+  "x-review": "machine",
+  "x-source": "c247cb467a"
+ },
+ "obj.nohost": "主星は保存されていません",
+ "@obj.nohost": {
+  "x-review": "machine",
+  "x-source": "1309987b39"
+ },
+ "obj.params": "保存されたパラメータ",
+ "@obj.params": {
+  "x-review": "machine",
+  "x-source": "a060be301b"
+ },
+ "obj.planets": "惑星",
+ "@obj.planets": {
+  "x-review": "machine",
+  "x-source": "0b1b4bc5af"
+ },
+ "obj.refs": "発見と文献",
+ "@obj.refs": {
+  "x-review": "machine",
+  "x-source": "11a5acd988"
+ },
+ "obj.row.a": "軌道長半径",
+ "@obj.row.a": {
+  "x-review": "machine",
+  "x-source": "7a98cb0909"
+ },
+ "obj.row.b": "衝突パラメータ",
+ "@obj.row.b": {
+  "x-review": "machine",
+  "x-source": "c30e761341"
+ },
+ "obj.row.dec": "Dec (J2000)",
+ "@obj.row.dec": {
+  "x-review": "machine",
+  "x-source": "31451795ef"
+ },
+ "obj.row.dist": "距離",
+ "@obj.row.dist": {
+  "x-review": "machine",
+  "x-source": "b7bdf7a2d6"
+ },
+ "obj.row.e": "離心率",
+ "@obj.row.e": {
+  "x-review": "machine",
+  "x-source": "3642eea73f"
+ },
+ "obj.row.incl": "軌道傾斜角",
+ "@obj.row.incl": {
+  "x-review": "machine",
+  "x-source": "e1a57232e1"
+ },
+ "obj.row.k": "RV 半振幅 K",
+ "@obj.row.k": {
+  "x-review": "machine",
+  "x-source": "4bc68f8d51"
+ },
+ "obj.row.lambda": "スピン軌道角 λ",
+ "@obj.row.lambda": {
+  "x-review": "machine",
+  "x-source": "f4a2329657"
+ },
+ "obj.row.mass": "質量",
+ "@obj.row.mass": {
+  "x-review": "machine",
+  "x-source": "10a0c5f853"
+ },
+ "obj.row.msini": "最小質量 (m sin i)",
+ "@obj.row.msini": {
+  "x-review": "machine",
+  "x-source": "0a0c24bec0"
+ },
+ "obj.row.period": "公転周期",
+ "@obj.row.period": {
+  "x-review": "machine",
+  "x-source": "278785d733"
+ },
+ "obj.row.ra": "RA (J2000)",
+ "@obj.row.ra": {
+  "x-review": "machine",
+  "x-source": "9cee37a6a6"
+ },
+ "obj.row.radius": "半径",
+ "@obj.row.radius": {
+  "x-review": "machine",
+  "x-source": "6fe0661c82"
+ },
+ "obj.row.sage": "年齢",
+ "@obj.row.sage": {
+  "x-review": "machine",
+  "x-source": "39b7370f30"
+ },
+ "obj.row.smass": "質量",
+ "@obj.row.smass": {
+  "x-review": "machine",
+  "x-source": "10a0c5f853"
+ },
+ "obj.row.smet": "金属量 [Fe/H]",
+ "@obj.row.smet": {
+  "x-review": "machine",
+  "x-source": "b7e5ba6b1d"
+ },
+ "obj.row.srad": "半径",
+ "@obj.row.srad": {
+  "x-review": "machine",
+  "x-source": "6fe0661c82"
+ },
+ "obj.row.steff": "有効温度",
+ "@obj.row.steff": {
+  "x-review": "machine",
+  "x-source": "bcd5903c63"
+ },
+ "obj.row.teq": "平衡温度",
+ "@obj.row.teq": {
+  "x-review": "machine",
+  "x-source": "a3016009fd"
+ },
+ "obj.row.tmeas": "測定温度",
+ "@obj.row.tmeas": {
+  "x-review": "machine",
+  "x-source": "592546ce16"
+ },
+ "obj.row.vmag": "V 等級",
+ "@obj.row.vmag": {
+  "x-review": "machine",
+  "x-source": "963ef1a54e"
+ },
+ "obj.sysview": "系の表示:",
+ "@obj.sysview": {
+  "x-review": "machine",
+  "x-source": "8f2681a95c"
+ },
+ "obj.units": "単位は {source} が保存したとおりです。誤差は保存された下限と上限で、保存されていない場合は表示しません。",
+ "@obj.units": {
+  "x-review": "machine",
+  "x-source": "1d415a6e1a"
+ },
+ "obj.where": "位置",
+ "@obj.where": {
+  "x-review": "machine",
+  "x-source": "751c664982"
+ },
+ "out.dash.footer": "SetuHQ が生成。合成データでの結果は、実際の空のデータについての主張ではありません。",
+ "@out.dash.footer": {
+  "x-review": "machine",
+  "x-source": "98762ed655"
+ },
+ "out.feed.candidates": "これらは候補です。",
+ "@out.feed.candidates": {
+  "x-review": "machine",
+  "x-source": "ee9b7f2cdf"
+ },
+ "out.feed.h1": "探索フィード",
+ "@out.feed.h1": {
+  "x-review": "machine",
+  "x-source": "22bc3c8839"
+ },
+ "out.feed.held": "レビューのため保留",
+ "@out.feed.held": {
+  "x-review": "machine",
+  "x-source": "57b7af20f8"
+ },
+ "out.feed.nights": "1 夜あたりの項目",
+ "@out.feed.nights": {
+  "x-review": "machine",
+  "x-source": "6cd04f7bc5"
+ },
+ "out.plate.interval": "減光の合意区間は、それぞれの印が一致する範囲です。",
+ "@out.plate.interval": {
+  "x-review": "machine",
+  "x-source": "1780c6e536"
+ },
+ "out.plate.others": "ほかの例の星のプレート",
+ "@out.plate.others": {
+  "x-review": "machine",
+  "x-source": "df7ef77948"
+ },
+ "out.plate.panel": "パネルは Sentinels と Probes で、人間はいません。",
+ "@out.plate.panel": {
+  "x-review": "machine",
+  "x-source": "15066e34e3"
+ },
+ "out.report.benchmark": "注入・回収",
+ "@out.report.benchmark": {
+  "x-review": "machine",
+  "x-source": "6da1d36286"
+ },
+ "out.report.candidates": "候補",
+ "@out.report.candidates": {
+  "x-review": "machine",
+  "x-source": "fdc9c0f69d"
+ },
+ "out.report.panel": "パネルの判断",
+ "@out.report.panel": {
+  "x-review": "machine",
+  "x-source": "a929a43913"
+ },
+ "out.report.panel.p": "盲検符号化したすべての対象に対する、各レビュアーの回答。合意はそこで勝ち取られるので、意見の不一致も見えるように残します。",
+ "@out.report.panel.p": {
+  "x-review": "machine",
+  "x-source": "da09405f36"
+ },
+ "out.report.pipeline": "実行のしくみ",
+ "@out.report.pipeline": {
+  "x-review": "machine",
+  "x-source": "baad56eb35"
+ },
+ "out.report.provenance": "来歴",
+ "@out.report.provenance": {
+  "x-review": "machine",
+  "x-source": "1c4b8ff605"
+ },
+ "out.report.validation": "既知の惑星による検証",
+ "@out.report.validation": {
+  "x-review": "machine",
+  "x-source": "4432fa961d"
+ },
+ "panel.both": "{s, plural, other {# 体の Sentinel}}と{p, plural, other {# 個の Probe}}",
+ "@panel.both": {
+  "x-review": "machine",
+  "x-source": "c6e6d6aa5e"
+ },
+ "panel.probes": "{p, plural, other {# 個の Probe}}",
+ "@panel.probes": {
+  "x-review": "machine",
+  "x-source": "5dce100851"
+ },
+ "panel.probes_sentinels": "Probes と Sentinels",
+ "@panel.probes_sentinels": {
+  "x-review": "machine",
+  "x-source": "300c2fe632"
+ },
+ "panel.sentinels": "{s, plural, other {# 体の Sentinel}}",
+ "@panel.sentinels": {
+  "x-review": "machine",
+  "x-source": "70f14c3441"
+ },
+ "pic.colour": "星の色",
+ "@pic.colour": {
+  "x-review": "machine",
+  "x-source": "dfe6307835"
+ },
+ "pic.draw": "星とトランジット",
+ "@pic.draw": {
+  "x-review": "machine",
+  "x-source": "e0d9fd74d5"
+ },
+ "pic.h1": "絵の描き方。",
+ "@pic.h1": {
+  "x-review": "machine",
+  "x-source": "b56c1f91df"
+ },
+ "pic.intro": "SetuHQ の星はすべて、保存された温度から黒体の色で描かれます。惑星はすべて想像図です: 見た目は 2 つの測定量、半径 (なければ質量) と主星から受ける光から選ばれます。絵の中でそれらの数値を超えて測定されたものはなく、組成は決して測定されていません。",
+ "@pic.intro": {
+  "x-review": "machine",
+  "x-source": "3cf76ad409"
+ },
+ "pic.labels": "5 つのラベル",
+ "@pic.labels": {
+  "x-review": "machine",
+  "x-source": "51668dd62a"
+ },
+ "pic.labels.p": "サイトのすべての絵は、絵そのものの上にこのどれかを付けています。",
+ "@pic.labels.p": {
+  "x-review": "machine",
+  "x-source": "880b424ff6"
+ },
+ "pic.real": "何が本物で、何が描かれたものか",
+ "@pic.real": {
+  "x-review": "machine",
+  "x-source": "79bd58ea67"
+ },
+ "pic.rules": "規則",
+ "@pic.rules": {
+  "x-review": "machine",
+  "x-source": "e3954c7ee3"
+ },
+ "pic.still": "動きを減らす設定では",
+ "@pic.still": {
+  "x-review": "machine",
+  "x-source": "a42e838475"
+ },
+ "pic.still.p": "端末が動きを減らすよう求めると、何もループしません: 各図はデザインした 1 コマを表示し、再生するものはボタンを待ちます。",
+ "@pic.still.p": {
+  "x-review": "machine",
+  "x-source": "b12a8bfb34"
+ },
+ "pic.table": "見た目の表",
+ "@pic.table": {
+  "x-review": "machine",
+  "x-source": "5bf530d59d"
+ },
+ "pr.col.marked": "この減光に印を付けた",
+ "@pr.col.marked": {
+  "x-review": "machine",
+  "x-source": "4a7a39ecf8"
+ },
+ "pr.col.provider": "プロバイダー",
+ "@pr.col.provider": {
+  "x-review": "machine",
+  "x-source": "472590ae97"
+ },
+ "pr.col.reviewer": "レビュアー",
+ "@pr.col.reviewer": {
+  "x-review": "machine",
+  "x-source": "d29f46772c"
+ },
+ "pr.col.role": "役割",
+ "@pr.col.role": {
+  "x-review": "machine",
+  "x-source": "14736a2eb9"
+ },
+ "pr.col.weight": "較正済みの重み",
+ "@pr.col.weight": {
+  "x-review": "machine",
+  "x-source": "2ff00b5847"
+ },
+ "pr.h1": "CHEOPS の提案を準備する。",
+ "@pr.h1": {
+  "x-review": "machine",
+  "x-source": "c189d495dd"
+ },
+ "pr.intro": "<code>setuhq propose cheops</code> は CHEOPS Guest Observers Running Call の準備パックを書きます: チェック済みの規則、ターゲットの状況、計画用の見積もり、匿名化した草稿、そしてチェックリストとしての ESA の 7 つの手順。ESA のツールの実行と提出はご自身で行います。",
+ "@pr.intro": {
+  "x-review": "machine",
+  "x-source": "6893d1fea2"
+ },
+ "pr.marked": "{n} 体中 {k} 体が印を付けた · パネルスコア {score} (保存値)",
+ "@pr.marked": {
+  "x-review": "machine",
+  "x-source": "59b2d88d9f"
+ },
+ "pr.marked_none": "{n} 体中 {k} 体が印を付けた · パネルスコアは保存されていません",
+ "@pr.marked_none": {
+  "x-review": "machine",
+  "x-source": "6a75119056"
+ },
+ "pr.no": "いいえ",
+ "@pr.no": {
+  "x-review": "machine",
+  "x-source": "9390298f3f"
+ },
+ "pr.reviewers": "レビュアー",
+ "@pr.reviewers": {
+  "x-review": "machine",
+  "x-source": "f49dd73f5c"
+ },
+ "pr.score": "パネルスコア",
+ "@pr.score": {
+  "x-review": "machine",
+  "x-source": "cf91ab41dd"
+ },
+ "pr.score_none": "スコア未保存",
+ "@pr.score_none": {
+  "x-review": "machine",
+  "x-source": "4ac231ea2a"
+ },
+ "pr.table": "印と重みの表",
+ "@pr.table": {
+  "x-review": "machine",
+  "x-source": "7cf41c5c1b"
+ },
+ "pr.what.dip": "この減光に対する各レビュアーの保存された印 (実線: 印あり、破線: 印なし)。大きさは較正済みの重みに比例し、リングは実行が保存したパネルスコアまで満ちます。",
+ "@pr.what.dip": {
+  "x-review": "machine",
+  "x-source": "31dfe96fd5"
+ },
+ "pr.what.panel": "パネルの全レビュアー。大きさは較正済みの重みに比例します。減光が選ばれていないので、スコアは描きません。",
+ "@pr.what.panel": {
+  "x-review": "machine",
+  "x-source": "881c9d4eaf"
+ },
+ "pr.yes": "はい",
+ "@pr.yes": {
+  "x-review": "machine",
+  "x-source": "8a798890fe"
+ },
+ "route.candidates.label": "ケースファイル",
+ "@route.candidates.label": {
+  "x-review": "machine",
+  "x-source": "d12f22e06a"
+ },
+ "route.candidates.title": "{name} のケースファイル · 候補 · SetuHQ",
+ "@route.candidates.title": {
+  "x-review": "machine",
+  "x-source": "6265efaa30"
+ },
+ "route.catalogue.label": "カタログ",
+ "@route.catalogue.label": {
+  "x-review": "machine",
+  "x-source": "1034513950"
+ },
+ "route.catalogue.title": "既知の系外惑星のカタログ · SetuHQ",
+ "@route.catalogue.title": {
+  "x-review": "machine",
+  "x-source": "1d55d9e531"
+ },
+ "route.docs.label": "ドキュメント",
+ "@route.docs.label": {
+  "x-review": "machine",
+  "x-source": "7af023c430"
+ },
+ "route.docs.title": "ドキュメント: SetuHQ をはじめる · SetuHQ",
+ "@route.docs.title": {
+  "x-review": "machine",
+  "x-source": "273729a761"
+ },
+ "route.editions.label": "エディション",
+ "@route.editions.label": {
+  "x-review": "machine",
+  "x-source": "c6a48dcca4"
+ },
+ "route.editions.title": "エディション: オープンコア、SetuHQ Pro、個別調査 · SetuHQ",
+ "@route.editions.title": {
+  "x-review": "machine",
+  "x-source": "facd044991"
+ },
+ "route.explorer.label": "候補",
+ "@route.explorer.label": {
+  "x-review": "machine",
+  "x-source": "fdc9c0f69d"
+ },
+ "route.explorer.title": "候補 · SetuHQ",
+ "@route.explorer.title": {
+  "x-review": "machine",
+  "x-source": "3377897bfa"
+ },
+ "route.galaxy.label": "銀河",
+ "@route.galaxy.label": {
+  "x-review": "machine",
+  "x-source": "9b81c03539"
+ },
+ "route.galaxy.title": "銀河 · 探索 · SetuHQ",
+ "@route.galaxy.title": {
+  "x-review": "machine",
+  "x-source": "ad11918632"
+ },
+ "route.leaderboard.label": "リーダーボード",
+ "@route.leaderboard.label": {
+  "x-review": "machine",
+  "x-source": "31b4712158"
+ },
+ "route.leaderboard.title": "リーダーボード · 証拠 · SetuHQ",
+ "@route.leaderboard.title": {
+  "x-review": "machine",
+  "x-source": "2b687acd99"
+ },
+ "route.methods.label": "しくみ",
+ "@route.methods.label": {
+  "x-review": "machine",
+  "x-source": "9c870aa6e5"
+ },
+ "route.methods.title": "{name} · しくみ · SetuHQ",
+ "@route.methods.title": {
+  "x-review": "machine",
+  "x-source": "1cbf3454bd"
+ },
+ "route.mission.label": "ミッションコントロール",
+ "@route.mission.label": {
+  "x-review": "machine",
+  "x-source": "1a9a658b5d"
+ },
+ "route.mission.title": "ミッションコントロール · 探索 · SetuHQ",
+ "@route.mission.title": {
+  "x-review": "machine",
+  "x-source": "3bbcc04226"
+ },
+ "route.notfound.label": "ページが見つかりません",
+ "@route.notfound.label": {
+  "x-review": "machine",
+  "x-source": "a469ab4ca4"
+ },
+ "route.notfound.title": "ページが見つかりません · SetuHQ",
+ "@route.notfound.title": {
+  "x-review": "machine",
+  "x-source": "9ba0459ab7"
+ },
+ "route.overview.label": "ホーム",
+ "@route.overview.label": {
+  "x-review": "machine",
+  "x-source": "3a78695388"
+ },
+ "route.overview.title": "SetuHQ: 空を、レビューする",
+ "@route.overview.title": {
+  "x-review": "machine",
+  "x-source": "1159339ef0"
+ },
+ "route.pictures.label": "絵の描き方",
+ "@route.pictures.label": {
+  "x-review": "machine",
+  "x-source": "e2d864dc53"
+ },
+ "route.pictures.title": "絵の描き方 · ドキュメント · SetuHQ",
+ "@route.pictures.title": {
+  "x-review": "machine",
+  "x-source": "09b9052231"
+ },
+ "route.planet.label": "惑星",
+ "@route.planet.label": {
+  "x-review": "machine",
+  "x-source": "b6e3957877"
+ },
+ "route.planet.title": "{name} · 惑星 · SetuHQ",
+ "@route.planet.title": {
+  "x-review": "machine",
+  "x-source": "1fcbb7f176"
+ },
+ "route.planets.label": "半径比",
+ "@route.planets.label": {
+  "x-review": "machine",
+  "x-source": "afcd4824b8"
+ },
+ "route.planets.title": "半径比 · 候補 · SetuHQ",
+ "@route.planets.title": {
+  "x-review": "machine",
+  "x-source": "ac2e38c1f9"
+ },
+ "route.plates.label": "プレート",
+ "@route.plates.label": {
+  "x-review": "machine",
+  "x-source": "4fb4c6f38a"
+ },
+ "route.propose.label": "CHEOPS の提案",
+ "@route.propose.label": {
+  "x-review": "machine",
+  "x-source": "ad05c9e350"
+ },
+ "route.propose.title": "CHEOPS の提案を準備する · ドキュメント · SetuHQ",
+ "@route.propose.title": {
+  "x-review": "machine",
+  "x-source": "6f87c679a9"
+ },
+ "route.report.label": "実行レポート",
+ "@route.report.label": {
+  "x-review": "machine",
+  "x-source": "6b5c209e01"
+ },
+ "route.runs.label": "実行",
+ "@route.runs.label": {
+  "x-review": "machine",
+  "x-source": "848f54e896"
+ },
+ "route.runs.title": "実行 · 証拠 · SetuHQ",
+ "@route.runs.title": {
+  "x-review": "machine",
+  "x-source": "004653c043"
+ },
+ "route.sentinels.label": "パネル",
+ "@route.sentinels.label": {
+  "x-review": "machine",
+  "x-source": "5326ad997a"
+ },
+ "route.sentinels.title": "証拠: パネルを測る · SetuHQ",
+ "@route.sentinels.title": {
+  "x-review": "machine",
+  "x-source": "789dfd2a1e"
+ },
+ "route.sky.label": "天球マップ",
+ "@route.sky.label": {
+  "x-review": "machine",
+  "x-source": "762d3baf8a"
+ },
+ "route.sky.title": "空を探索する · SetuHQ",
+ "@route.sky.title": {
+  "x-review": "machine",
+  "x-source": "8b6fb90a8b"
+ },
+ "route.star.label": "星",
+ "@route.star.label": {
+  "x-review": "machine",
+  "x-source": "e357d39687"
+ },
+ "route.star.title": "{name} · 星 · SetuHQ",
+ "@route.star.title": {
+  "x-review": "machine",
+  "x-source": "fbb83b9cf8"
+ },
+ "route.stellar.label": "恒星",
+ "@route.stellar.label": {
+  "x-review": "machine",
+  "x-source": "4e44daeed5"
+ },
+ "route.stellar.title": "恒星を測る: フレアと脈動 · 証拠 · SetuHQ",
+ "@route.stellar.title": {
+  "x-review": "machine",
+  "x-source": "67e92dbcd1"
+ },
+ "route.stellardocs.label": "フレアと脈動",
+ "@route.stellardocs.label": {
+  "x-review": "machine",
+  "x-source": "e5b12f44ff"
+ },
+ "route.stellardocs.title": "フレア、脈動、CHEOPS · ドキュメント · SetuHQ",
+ "@route.stellardocs.title": {
+  "x-review": "machine",
+  "x-source": "ed9c362b70"
+ },
+ "route.tessnow.label": "TESS はいまどこ",
+ "@route.tessnow.label": {
+  "x-review": "machine",
+  "x-source": "fb060d8af7"
+ },
+ "route.tessnow.title": "TESS が見ている場所 · 探索 · SetuHQ",
+ "@route.tessnow.title": {
+  "x-review": "machine",
+  "x-source": "b9141101d4"
+ },
+ "route.transit.label": "候補",
+ "@route.transit.label": {
+  "x-review": "machine",
+  "x-source": "b2452d1eba"
+ },
+ "route.transit.title": "{name} · 候補 · SetuHQ",
+ "@route.transit.title": {
+  "x-review": "machine",
+  "x-source": "e3d2dd556b"
+ },
+ "route.variables.label": "暗くなるものすべて",
+ "@route.variables.label": {
+  "x-review": "machine",
+  "x-source": "4558adf410"
+ },
+ "route.variables.title": "暗くなるものすべて · カタログ · SetuHQ",
+ "@route.variables.title": {
+  "x-review": "machine",
+  "x-source": "85fdb3c494"
+ },
+ "route.vetter.label": "審査してみる",
+ "@route.vetter.label": {
+  "x-review": "machine",
+  "x-source": "e37b76fbec"
+ },
+ "route.vetter.title": "審査してみる · 候補 · SetuHQ",
+ "@route.vetter.title": {
+  "x-review": "machine",
+  "x-source": "f8e3bf1fc8"
+ },
+ "rr.h1": "それぞれの深さが惑星だったら何を意味するか。",
+ "@rr.h1": {
+  "x-review": "machine",
+  "x-source": "ff54ab4721"
+ },
+ "rr.intro": "実行またはフィードの星ごとに 1 枚のカード。各項目は{status}です。下の比は、保存された深さが惑星だった場合に意味するものです。",
+ "@rr.intro": {
+  "x-review": "machine",
+  "x-source": "9889e603bf"
+ },
+ "run.casefile": "実行のケースファイル ›",
+ "@run.casefile": {
+  "x-review": "machine",
+  "x-source": "44cc301e33"
+ },
+ "run.plates": "プレート ›",
+ "@run.plates": {
+  "x-review": "machine",
+  "x-source": "3a05204bd6"
+ },
+ "run.report": "実行レポート ›",
+ "@run.report": {
+  "x-review": "machine",
+  "x-source": "3f0278c3ff"
+ },
+ "run.sectors": "実行 {run}、TESS {n, plural, other {セクター}} {list}。",
+ "@run.sectors": {
+  "x-review": "machine",
+  "x-source": "cdff019405"
+ },
+ "runs.h1": "すべての探索実行、保存されたままのエラー、これらのページの裏にある設定。",
+ "@runs.h1": {
+  "x-review": "machine",
+  "x-source": "db1e81a5b2"
+ },
+ "runs.hist": "探索実行",
+ "@runs.hist": {
+  "x-review": "machine",
+  "x-source": "26d6d37f90"
+ },
+ "runs.intro": "カタログによる探索実行の履歴と、実行 {run} の設定。エラーメッセージは保存されたとおりに示します。",
+ "@runs.intro": {
+  "x-review": "machine",
+  "x-source": "95d99973c5"
+ },
+ "sd.h1": "フレア、脈動、CHEOPS。",
+ "@sd.h1": {
+  "x-review": "machine",
+  "x-source": "a0c598f487"
+ },
+ "sd.intro": "6 つのコマンドは惑星ではなく星そのものを見ます。それぞれ結果、来歴 (バージョン、コードの指紋、各入力の sha256)、ラベルを含む JSON 記録を 1 つ書きます。フレアや周波数は明示した有意性で検出されるもので、決して確認されたものではありません。変光タイプは「可能性が高い」か「候補」です。",
+ "@sd.intro": {
+  "x-review": "machine",
+  "x-source": "d9fdd750e3"
+ },
+ "search.hint": "↑ ↓ で移動 · Enter で開く · Esc で閉じる",
+ "@search.hint": {
+  "x-review": "machine",
+  "x-source": "4fefe7c452"
+ },
+ "search.placeholder": "惑星、星、ページを検索",
+ "@search.placeholder": {
+  "x-review": "machine",
+  "x-source": "28a6ead8a4"
+ },
+ "search.results": "結果",
+ "@search.results": {
+  "x-review": "machine",
+  "x-source": "219c4a6c86"
+ },
+ "sen.h1": "{n, plural, other {# 体のレビュアー。}}",
+ "@sen.h1": {
+  "x-review": "machine",
+  "x-source": "18e2721f25"
+ },
+ "sen.h1b": "それぞれが票に値することを示します。",
+ "@sen.h1b": {
+  "x-review": "machine",
+  "x-source": "67b1d265c9"
+ },
+ "sen.intro": "実行 {run} で減光に印を付けたパネル: Sentinels と Probes で、人間はいません。",
+ "@sen.intro": {
+  "x-review": "machine",
+  "x-source": "cfd243554e"
+ },
+ "shell.bootnote": "このページの対話的な部分を読み込めませんでした。上の文章は完全です。再読み込みしてもう一度お試しください。",
+ "@shell.bootnote": {
+  "x-review": "machine",
+  "x-source": "a2f1ab571c"
+ },
+ "shell.breadcrumb": "パンくずリスト",
+ "@shell.breadcrumb": {
+  "x-review": "machine",
+  "x-source": "2bd873d6c7"
+ },
+ "shell.copy_view": "この表示へのリンクをコピー",
+ "@shell.copy_view": {
+  "x-review": "machine",
+  "x-source": "709937ae3d"
+ },
+ "shell.home": "SetuHQ、ホーム",
+ "@shell.home": {
+  "x-review": "machine",
+  "x-source": "970b8e33a0"
+ },
+ "shell.in_section": "このセクション内",
+ "@shell.in_section": {
+  "x-review": "machine",
+  "x-source": "a4b1dbff1e"
+ },
+ "shell.menu_close": "メニューを閉じる",
+ "@shell.menu_close": {
+  "x-review": "machine",
+  "x-source": "d992820f3c"
+ },
+ "shell.menu_open": "メニューを開く",
+ "@shell.menu_open": {
+  "x-review": "machine",
+  "x-source": "fc798c613b"
+ },
+ "shell.nav_main": "メイン",
+ "@shell.nav_main": {
+  "x-review": "machine",
+  "x-source": "eb814be3ca"
+ },
+ "shell.search": "惑星、星、ページを検索 (/ キー)",
+ "@shell.search": {
+  "x-review": "machine",
+  "x-source": "781eaaf920"
+ },
+ "shell.search_title": "検索 (/)",
+ "@shell.search_title": {
+  "x-review": "machine",
+  "x-source": "bae77fae53"
+ },
+ "shell.skip": "本文へスキップ",
+ "@shell.skip": {
+  "x-review": "machine",
+  "x-source": "ac576a66d4"
+ },
+ "shell.theme.dark": "ダーク",
+ "@shell.theme.dark": {
+  "x-review": "machine",
+  "x-source": "e6bb5689be"
+ },
+ "shell.theme.label": "配色テーマ: {t}。{next} に切り替え",
+ "@shell.theme.label": {
+  "x-review": "machine",
+  "x-source": "c4ccc7de70"
+ },
+ "shell.theme.light": "ライト",
+ "@shell.theme.light": {
+  "x-review": "machine",
+  "x-source": "99a7026172"
+ },
+ "shell.theme.system": "端末の設定",
+ "@shell.theme.system": {
+  "x-review": "machine",
+  "x-source": "2b67477bad"
+ },
+ "shell.theme.title": "テーマ: {t}",
+ "@shell.theme.title": {
+  "x-review": "machine",
+  "x-source": "79f90fbb1e"
+ },
+ "shell.view_link": "この表示へのリンク",
+ "@shell.view_link": {
+  "x-review": "machine",
+  "x-source": "5fb2ec761c"
+ },
+ "showcase.tess-hd-15337-s4.caveat": "b の 5 回のトランジットのうち 1 回と c の 2 回を検出。公表周期はどちらも回復できませんでした (これらの減光の BLS 周期は惑星の周期ではありません)。",
+ "@showcase.tess-hd-15337-s4.caveat": {
+  "x-review": "machine",
+  "x-source": "492b8ee5d0"
+ },
+ "showcase.tess-hd-15337-s4.kind": "限界近くの小さな惑星",
+ "@showcase.tess-hd-15337-s4.kind": {
+  "x-review": "machine",
+  "x-source": "decd7f2886"
+ },
+ "showcase.tess-hd-15337-s4.outcome": "HD 15337 b: 5 回中 1 回のトランジット (候補 1 件、BLS 周期は惑星のものではない)。HD 15337 c: 2 回中 2 回 (候補 1 件、要レビュー 1 件、BLS 周期は惑星のものではない)。",
+ "@showcase.tess-hd-15337-s4.outcome": {
+  "x-review": "machine",
+  "x-source": "e894ab72ac"
+ },
+ "showcase.tess-hd-15337-s4.summary": "小さな既知惑星を 2 つ持つ明るい K 型矮星: b (地球半径の約 1.6 倍、4.8 日、深さ約 350 ppm) と c (17.2 日)。",
+ "@showcase.tess-hd-15337-s4.summary": {
+  "x-review": "machine",
+  "x-source": "edc1d3e217"
+ },
+ "showcase.tess-hd-15337-s4.why": "1 回ごとのトランジットが 1 セクターのノイズに近い小さな惑星: 10 分ビンの探索で見える限界でパネルと審査が何をするかを示し、ページは見逃したものを明記します。",
+ "@showcase.tess-hd-15337-s4.why": {
+  "x-review": "machine",
+  "x-source": "97542c5ae2"
+ },
+ "showcase.tess-pi-men-s1.kind": "参照チェック",
+ "@showcase.tess-pi-men-s1.kind": {
+  "x-review": "machine",
+  "x-source": "70fa5c4aa7"
+ },
+ "showcase.tess-pi-men-s1.outcome": "Rp/R★ と T14 は Huang et al. 2018 との差 5% 以内 (docs/results/pi_men_validation.md)。",
+ "@showcase.tess-pi-men-s1.outcome": {
+  "x-review": "machine",
+  "x-source": "c09fef04d0"
+ },
+ "showcase.tess-pi-men-s1.summary": "6.3 日周期のスーパーアースを持つ太陽型星: Huang et al. 2018 と全面的に照合した実行。",
+ "@showcase.tess-pi-men-s1.summary": {
+  "x-review": "machine",
+  "x-source": "27c4facb20"
+ },
+ "showcase.tess-pi-men-s1.why": "参照チェック: Probes に加えて Sentinels も使った唯一の実行で、周縁減光を含むフィットを docs/results/pi_men_validation.md で発見論文と比較しています。",
+ "@showcase.tess-pi-men-s1.why": {
+  "x-review": "machine",
+  "x-source": "ae1c536ddb"
+ },
+ "showcase.tess-toi-236-s2.kind": "既知の偽陽性",
+ "@showcase.tess-toi-236-s2.kind": {
+  "x-review": "machine",
+  "x-source": "e01d094660"
+ },
+ "showcase.tess-toi-236-s2.outcome": "捕捉: TOI の天体暦上の 6 件の減光はすべて審査で棄却され (secondary_any_phase、secondary_eclipse)、どれも候補ではありません。",
+ "@showcase.tess-toi-236-s2.outcome": {
+  "x-review": "machine",
+  "x-source": "d59f7be2fe"
+ },
+ "showcase.tess-toi-236-s2.summary": "TOI 表が偽陽性 (FP) と判定している TESS Object of Interest: 4.5 日ごとの 2.4% の減光。",
+ "@showcase.tess-toi-236-s2.summary": {
+  "x-review": "machine",
+  "x-source": "35157a3066"
+ },
+ "showcase.tess-toi-236-s2.why": "SetuHQ が不合格にならなければならないテスト: TOI-236.01 は実 TOI ベンチマークの偽陽性セットに含まれます。審査がそれをどう扱ったかを、結果にかかわらずページに示します。",
+ "@showcase.tess-toi-236-s2.why": {
+  "x-review": "machine",
+  "x-source": "50637bce9d"
+ },
+ "showcase.tess-toi-270-s5.caveat": "c の 5 回のトランジットすべてと d の 2 回を検出。b は検出されず、d は 2 回見えたものの周期なし (光度曲線の 13 日ごとの区間に 1 回ずつ)。",
+ "@showcase.tess-toi-270-s5.caveat": {
+  "x-review": "machine",
+  "x-source": "09f285b361"
+ },
+ "showcase.tess-toi-270-s5.kind": "多惑星系",
+ "@showcase.tess-toi-270-s5.kind": {
+  "x-review": "machine",
+  "x-source": "7e5f73c9ed"
+ },
+ "showcase.tess-toi-270-s5.outcome": "TOI-270 b: トランジット 6 回中 0 回。TOI-270 c: トランジット 5 回中 5 回 (候補 5 件)。TOI-270 d: トランジット 2 回中 2 回 (要レビュー 2 件、周期なし)。",
+ "@showcase.tess-toi-270-s5.outcome": {
+  "x-review": "machine",
+  "x-source": "64bc9f9e61"
+ },
+ "showcase.tess-toi-270-s5.summary": "3.4、5.7、11.4 日にトランジットする 3 つの既知惑星を持つ M 型矮星: 1 つの星に複数の周期。",
+ "@showcase.tess-toi-270-s5.summary": {
+  "x-review": "machine",
+  "x-source": "3f5bb74bc0"
+ },
+ "showcase.tess-toi-270-s5.why": "1 本の光度曲線に 3 つの周期。星に複数の惑星があるとき探索がどうするか、そして 13 日の区間にどれが収まるかを示します。",
+ "@showcase.tess-toi-270-s5.why": {
+  "x-review": "machine",
+  "x-source": "a6cb0e9faa"
+ },
+ "showcase.tess-wasp-126-s1.kind": "ホットジュピター",
+ "@showcase.tess-wasp-126-s1.kind": {
+  "x-review": "machine",
+  "x-source": "f55d3631cf"
+ },
+ "showcase.tess-wasp-126-s1.outcome": "WASP-126 b: 8 回中 8 回のトランジット (候補 8 件)。",
+ "@showcase.tess-wasp-126-s1.outcome": {
+  "x-review": "machine",
+  "x-source": "60440caba1"
+ },
+ "showcase.tess-wasp-126-s1.summary": "3.3 日周期の木星サイズの惑星: TESS 南天連続観測領域にある深く簡単なトランジット。",
+ "@showcase.tess-wasp-126-s1.summary": {
+  "x-review": "machine",
+  "x-source": "55d843f795"
+ },
+ "showcase.tess-wasp-126-s1.why": "簡単な例: どの探索でも見つかるはずの深さ約 0.6% のトランジットで、信号を疑う余地が少ないまま、光度曲線からフィットまでの全工程を示します。",
+ "@showcase.tess-wasp-126-s1.why": {
+  "x-review": "machine",
+  "x-source": "9768c89800"
+ },
+ "sky.all": "すべて",
+ "@sky.all": {
+  "x-review": "machine",
+  "x-source": "a52ace420f"
+ },
+ "sky.cap": "各点はカタログにある惑星で、主星の位置 (RA と Dec、J2000) に、それを見つけた手法の色で、発見年に現れます。",
+ "@sky.cap": {
+  "x-review": "machine",
+  "x-source": "f6c3623c32"
+ },
+ "sky.col.method": "手法",
+ "@sky.col.method": {
+  "x-review": "machine",
+  "x-source": "52a0f9b65b"
+ },
+ "sky.col.planets": "惑星",
+ "@sky.col.planets": {
+  "x-review": "machine",
+  "x-source": "c06c7c6bbd"
+ },
+ "sky.cov": "探査の範囲: TESS は空の {tess}% を観測しました (セクター 1–{last})。{unm}% は TESS、Kepler、K2 のどの視野にも入ったことがありません。陰影は探査がどこを見たかを示すもので、惑星の位置ではありません。",
+ "@sky.cov": {
+  "x-review": "machine",
+  "x-source": "7880d28ec6"
+ },
+ "sky.cov_label": "探査の範囲",
+ "@sky.cov_label": {
+  "x-review": "machine",
+  "x-source": "67b9a456c5"
+ },
+ "sky.cov_more": "銀河の図と出典 ›",
+ "@sky.cov_more": {
+  "x-review": "machine",
+  "x-source": "50afd0241b"
+ },
+ "sky.lc": "実行の光度曲線",
+ "@sky.lc": {
+  "x-review": "machine",
+  "x-source": "f6ebbca8e7"
+ },
+ "sky.legend": "発見方法",
+ "@sky.legend": {
+  "x-review": "machine",
+  "x-source": "7f31ff7ee3"
+ },
+ "sky.nojs": "この静止画はそのうち {k, number} 個 ({step} 個ごとに 1 個) を示します。ページのスクリプトが動くと地図全体が描かれます。",
+ "@sky.nojs": {
+  "x-review": "machine",
+  "x-source": "f5717a638d"
+ },
+ "sky.note.ecl": "破線: 黄道",
+ "@sky.note.ecl": {
+  "x-review": "machine",
+  "x-source": "a57d25f4fc"
+ },
+ "sky.note.feed": "フィードの星は描いていません (位置が保存されていない)",
+ "@sky.note.feed": {
+  "x-review": "machine",
+  "x-source": "5d62afd4b7"
+ },
+ "sky.note.placed": "{star} は SIMBAD による位置 (ICRS J2000)",
+ "@sky.note.placed": {
+  "x-review": "machine",
+  "x-source": "fc21ca6c11"
+ },
+ "sky.note.unplaced": "ターゲットは描いていません (位置が保存されていない)",
+ "@sky.note.unplaced": {
+  "x-review": "machine",
+  "x-source": "2ba7ac0091"
+ },
+ "sky.open": "開く ›",
+ "@sky.open": {
+  "x-review": "machine",
+  "x-source": "90fdccaabc"
+ },
+ "sky.pause": "一時停止",
+ "@sky.pause": {
+  "x-review": "machine",
+  "x-source": "858e4ba7a2"
+ },
+ "sky.play": "再生",
+ "@sky.play": {
+  "x-review": "machine",
+  "x-source": "436e61016e"
+ },
+ "sky.shown": "{n, number} 個の惑星を表示",
+ "@sky.shown": {
+  "x-review": "machine",
+  "x-source": "2f879fe4d1"
+ },
+ "sky.sweep": "setuhq スイープの層: スイープが探索した星セクターごとに緑の点 1 つ (これまでに {n, number} 個、位置は MAST)。このスライスでヌルを超えるクラスの項目があれば琥珀色 ({found, select, none {なし} other {{found}}})。",
+ "@sky.sweep": {
+  "x-review": "machine",
+  "x-source": "6df4812450"
+ },
+ "sky.sweep_more": "暗くなるものすべて ›",
+ "@sky.sweep_more": {
+  "x-review": "machine",
+  "x-source": "a15059214f"
+ },
+ "sky.table": "発見方法別の惑星 ({y} 年時点)",
+ "@sky.table": {
+  "x-review": "machine",
+  "x-source": "b101c75a14"
+ },
+ "sky.tl": "年ごとに見つかった惑星 (手法別)",
+ "@sky.tl": {
+  "x-review": "machine",
+  "x-source": "10dff603f9"
+ },
+ "sky.tonly": "トランジットのみ",
+ "@sky.tonly": {
+  "x-review": "machine",
+  "x-source": "24f8dea1d4"
+ },
+ "sky.tonly_note": " (トランジットのみ)",
+ "@sky.tonly_note": {
+  "x-review": "machine",
+  "x-source": "8e198c9572"
+ },
+ "sky.valuetext": "{y}: {n, number} 個の惑星",
+ "@sky.valuetext": {
+  "x-review": "machine",
+  "x-source": "17dd24a14c"
+ },
+ "sky.year": "年",
+ "@sky.year": {
+  "x-review": "machine",
+  "x-source": "89f6832560"
+ },
+ "sky.zoom": "{planet} の系を拡大 ›",
+ "@sky.zoom": {
+  "x-review": "machine",
+  "x-source": "7c9d17cb1f"
+ },
+ "st.figs": "検出器に見えるもの",
+ "@st.figs": {
+  "x-review": "machine",
+  "x-source": "ff3ec0553b"
+ },
+ "st.h1": "恒星を測る。",
+ "@st.h1": {
+  "x-review": "machine",
+  "x-source": "ec1ba1f8f3"
+ },
+ "st.intro": "SetuHQ は惑星だけでなく、恒星フレアを検出し、脈動周波数を取り出し、公開 CHEOPS 光度曲線を読み、食連星、自転周期、突発天体を見つけます。各機能は実行前に定めたプロトコルのもとで公表結果と比べられ、各ページとツールの出力が検証の到達範囲を示します。",
+ "@st.intro": {
+  "x-review": "machine",
+  "x-source": "7f59c8f0fc"
+ },
+ "status.known": "{planet} · 既知の惑星",
+ "@status.known": {
+  "x-review": "machine",
+  "x-source": "f5b7664b3d"
+ },
+ "status.open_cand": "未決 · 候補、未確認",
+ "@status.open_cand": {
+  "x-review": "machine",
+  "x-source": "d4f9806249"
+ },
+ "status.open_flagged": "未決 · 要レビュー",
+ "@status.open_flagged": {
+  "x-review": "machine",
+  "x-source": "17cedf349f"
+ },
+ "status.rejected": "審査で棄却",
+ "@status.rejected": {
+  "x-review": "machine",
+  "x-source": "402f943e20"
+ },
+ "story.both_passed": "Sentinels は 2 体とも見送りました。",
+ "@story.both_passed": {
+  "x-review": "machine",
+  "x-source": "240e9f6e70"
+ },
+ "story.feed": "探索フィードにある {stars, plural, other {ほか # 個の星}} の項目。{new, plural, =0 {既知の TOI と一致。} other {新しい周期のもの # 件。}} レビュー用の手がかりであり、惑星ではありません。",
+ "@story.feed": {
+  "x-review": "machine",
+  "x-source": "7a2c50f550"
+ },
+ "story.no_probe": "印を付けた Probe はありません。",
+ "@story.no_probe": {
+  "x-review": "machine",
+  "x-source": "181249a8c6"
+ },
+ "story.open": "{n, plural, other {件の減光が未決のまま。}}",
+ "@story.open": {
+  "x-review": "machine",
+  "x-source": "76a0fd06d3"
+ },
+ "story.panel": "AI の Sentinels と Probes がこの実行の光度曲線を読みます。各票の重みは、埋め込んだテスト用トランジットでの成績に応じます。",
+ "@story.panel": {
+  "x-review": "machine",
+  "x-source": "ca695f248f"
+ },
+ "story.probes_saw": "Probes は検出しました ({n} 体中 {k} 体)。",
+ "@story.probes_saw": {
+  "x-review": "machine",
+  "x-source": "595da333cb"
+ },
+ "story.recovered": "回の {planet} のトランジットを探す場所を知らされずに検出。それぞれ公表時刻から約 {min} 分以内。既知の惑星を再検出したものです。",
+ "@story.recovered": {
+  "x-review": "machine",
+  "x-source": "9d8d1e5460"
+ },
+ "story.recovered_period": "件の減光が既知の惑星 {planet} の周期上に。再検出であり、発見ではありません。",
+ "@story.recovered_period": {
+  "x-review": "machine",
+  "x-source": "7aa74cf44f"
+ },
+ "story.sentinels": "Sentinels {n} 体中 {k} 体が印を付けました。",
+ "@story.sentinels": {
+  "x-review": "machine",
+  "x-source": "c6be0b2e6b"
+ },
+ "subnav.candidates": "ケースファイル",
+ "@subnav.candidates": {
+  "x-review": "machine",
+  "x-source": "379b0a5b2b"
+ },
+ "subnav.catalogue": "カタログ",
+ "@subnav.catalogue": {
+  "x-review": "machine",
+  "x-source": "1034513950"
+ },
+ "subnav.docs": "はじめに",
+ "@subnav.docs": {
+  "x-review": "machine",
+  "x-source": "61e8d44ad4"
+ },
+ "subnav.editions": "エディション",
+ "@subnav.editions": {
+  "x-review": "machine",
+  "x-source": "c6a48dcca4"
+ },
+ "subnav.explorer": "すべての候補",
+ "@subnav.explorer": {
+  "x-review": "machine",
+  "x-source": "e2df94228e"
+ },
+ "subnav.galaxy": "銀河",
+ "@subnav.galaxy": {
+  "x-review": "machine",
+  "x-source": "9b81c03539"
+ },
+ "subnav.leaderboard": "リーダーボード",
+ "@subnav.leaderboard": {
+  "x-review": "machine",
+  "x-source": "31b4712158"
+ },
+ "subnav.mission": "ミッションコントロール",
+ "@subnav.mission": {
+  "x-review": "machine",
+  "x-source": "1a9a658b5d"
+ },
+ "subnav.pictures": "絵の描き方",
+ "@subnav.pictures": {
+  "x-review": "machine",
+  "x-source": "e2d864dc53"
+ },
+ "subnav.planets": "半径比",
+ "@subnav.planets": {
+  "x-review": "machine",
+  "x-source": "afcd4824b8"
+ },
+ "subnav.plates": "プレート",
+ "@subnav.plates": {
+  "x-review": "machine",
+  "x-source": "4fb4c6f38a"
+ },
+ "subnav.propose": "CHEOPS の提案",
+ "@subnav.propose": {
+  "x-review": "machine",
+  "x-source": "ad05c9e350"
+ },
+ "subnav.report": "実行レポート",
+ "@subnav.report": {
+  "x-review": "machine",
+  "x-source": "6b5c209e01"
+ },
+ "subnav.runs": "実行",
+ "@subnav.runs": {
+  "x-review": "machine",
+  "x-source": "848f54e896"
+ },
+ "subnav.sentinels": "パネル",
+ "@subnav.sentinels": {
+  "x-review": "machine",
+  "x-source": "5326ad997a"
+ },
+ "subnav.sky": "天球マップ",
+ "@subnav.sky": {
+  "x-review": "machine",
+  "x-source": "762d3baf8a"
+ },
+ "subnav.stellar": "恒星",
+ "@subnav.stellar": {
+  "x-review": "machine",
+  "x-source": "4e44daeed5"
+ },
+ "subnav.stellardocs": "フレアと脈動",
+ "@subnav.stellardocs": {
+  "x-review": "machine",
+  "x-source": "e5b12f44ff"
+ },
+ "subnav.tessnow": "TESS はいまどこ",
+ "@subnav.tessnow": {
+  "x-review": "machine",
+  "x-source": "fb060d8af7"
+ },
+ "subnav.transit": "減光",
+ "@subnav.transit": {
+  "x-review": "machine",
+  "x-source": "25efb1bd33"
+ },
+ "subnav.variables": "暗くなるものすべて",
+ "@subnav.variables": {
+  "x-review": "machine",
+  "x-source": "4558adf410"
+ },
+ "subnav.vetter": "審査してみる",
+ "@subnav.vetter": {
+  "x-review": "machine",
+  "x-source": "e37b76fbec"
+ },
+ "sweep.evidence": "証拠を見る ›",
+ "@sweep.evidence": {
+  "x-review": "machine",
+  "x-source": "17281a2fb3"
+ },
+ "sweep.line": "{n, number} 個の星で暗くなるものを探しました。{k, plural, =0 {今のところ偶然を上回って目立つものはありません} other {今のところ {list} が偶然を上回って目立っています}}。",
+ "@sweep.line": {
+  "x-review": "machine",
+  "x-source": "2625a10311"
+ },
+ "tl.cap": "発見年ごとの惑星数を、見つけた手法別に積み上げたもの。",
+ "@tl.cap": {
+  "x-review": "machine",
+  "x-source": "abe7e1b656"
+ },
+ "tl.hint": "年を指すか、グラフにフォーカスして矢印キーを使ってください。",
+ "@tl.hint": {
+  "x-review": "machine",
+  "x-source": "c0d70ad218"
+ },
+ "tl.noyear": "年のない {n, number} 件の記録は描いていません。",
+ "@tl.noyear": {
+  "x-review": "machine",
+  "x-source": "90f8af3261"
+ },
+ "tl.read": "{y}: {n, plural, other {# 個の惑星}}",
+ "@tl.read": {
+  "x-review": "machine",
+  "x-source": "7968ad0970"
+ },
+ "tl.table": "年と手法別の惑星",
+ "@tl.table": {
+  "x-review": "machine",
+  "x-source": "60ecd96d94"
+ },
+ "tl.table_link": "年と手法別の件数を表で見る ›",
+ "@tl.table_link": {
+  "x-review": "machine",
+  "x-source": "8d38020252"
+ },
+ "tn.h1": "TESS が見ている場所。",
+ "@tn.h1": {
+  "x-review": "machine",
+  "x-source": "33a70ec6b1"
+ },
+ "tn.intro": "NASA の TESS 衛星は、それぞれ 24°×24° の 4 台のカメラで、空の 1 本の帯を約 4 週間 (1 セクター) 観測します。この地図は公開された観測計画による帯と、その中にある既知の惑星を持つ星を示します。",
+ "@tn.intro": {
+  "x-review": "machine",
+  "x-source": "6cbf61a637"
+ },
+ "ts.hi": "最も熱い星 (ケルビン)",
+ "@ts.hi": {
+  "x-review": "machine",
+  "x-source": "8f287e3909"
+ },
+ "ts.lo": "最も冷たい星 (ケルビン)",
+ "@ts.lo": {
+  "x-review": "machine",
+  "x-source": "ccde65937b"
+ },
+ "ts.src": "星の色: プランクスペクトルを CIE 1931 等色関数に通し、sRGB で最も明るいチャンネルに正規化 (明るさではなく色相)。Teff: 各実行の stellar.json (TESS Input Catalog v8.2、MAST)。太陽は 5,772 K (IAU 2015 公称値)。",
+ "@ts.src": {
+  "x-review": "machine",
+  "x-source": "b9cdfdaa9f"
+ },
+ "ts.sun": "太陽",
+ "@ts.sun": {
+  "x-review": "machine",
+  "x-source": "c15630ef0d"
+ },
+ "ts.title": "2,500 K から 10,000 K までの星の色と、それぞれの温度に印を付けた星",
+ "@ts.title": {
+  "x-review": "machine",
+  "x-source": "1fd7f02e9a"
+ },
+ "var.h1": "暗くなるものすべて。",
+ "@var.h1": {
+  "x-review": "machine",
+  "x-source": "00cffacfe5"
+ },
+ "var.h1b": "{n, number} 件の項目、捨てたものはありません。",
+ "@var.h1b": {
+  "x-review": "machine",
+  "x-source": "af9b7536fe"
+ },
+ "var.intro": "パネルのすべての合意減光、スイープによるすべての増光とすべての星の変光を、明示した規則で分類し、確信度、手がかり、来歴を添えて: 印、重み、そして Sentinels 自身の言葉。",
+ "@var.intro": {
+  "x-review": "machine",
+  "x-source": "a3cde2962d"
+ },
+ "vt.h1": "審査してみる。",
+ "@vt.h1": {
+  "x-review": "machine",
+  "x-source": "bc56851e50"
+ },
+ "vt.intro": "各カードは SetuHQ の例の実行が保存した実際の減光です。光度曲線、畳み込み、偶数と奇数の深さ、半周期後の深さを見て、通過・要レビュー・棄却を判断してください。そのあと、審査が何をなぜ決めたかを確かめます。",
+ "@vt.intro": {
+  "x-review": "machine",
+  "x-source": "2d2a3a79d4"
+ }
+}

@@ -132,7 +132,7 @@ def test_catalogue_route_pages_and_lazy_data(built):
 
     assert check_budget(built.parent) == [] and "ZTF J1840-1742" not in page and "Kepler-1649 c" not in page
     # No request leaves the page's own folder.
-    assert not re.search(r"""(?:src|href)=["']https?://(?!doi\.org)""", re.sub(r'<a [^>]*rel="noopener"[^>]*>|<link rel="canonical"[^>]*>', "", page))  # a canonical link is not a request
+    assert not re.search(r"""(?:src|href)=["']https?://(?!doi\.org)""", re.sub(r'<a [^>]*rel="noopener"[^>]*>|<link rel="(?:canonical|alternate)"[^>]*>', "", page))  # a canonical or alternate link is not a request
     assert not re.search(r"fetch\(['\"`]https?:", APP_JS)
 
 

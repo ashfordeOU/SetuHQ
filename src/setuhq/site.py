@@ -30,6 +30,8 @@ from pathlib import Path
 
 from setuhq import brand, renderer
 from setuhq.design import CROSSHAIR_JS, FONT_PRELOAD, MOTION_JS, tokens_css
+from setuhq.i18n import N_
+from setuhq.minify import strip_css, strip_js
 from setuhq.app import (APP_CSS, APP_JS, DEFAULT_SHOWCASE, DEFAULT_SWEEP, DEFAULT_WEIGHTS, FONTS_DIR, GALAXY_JSON, NAV, ROUTE_META, SUBNAV,
                         UNCONFIRMED, app_data, app_payload, dip_state, galaxy_json, route_sections)
 from setuhq.catalogue import CATALOGUE_JSON, SEARCH_BUTTON, SEARCH_DIALOG
@@ -40,10 +42,10 @@ from setuhq.methods import CHAPTER_PLANETS, CHAPTERS, system_stage
 from setuhq.names import ATTRIBUTION
 from setuhq.objects import slugify
 from setuhq.everything import VARIABLES_JSON
-from setuhq.routes import CHAPTER_SLUGS, LEGACY_PAGES, ROUTES_CORE_JS, from_hash, legacy_js, url_for
+from setuhq.routes import CHAPTER_SLUGS, LEGACY_PAGES, ROUTE_PATHS, ROUTES_APP_JS, from_hash, legacy_js, url_for
 from setuhq.stubs import stored
 from setuhq.looks import BANDS, COMPOSITION_RULES, LOOKS, rule_words
-from setuhq import viz
+from setuhq import editions, features, i18n, journey, stellarpages, tessnow, vetter, viz
 
 REPO_URL = brand.REPO_URL
 # Each page's HTML (its own view, the shell, the head) stays under this many characters; everything shared is a
@@ -244,25 +246,27 @@ table.excompact th button[aria-pressed="true"]{text-decoration:underline;text-un
 SHELL_JS = r"""
 // ---------- the shell: theme, menu, and the app's start ----------
 // Runs on every page before the app's data arrives, so the header works at once.
-const SETUHQ_THEMES = ['dark', 'light', 'system'], THEME_SAY = {dark: 'dark', light: 'light', system: "your device's setting"};
+const SETUHQ_THEMES = ['dark', 'light', 'system'], TT = (id, en, a) => (window.SetuI18n ? SetuI18n.T(id, en, a) : en).replace(/&#(\d+);/g, (x, d) => String.fromCharCode(d));
+const THEME_SAY = {get dark(){ return TT('shell.theme.dark', 'dark'); }, get light(){ return TT('shell.theme.light', 'light'); }, get system(){ return TT('shell.theme.system', 'your device\'s setting'); }};
 function currentTheme(){ const t = document.documentElement.getAttribute('data-theme'); return SETUHQ_THEMES.includes(t) ? t : 'dark'; }
 function applyTheme(t, announce){
   document.documentElement.setAttribute('data-theme', t);
   try { if (t === 'dark') localStorage.removeItem('setuhq-theme'); else localStorage.setItem('setuhq-theme', t); } catch (e) { /* storage blocked: the theme lasts for this visit */ }
   const next = SETUHQ_THEMES[(SETUHQ_THEMES.indexOf(t) + 1) % SETUHQ_THEMES.length];
-  for (const b of document.querySelectorAll('[data-theme-toggle]')){ b.setAttribute('aria-label', `Colour theme: ${THEME_SAY[t]}. Switch to ${THEME_SAY[next]}`); b.title = `Theme: ${THEME_SAY[t]}`; }
-  if (announce){ const a = document.getElementById('announce'); if (a){ a.textContent = ''; setTimeout(() => { a.textContent = `Theme: ${THEME_SAY[t]}.`; }, 30); } }
+  const say = TT('shell.theme.title', 'Theme: {t}', {t: THEME_SAY[t]});
+  for (const b of document.querySelectorAll('[data-theme-toggle]')){ b.setAttribute('aria-label', TT('shell.theme.label', 'Colour theme: {t}. Switch to {next}', {t: THEME_SAY[t], next: THEME_SAY[next]})); b.title = say; }
+  if (announce){ const a = document.getElementById('announce'); if (a){ a.textContent = ''; setTimeout(() => { a.textContent = say + '.'; }, 30); } }
   document.dispatchEvent(new CustomEvent('setuhq-theme', {detail: t}));
 }
 function closeMenu(focusButton){
   const m = document.getElementById('menu'), b = document.getElementById('menubtn');
   if (!m || m.hidden) return;
-  m.hidden = true; b.setAttribute('aria-expanded', 'false'); b.setAttribute('aria-label', 'Open the menu');
+  m.hidden = true; b.setAttribute('aria-expanded', 'false'); b.setAttribute('aria-label', TT('shell.menu_open', 'Open the menu'));
   if (focusButton) b.focus();
 }
 function openMenu(){
   const m = document.getElementById('menu'), b = document.getElementById('menubtn');
-  m.hidden = false; b.setAttribute('aria-expanded', 'true'); b.setAttribute('aria-label', 'Close the menu');
+  m.hidden = false; b.setAttribute('aria-expanded', 'true'); b.setAttribute('aria-label', TT('shell.menu_close', 'Close the menu'));
   const first = m.querySelector('a'); if (first) first.focus();
 }
 function initShell(){
@@ -291,7 +295,7 @@ function bootApp(){
   const b = document.body.dataset;
   if (!b.data || !b.routes || !b.app) return;
   Promise.all([fetch(b.data).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }),
-               fetch(b.routes).then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })]).then(([D, routes]) => {
+               fetch(b.routes).then(r => { if (!r.ok) throw new Error(r.status); return r.text(); }), window.SetuI18n && SetuI18n.ready]).then(([D, routes]) => {
     const tpl = document.createElement('template'); tpl.innerHTML = routes;
     const content = document.getElementById('content');
     const sys = tpl.content.querySelector('template#mxsystpl');
@@ -301,6 +305,7 @@ function bootApp(){
       if (mine && !mine.hasAttribute('data-partial')) continue;
       if (mine){ sec.hidden = mine.hidden; mine.replaceWith(sec); }
       else { sec.hidden = true; content.appendChild(sec); }
+      if (window.SetuI18n) SetuI18n.apply(sec);
     }
     // The app's code reads D; it runs as a script of its own (cached across pages, and its names stay global).
     window.D = D;
@@ -319,15 +324,19 @@ function bootApp(){
   // A small page (a catalogue planet or star written at deploy time, setuhq.stubs) carries no header or footer of
   // its own: the shared chrome file (cached like the rest) is put in place first.
   const c = document.body.dataset.chrome;
-  if (!c){ initShell(); bootApp(); return; }
-  fetch(c).then(r => { if (!r.ok) throw new Error(r.status); return r.text(); }).then(t => {
+  if (!c){ initShell(); bootApp(); if (window.SetuI18n) SetuI18n.ready.then(() => applyTheme(currentTheme(), false)); return; }
+  // A small page loads the languages' script itself (its template stays within the stubs' budget).
+  (window.SetuI18n || typeof I18N_SRC === 'undefined' ? Promise.resolve() : new Promise(ok => { const s = document.createElement('script'); s.src = I18N_SRC; s.onload = s.onerror = ok; document.head.appendChild(s); }))
+  .then(() => fetch(c)).then(r => { if (!r.ok) throw new Error(r.status); return r.text(); }).then(t => {
     const tpl = document.createElement('template'); tpl.innerHTML = t;
     const top = tpl.content.querySelector('[data-chrome-part="top"]'), bottom = tpl.content.querySelector('[data-chrome-part="bottom"]');
     if (top) document.getElementById('chrome-top').replaceWith(...top.childNodes);
     if (bottom) document.getElementById('chrome-bottom').replaceWith(...bottom.childNodes);
-  }).catch(err => console.warn('SetuHQ: the header could not load', err)).then(() => { initShell(); bootApp(); });
+  }).catch(err => console.warn('SetuHQ: the header could not load', err)).then(() => (window.SetuI18n && SetuI18n.ready)).then(() => {
+    if (window.SetuI18n){ SetuI18n.apply(document.body); if (SetuI18n.lang !== 'en') for (const n of document.querySelectorAll('.mtnote')) n.hidden = false; }
+    initShell(); bootApp(); });
 })();
-""" + MOTION_JS + CROSSHAIR_JS
+""" + MOTION_JS + CROSSHAIR_JS + features.SHELL_JS
 
 
 def _sha(text: str | bytes) -> str:
@@ -344,47 +353,66 @@ def clean_links(markup: str, lead: str | None = None) -> str:
 # ---------------------------------------------------------------------------------------------------------
 
 def _nav_html() -> str:
-    items = "".join(f'<li><a href="{from_hash(h)}" data-nav="{k}">{html.escape(label)}</a></li>' for k, label, h in NAV)
-    return f'<nav class="nav" aria-label="Main"><ul>{items}</ul></nav>'
+    items = "".join(f'<li><a href="{from_hash(h)}" data-nav="{k}"{i18n.k("nav." + k)}>{html.escape(label)}</a></li>' for k, label, h in NAV)
+    return f'<nav class="nav" aria-label="{i18n.t("shell.nav_main", "Main")}"{i18n.ka(aria_label="shell.nav_main")}><ul>{items}</ul></nav>'
 
 
 def _menu_html(lead: str | None) -> str:
     secs = []
     for k, label, h in NAV:
-        subs = "".join(f'<li><a href="{html.escape(from_hash(sh, lead=lead) if sh.startswith("#/") else sh)}">{html.escape(sl)}</a></li>'
-                       for sl, sh, _ in SUBNAV.get(k, []))
-        secs.append(f'<li class="msec"><a href="{from_hash(h)}" data-nav="{k}">{html.escape(label)}</a>'
+        subs = "".join(f'<li><a href="{html.escape(from_hash(sh, lead=lead) if sh.startswith("#/") else sh)}"{i18n.k("subnav." + rs[0])}>{html.escape(sl)}</a></li>'
+                       for sl, sh, rs in SUBNAV.get(k, []))
+        secs.append(f'<li class="msec"><a href="{from_hash(h)}" data-nav="{k}"{i18n.k("nav." + k)}>{html.escape(label)}</a>'
                     + (f'<ul class="msub">{subs}</ul>' if subs else "") + "</li>")
-    return f'<div class="menu" id="menu" hidden><nav aria-label="Main"><ul>{"".join(secs)}</ul></nav></div>'
+    return f'<div class="menu" id="menu" hidden><nav aria-label="Main"{i18n.ka(aria_label="shell.nav_main")}><ul>{"".join(secs)}</ul></nav></div>'
 
 
 def _footer_html(lead: str | None) -> str:
     cols = []
     for k, label, h in NAV:
-        links = [("Get started" if k == "docs" else "Overview", from_hash(h))] if k in ("how", "docs") else []
-        links += [(sl, from_hash(sh, lead=lead) if sh.startswith("#/") else sh) for sl, sh, _ in SUBNAV.get(k, []) if sh != h and sh != "#/pictures"]
+        links = [(("subnav.docs", i18n.t("subnav.docs", "Get started")) if k == "docs" else ("footer.overview", i18n.t("footer.overview", "Overview")), from_hash(h))] if k in ("how", "docs") else []
+        links += [(("subnav." + rs[0], sl), from_hash(sh, lead=lead) if sh.startswith("#/") else sh) for sl, sh, rs in SUBNAV.get(k, []) if sh != h and sh != "#/pictures"]
         if k == "how":
-            links += [(t, url_for("methods", {"ch": c})) for c, t in CHAPTERS[1:5]] + [("All 15 chapters", from_hash(h))]
+            links += [(("chapter." + c, t), url_for("methods", {"ch": c})) for c, t in CHAPTERS[1:5]]
+            links += [(("footer.all_chapters", i18n.t("footer.all_chapters", "All {n} chapters", n=len(CHAPTERS)), {"n": len(CHAPTERS)}), from_hash(h))]
         if k == "docs":
-            links += [("How the pictures are drawn ›", "/docs/pictures/"), ("Source code", REPO_URL), ("Contributing a sweep", "/docs/#contribute"), ("Data downloads", "/docs/#data")]
+            links += [(("footer.pictures", i18n.t("footer.pictures", "How the pictures are drawn ›")), "/docs/pictures/"),
+                      (("footer.source", i18n.t("footer.source", "Source code")), REPO_URL),
+                      (("footer.contribute", i18n.t("footer.contribute", "Contributing a sweep")), "/docs/#contribute"),
+                      (("footer.data", i18n.t("footer.data", "Data downloads")), "/docs/#data")]
         rel = ' rel="noopener"'
-        lis = "".join(f'<li><a{rel if u.startswith("http") else ""} href="{html.escape(u)}">{html.escape(t)}</a></li>' for t, u in links)
-        cols.append(f'<div><h2>{html.escape(label)}</h2><ul>{lis}</ul></div>')
+        lis = "".join(f'<li><a{rel if u.startswith("http") else ""} href="{html.escape(u)}"{i18n.k(m[0], **(m[2] if len(m) > 2 else {}))}>{html.escape(m[1])}</a></li>' for m, u in links)
+        cols.append(f'<div><h2{i18n.k("nav." + k)}>{html.escape(label)}</h2><ul>{lis}</ul></div>')
+    footer_line = i18n.t("honesty.footer", 'Every SetuHQ result on this site is a candidate, never a confirmed planet. Open source under the AGPL-3.0; SetuHQ\'s data under CC BY 4.0. "SetuHQ" and the Setu mark are trademarks of Ashforde OÜ.', note="The footer's honesty line. Keep 'a candidate, never a confirmed planet' exactly as strong; licence names stay as written.")
     return f"""<footer class="sitefoot"><div class="fin">
-  <nav class="footnav" aria-label="Site">{"".join(cols)}</nav>
-  <p class="attribution">{html.escape(ATTRIBUTION)}</p>
-  <p>Every SetuHQ result on this site is a candidate, never a confirmed planet. Open source under the AGPL-3.0; SetuHQ's data under CC BY 4.0. "SetuHQ" and the Setu mark are trademarks of Ashforde OÜ.</p>
+  <nav class="footnav" aria-label="{i18n.t("footer.nav", "Site")}"{i18n.ka(aria_label="footer.nav")}>{"".join(cols)}</nav>
+  <p class="attribution"{i18n.k("honesty.attribution")}>{html.escape(ATTRIBUTION)}</p>
+  <p{i18n.k("honesty.footer")}>{footer_line}</p>
+  <p class="mtnote"{i18n.k("i18n.mtnote")} hidden>{i18n.t("i18n.mtnote", 'This translation is machine-assisted and has not yet been reviewed by a native speaker. <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/docs/TRANSLATING.md">Corrections are welcome</a>.', note="Shown on every translated page. Say plainly that the translation was made with machine assistance and is not yet reviewed.")}</p>
 </div></footer>"""
 
 
-def _head(title: str, description: str, path: str | None, assets: dict, *, extra: str = "", noindex: bool = False) -> str:
+def _head(title: str, description: str, path: str | None, assets: dict, *, extra: str = "", noindex: bool = False,
+          keys: tuple | None = None) -> str:
+    """The head. ``keys`` (title id, its arguments, description id, its arguments) keys the title and description
+    to their messages; a page with an address in every language (MAIN_PATHS) lists them all (hreflang)."""
     meta = brand.head(title, description, path or "/", prefix="/")
     if path is None:  # a page with no address of its own (404, a forwarding page): no canonical
         meta = re.sub(r'<link rel="canonical"[^>]*>\n?', "", meta)
+    tkey = ""
+    if keys:
+        tid, targs, did, dargs = keys
+        tkey = i18n.k(tid, **targs) if tid else ""
+        dk = (' data-i18n-attr="content:' + did + '"' + i18n.kargs(**dargs)) if did else ""
+        tk = (' data-i18n-attr="content:' + tid + '"' + i18n.kargs(**targs)) if tid else ""
+        meta = re.sub(r'(<meta (?:name|property)="(?:description|og:description|twitter:description)" content="[^"]*")>', lambda m: m.group(1) + dk + ">", meta)
+        meta = re.sub(r'(<meta (?:property|name)="(?:og:title|twitter:title)" content="[^"]*")>', lambda m: m.group(1) + tk + ">", meta)
+    if path in MAIN_PATHS:
+        meta += "\n" + alternates(path)
     return f"""<!doctype html>
 <html lang="en" data-theme="dark"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>{html.escape(title)}</title>
+<title{tkey}>{html.escape(title)}</title>
 {meta}
 {'<meta name="robots" content="noindex">' if noindex else ''}
 <meta name="color-scheme" content="dark light">
@@ -397,6 +425,7 @@ def _head(title: str, description: str, path: str | None, assets: dict, *, extra
 <link rel="preload" href="{assets['data']}" as="fetch" crossorigin="anonymous">
 <link rel="preload" href="{assets['app']}" as="script">
 <script src="{assets['render']}" defer></script>
+<script src="{assets['i18n']}" defer></script>
 <script src="{assets['js']}" defer></script>
 <script type="speculationrules">{SPECULATION}</script>
 </head>"""
@@ -415,16 +444,55 @@ def starfield_html(src: str) -> str:
             f'<img class="rstill" src="{src}" alt=""></div>')
 
 
-def _topbar(lead: str | None) -> str:
-    return f"""<a class="skip" href="#content">Skip to content</a>
+ICON_LANG = ('<svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.2" fill="none" stroke="currentColor" stroke-width="1.5"/>'
+             '<path d="M2.8 10h14.4M10 2.8c2.2 2.2 2.9 4.6 2.9 7.2s-.7 5-2.9 7.2c-2.2-2.2-2.9-4.6-2.9-7.2s.7-5 2.9-7.2z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>')
+# The pages with an address in every language: every section page and every chapter. The others (a dip, a case file,
+# a planet, a star, the reports) keep one address and are translated in the browser, with the visitor's choice.
+MAIN_PATHS = tuple(sorted(set(ROUTE_PATHS.values()) | {url_for("methods", {"ch": c}) for c, _ in CHAPTERS}))
+
+
+def lang_path(path: str, lang: str) -> str:
+    """A page's address in ``lang``: English at the root, every other language under /<lang>/."""
+    return path if lang == i18n.SOURCE else f"/{lang}{path}"
+
+
+def alternates(path: str) -> str:
+    """The hreflang links of a page that has an address in every language (and x-default, the English)."""
+    links = [f'<link rel="alternate" hreflang="{l}" href="{brand.SITE_URL}{lang_path(path, l)}">' for l in i18n.LOCALES]
+    return "".join(links) + f'<link rel="alternate" hreflang="x-default" href="{brand.SITE_URL}{path}">'
+
+
+def _langcode(lang: str) -> str:
+    return "ZH" if lang == "zh-Hans" else lang.upper()
+
+
+def langpick(path: str | None, lang: str = "en") -> str:
+    """The language picker: every language by its own name, linking to this page in it (a page with one address
+    links to itself; the choice then applies in the browser), and the machine-translation note."""
+    e = html.escape
+    items = "".join(f'<li><a href="{e(lang_path(path, l) if path in MAIN_PATHS else (path or "/"))}" data-lang="{l}" hreflang="{l}" lang="{l}"'
+                    f'{" aria-current=" + chr(34) + "true" + chr(34) if l == lang else ""}>{e(i18n.NATIVE[l])}</a></li>' for l in i18n.LOCALES)
+    with i18n.use(lang):
+        label = i18n.t("i18n.picker.label", "Language: {name}", name=i18n.NATIVE[lang])
+        note = i18n.th("i18n.picker.note", 'Every language but English is machine-assisted and not yet reviewed by a native speaker. <a rel="noopener" href="https://github.com/ashfordeOU/SetuHQ/blob/main/docs/TRANSLATING.md">Corrections are welcome</a>.',
+                       note="In the language picker, in each language. Plain: machine-assisted, not yet reviewed by a native speaker.")
+    return (f'<details class="langpick"><summary class="iconbtn" aria-label="{e(label)}" title="{e(label)}"{i18n.ka(aria_label="i18n.picker.label", title="i18n.picker.label")}'
+            f"{i18n.kargs(name=i18n.NATIVE[lang])}>"
+            f'{ICON_LANG}<span class="langcode">{_langcode(lang)}</span></summary>'
+            f'<div class="langmenu"><ul>{items}</ul><p class="langnote">{note}</p></div></details>')
+
+
+def _topbar(lead: str | None, path: str | None = None) -> str:
+    return f"""<a class="skip" href="#content"{i18n.k("shell.skip")}>{i18n.t("shell.skip", "Skip to content")}</a>
 <header class="topbar">
   <div class="tbin">
-    <a class="brand" href="/" aria-label="SetuHQ, home">{brand.logo("/")}</a>
+    <a class="brand" href="/" aria-label="{i18n.t("shell.home", "SetuHQ, home")}"{i18n.ka(aria_label="shell.home")}>{brand.logo("/")}</a>
     {_nav_html()}
     <div class="tools">
       {SEARCH_BUTTON}
+      {langpick(path)}
       <button class="iconbtn themebtn" type="button" data-theme-toggle aria-label="Colour theme: dark. Switch to light" title="Theme: dark">{ICON_THEME}</button>
-      <button class="iconbtn menubtn" type="button" id="menubtn" aria-expanded="false" aria-controls="menu" aria-label="Open the menu">{ICON_MENU}</button>
+      <button class="iconbtn menubtn" type="button" id="menubtn" aria-expanded="false" aria-controls="menu" aria-label="{i18n.t("shell.menu_open", "Open the menu")}"{i18n.ka(aria_label="shell.menu_open")}>{ICON_MENU}</button>
     </div>
   </div>
   {_menu_html(lead)}
@@ -433,27 +501,36 @@ def _topbar(lead: str | None) -> str:
 
 def _crumbs(route: str, name: str | None, params: dict, lead: str | None) -> str:
     m = ROUTE_META.get(route, {})
-    chain = [(label, from_hash(h, lead=lead)) for label, h in m.get("crumbs", [])]
+    chain = [(label, from_hash(h, lead=lead), CRUMB_IDS.get(label)) for label, h in m.get("crumbs", [])]
     if route == "methods" and params.get("ch") and params["ch"] != CHAPTERS[0][0]:
-        chain.append(("How it works", "/how-it-works/"))
+        chain.append(("How it works", "/how-it-works/", "nav.how"))
     if route == "candidates" and params.get("dip"):
-        chain.append((name_of_dip(params["dip"]), url_for("transit", {"dip": params["dip"]})))
+        chain.append((name_of_dip(params["dip"]), url_for("transit", {"dip": params["dip"]}), None))
+    bc = f'aria-label="{i18n.t("shell.breadcrumb", "Breadcrumb")}"{i18n.ka(aria_label="shell.breadcrumb")}'
     if not chain:
-        return '<nav class="crumbs" id="crumbs" aria-label="Breadcrumb" hidden></nav>'
+        return f'<nav class="crumbs" id="crumbs" {bc} hidden></nav>'
     here = "Case file" if route == "candidates" else (name or m.get("label", ""))
-    lis = "".join(f'<li><a href="{html.escape(u)}">{html.escape(t)}</a></li>' for t, u in chain)
-    return (f'<nav class="crumbs" id="crumbs" aria-label="Breadcrumb"><ol>{lis}'
-            f'<li aria-current="page">{html.escape(here)}</li></ol></nav>')
+    hid = "route.candidates.label" if route == "candidates" else (None if name else f"route.{route}.label")
+    if route == "methods" and params.get("ch"):
+        hid = "chapter." + params["ch"]
+    lis = "".join(f'<li><a href="{html.escape(u)}"{i18n.k(c) if c else ""}>{html.escape(t)}</a></li>' for t, u, c in chain)
+    return (f'<nav class="crumbs" id="crumbs" {bc}><ol>{lis}'
+            f'<li aria-current="page"{i18n.k(hid) if hid else ""}>{html.escape(here)}</li></ol></nav>')
+
+
+CRUMB_IDS = {"Explore": "nav.explore", "Candidates": "nav.candidates", "Evidence": "nav.evidence", "Docs": "nav.docs",
+             "Catalogue": "route.catalogue.label", "How it works": "nav.how"}
 
 
 def _subnav(route: str, lead: str | None) -> str:
     items = SUBNAV.get(ROUTE_META.get(route, {}).get("nav") or "", [])
+    lab = f'aria-label="{i18n.t("shell.in_section", "In this section")}"{i18n.ka(aria_label="shell.in_section")}'
     if not items:
-        return '<nav class="subnav" id="subnav" aria-label="In this section" hidden></nav>'
+        return f'<nav class="subnav" id="subnav" {lab} hidden></nav>'
     cur = ' aria-current="page"'
     links = "".join(f'<a href="{html.escape(from_hash(h, lead=lead) if h.startswith("#/") else h)}"'
-                    f'{cur if route in rs else ""}>{html.escape(label)}</a>' for label, h, rs in items)
-    return f'<nav class="subnav" id="subnav" aria-label="In this section">{links}</nav>'
+                    f'{cur if route in rs else ""}{i18n.k("subnav." + rs[0])}>{html.escape(label)}</a>' for label, h, rs in items)
+    return f'<nav class="subnav" id="subnav" {lab}>{links}</nav>'
 
 
 DIP_LABELS: dict[str, str] = {}
@@ -467,30 +544,32 @@ VIEW_STATE_ROUTES = ("explorer", "sky", "galaxy", "catalogue", "variables")
 
 
 def _pagebar(route: str, name: str | None, params: dict, lead: str | None) -> str:
-    tools = (f'<div class="pagetools"><button class="btn" type="button" id="copyview"{"" if route in VIEW_STATE_ROUTES else " hidden"}>Copy link to this view</button>'
+    tools = (f'<div class="pagetools"><button class="btn" type="button" id="copyview"{"" if route in VIEW_STATE_ROUTES else " hidden"}{i18n.k("shell.copy_view")}>{i18n.t("shell.copy_view", "Copy link to this view")}</button>'
              '<span class="muted" id="copyviewstate" role="status"></span>'
-             '<input class="copyfallback" id="copyviewbox" type="text" readonly aria-label="Link to this view" hidden></div>')
+             f'<input class="copyfallback" id="copyviewbox" type="text" readonly aria-label="{i18n.t("shell.view_link", "Link to this view")}"{i18n.ka(aria_label="shell.view_link")} hidden></div>')
     return f'<div class="pagebar"><div class="pbin">{_crumbs(route, name, params, lead)}{_subnav(route, lead)}{tools}</div></div>'
 
 
 def page(*, route: str, title: str, description: str, path: str | None, body: str, assets: dict, lead: str | None,
          name: str | None = None, params: dict | None = None, extra_head: str = "", extra_body: str = "",
-         partial: bool = False, noindex: bool = False, app: bool = True) -> str:
-    """One page of the site: the head, the top bar, the page bar, this page's view, the footer."""
+         partial: bool = False, noindex: bool = False, app: bool = True, keys: tuple | None = None, auto: bool = False) -> str:
+    """One page of the site: the head, the top bar, the page bar, this page's view, the footer. ``keys``: the title's
+    and description's messages (see _head). ``auto``: a page with one address, translated in the browser to the
+    visitor's chosen language."""
     params = params or {}
     section = (f'<section class="route" id="route-{route}" data-route="{route}" aria-labelledby="h-{route}"'
                f'{" data-partial" if partial else ""}>\n{body}\n</section>')
     boot = f' data-data="{assets["data"]}" data-routes="{assets["routes"]}" data-app="{assets["app"]}"' if app else ""
-    out = f"""{_head(title, description, path, assets, extra=extra_head, noindex=noindex)}
-<body class="page-{route}" data-page="{route}" data-route="{route}"{boot}>
+    out = f"""{_head(title, description, path, assets, extra=extra_head, noindex=noindex, keys=keys)}
+<body class="page-{route}" data-page="{route}" data-route="{route}"{boot}{" data-i18n-auto" if auto or path not in MAIN_PATHS else ""}>
 {starfield_html(assets['starfield'])}
-{_topbar(lead)}
+{_topbar(lead, path)}
 {_pagebar(route, name, params, lead)}
 <main id="main">
  <div id="content" tabindex="-1">
 {section}
  </div>
- <p class="note" id="bootnote" hidden>The interactive parts of this page could not load. Its text above is complete; reload to try again.</p>
+ <p class="note" id="bootnote"{i18n.k("shell.bootnote")} hidden>{i18n.t("shell.bootnote", "The interactive parts of this page could not load. Its text above is complete; reload to try again.")}</p>
 </main>
 {_footer_html(lead)}
 <div id="announce" class="sr" aria-live="polite" aria-atomic="true"></div>
@@ -532,41 +611,45 @@ def docs_section(data: dict) -> str:
             f"version of the pipeline. Later fixes change default results, and this run has not been re-run on the "
             f"current code. The run's own record says:</p>{technical_note_html(note)}") if note else (
             f"<p>The candidate pages show figures from the stored runs ({', '.join('<code>' + e(c['run']) + '</code>' for c in data.get('showcase') or []) or '<code>' + e(run['name']) + '</code>'}), made with the current code.</p>")
-    return f"""<header><h1 class="lead-h" id="h-docs" tabindex="-1">Run it yourself.</h1>
-        <p>SetuHQ is open source. Install it, search a star's light curve with the same panel this site shows, contribute a sweep of the sky, or let your AI assistant use it.</p></header>
+    T = i18n.t
+    cards = [("start", T("docs.start", "Get started"), T("docs.start.p", "Install, then search any TESS star's light curve, as each of this site's example runs did."), "#start", T("docs.start.a", "Install and first run ›")),
+             ("contribute", T("docs.contribute", "Contribute a sweep"), T("docs.contribute.p", "Search a slice of a TESS sector on your own machine and send the result, with credit."), "#contribute", T("docs.contribute.a", "How to contribute ›")),
+             ("mcp", T("docs.mcp", "Use it from an assistant"), T("docs.mcp.p", "The MCP server lets an assistant run SetuHQ's own code and read its results."), "#mcp", T("docs.mcp.a", "Connect over MCP ›")),
+             ("data", T("docs.data", "Data and files"), T("docs.data.p", "Every catalogue on this site as a download, and the reports behind the evidence."), "#data", T("docs.data.a", "Downloads ›")),
+             ("pictures", T("docs.pictures", "How the pictures are drawn"), T("docs.pictures.p", "Stars in their blackbody colour; planets as artist's impressions chosen from measured radius and irradiation. Every rule and source."), "/docs/pictures/", T("docs.pictures.a", "The pictures ›")),
+             ("editions", T("docs.editions", "Editions"), T("docs.editions.p", "The open core is free. SetuHQ Pro (in development) and custom studies are under contract, with no prices: each starts with a message."), "/editions/", T("docs.editions.a", "Compare the editions ›"))]
+    grid = "\n".join(f'        <section class="card"><h2{i18n.k("docs." + c)}>{h}</h2><p{i18n.k("docs." + c + ".p")}>{p}</p><a href="{u}"{i18n.k("docs." + c + ".a")}>{a}</a></section>' for c, h, p, u, a in cards)
+    return f"""<header><h1 class="lead-h" id="h-docs" tabindex="-1"{i18n.k("docs.h1")}>{T("docs.h1", "Run it yourself.")}</h1>
+        <p{i18n.k("docs.intro")}>{T("docs.intro", "SetuHQ is open source. Install it, search a star's light curve with the same panel this site shows, contribute a sweep of the sky, or let your AI assistant use it.")}</p></header>
       <div class="docgrid">
-        <section class="card"><h2>Get started</h2><p>Install, then search any TESS star's light curve, as each of this site's example runs did.</p><a href="#start">Install and first run ›</a></section>
-        <section class="card"><h2>Contribute a sweep</h2><p>Search a slice of a TESS sector on your own machine and send the result, with credit.</p><a href="#contribute">How to contribute ›</a></section>
-        <section class="card"><h2>Use it from an assistant</h2><p>The MCP server lets an assistant run SetuHQ's own code and read its results.</p><a href="#mcp">Connect over MCP ›</a></section>
-        <section class="card"><h2>Data and files</h2><p>Every catalogue on this site as a download, and the reports behind the evidence.</p><a href="#data">Downloads ›</a></section>
-        <section class="card"><h2>How the pictures are drawn</h2><p>Stars in their blackbody colour; planets as artist's impressions chosen from measured radius and irradiation. Every rule and source.</p><a href="/docs/pictures/">The pictures ›</a></section>
+{grid}
       </div>
       <div class="prose">
-        <h2 id="start">Install and first run</h2>
-        <p>SetuHQ needs Python {python_floor()} or newer.</p>
+        <h2 id="start"{i18n.k("docs.install")}>{T("docs.install", "Install and first run")}</h2>
+        <p{i18n.k("docs.python", v=python_floor())}>{T("docs.python", "SetuHQ needs Python {v} or newer.", v=python_floor())}</p>
         <pre tabindex="0"><code>pip install "setuhq[tess] @ git+{REPO_URL}"
 setuhq run configs/showcase/tess-wasp-126-s1.toml --out runs/tess-wasp-126-s1   # or any star: copy a config, change its TIC and sectors
 setuhq crossmatch runs/tess-wasp-126-s1          # the NASA Exoplanet Archive's planets for the star
 setuhq site runs/tess-wasp-126-s1 --out site     # a website from your run (several runs: list them all)</code></pre>
         <p>Every example on this site has its configuration in <code>configs/</code> and its one-line command in <a rel="noopener" href="{REPO_URL}/blob/main/docs/SHOWCASE.md">docs/SHOWCASE.md</a>. The run downloads the light curve from MAST, cleans it, lets the panel mark dips, vets each signal and writes every result with its provenance. The Probes run with no account; the Sentinels need an API key for their provider. {e(ATTRIBUTION)}</p>
-        <h2 id="contribute">Contribute a sweep</h2>
+        <h2 id="contribute"{i18n.k("docs.contribute")}>{T("docs.contribute", "Contribute a sweep")}</h2>
         <p>A sweep searches every 2-minute target of a TESS sector and keeps every dip it finds, classified, with nothing thrown away. You can run a slice and send it in:</p>
         <pre tabindex="0"><code>setuhq sweep configs/sweep.toml --sector 5 --limit 200 --workers 3
 setuhq bundle my-sweep/sector_0005.json.gz --contributor "Your Name" --out bundle/</code></pre>
         <p>Open a pull request with the bundle. A maintainer checks it and merges it into <a href="/catalogue/everything-that-dims/">Everything that dims</a>, with your name on every entry it brings. See <a rel="noopener" href="{REPO_URL}/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>.</p>
-        <h2 id="mcp">Use it from an AI assistant (MCP)</h2>
+        <h2 id="mcp"{i18n.k("docs.mcp.h")}>{T("docs.mcp.h", "Use it from an AI assistant (MCP)")}</h2>
         <pre tabindex="0"><code>pip install "setuhq[tess,mcp] @ git+{REPO_URL}"
 setuhq-mcp --list-tools</code></pre>
         <p>Set-up for each assistant is in <a rel="noopener" href="{REPO_URL}/blob/main/docs/MCP-INSTALL.md">docs/MCP-INSTALL.md</a>.</p>
-        <h2 id="data">Data and files</h2>
+        <h2 id="data"{i18n.k("docs.data")}>{T("docs.data", "Data and files")}</h2>
         <ul>
           <li><a href="/{CATALOGUE_JSON}">The catalogue of known planets (JSON)</a> and <a href="/assets/data/{CSV_NAME}">every planet on the Galaxy map (CSV)</a>, from exoplanet.eu.</li>
           <li><a href="/{VARIABLES_JSON}">Everything that dims (JSON)</a>: every entry of SetuHQ's sweep, with its credit.</li>
-          {"".join(f'<li>{e(c["star"])} ({e(c["kind"] or c["run"])}): <a href="{e(c["report"])}">the run report</a>, <a href="{e(c["plates"])}">the plates</a> and <a href="{e(c["case_file"])}">the case file</a> of run {e(c["run"])}.</li>' for c in data.get("showcase") or [])}
+          {"".join(f'<li>{e(c["star"])} ({e(c["kind"] or c["run"])}): ' + i18n.span("docs.runfiles", '<a href="{report}">the run report</a>, <a href="{plates}">the plates</a> and <a href="{cf}">the case file</a> of run {run}.', report=c["report"], plates=c["plates"], cf=c["case_file"], run=c["run"]) + '</li>' for c in data.get("showcase") or [])}
           <li>The benchmark, the leaderboard and the paper: <a rel="noopener" href="{REPO_URL}/tree/main/docs">docs/ in the repository</a>.</li>
         </ul>
         <p>SetuHQ's own data, benchmark, leaderboard and paper are under CC BY 4.0; the code is under the AGPL-3.0 (a commercial licence is available). Cite it with <a rel="noopener" href="{REPO_URL}/blob/main/CITATION.cff">CITATION.cff</a>.</p>
-        <h2 id="provenance">Technical details: where the figures come from</h2>
+        <h2 id="provenance"{i18n.k("docs.prov")}>{T("docs.prov", "Technical details: where the figures come from")}</h2>
         {prov}
         <p>Every number on the candidate and evidence pages is read from stored files: the run directory, the search catalogue and the calibrated reviewer weights. <a href="/evidence/runs/">Runs and configuration</a> lists the files, the configuration and its hash.</p>
       </div>"""
@@ -634,9 +717,10 @@ def pictures_section() -> str:
         ("Orbits", "the planets at their phases for t = 0, one at conjunction with its dip marked"),
         ("Counters and timelines", "the final numbers and the full bars"),
         ("The starfield", "its static image")))
-    return f"""<header><h1 class="lead-h" id="h-pictures" tabindex="-1">How the pictures are drawn.</h1>
-        <p>Every star on SetuHQ is drawn in its blackbody colour from its stored temperature. Every planet is an artist's impression: its look is chosen from two measured things, its radius (or, without one, its mass) and the light it gets from its star. Nothing in a picture is measured beyond those numbers, and composition never is.</p></header>
-      <section class="prose" aria-labelledby="h-pic-rules"><h2 id="h-pic-rules">The rules</h2>
+    T = i18n.t
+    return f"""<header><h1 class="lead-h" id="h-pictures" tabindex="-1"{i18n.k("pic.h1")}>{T("pic.h1", "How the pictures are drawn.")}</h1>
+        <p{i18n.k("pic.intro")}>{T("pic.intro", "Every star on SetuHQ is drawn in its blackbody colour from its stored temperature. Every planet is an artist's impression: its look is chosen from two measured things, its radius (or, without one, its mass) and the light it gets from its star. Nothing in a picture is measured beyond those numbers, and composition never is.")}</p></header>
+      <section class="prose" aria-labelledby="h-pic-rules"><h2 id="h-pic-rules"{i18n.k("pic.rules")}>{T("pic.rules", "The rules")}</h2>
         <p>Composition, from the radius in Earth radii (1 RJ = 11.209 R⊕):</p>
         <div class="tablewrap"><table><thead><tr><th scope="col">Drawn as</th><th scope="col">Radius</th><th scope="col">Why</th></tr></thead><tbody>{rad}</tbody></table></div>
         <p>Without a radius, from the mass (or m sin i, a minimum mass) in Earth masses; such a planet is drawn at a fixed size, marked not to scale. With neither, no planet is drawn.</p>
@@ -645,7 +729,7 @@ def pictures_section() -> str:
         <div class="tablewrap"><table><thead><tr><th scope="col">Band</th><th scope="col">Teq</th><th scope="col">Why</th></tr></thead><tbody>{bands}</tbody></table></div>
         <p>A star's colour: a Planck spectrum from 380 to 780 nm, through the CIE 1931 colour-matching functions (the multi-lobe fit of Wyman, Sloan and Shirley 2013), to sRGB, normalised so the colour is a hue, not a brightness. Limb darkening is the quadratic law with Claret's (2017) TESS-band coefficients, applied to a visible disc. Granulation and planet surfaces are texture only: decorative, never data.</p>
       </section>
-      <section class="prose" aria-labelledby="h-pic-table"><h2 id="h-pic-table">The look table</h2>
+      <section class="prose" aria-labelledby="h-pic-table"><h2 id="h-pic-table"{i18n.k("pic.table")}>{T("pic.table", "The look table")}</h2>
         <p>One row per look: what it is drawn for, by the rules above, and what its surface shows. The same table (setuhq.looks.LOOKS) drives the pictures, so a picture can only be one of these.</p>
         <div class="tablewrap" tabindex="0" role="region" aria-labelledby="h-pic-table"><table class="looktable"><thead><tr><th scope="col">Look</th><th scope="col">Composition</th><th scope="col">Bands</th><th scope="col">Drawn for</th><th scope="col">Surface</th></tr></thead><tbody>{looktable}</tbody></table></div>
       </section>
@@ -653,36 +737,37 @@ def pictures_section() -> str:
         <p class="lookintro">Each look as its still (seed 1). Oceans and continents are drawn only for Earth itself, the Solar System reference; no exoplanet is given water.</p>
         <ul class="lookgrid">{"".join(cards)}</ul>
       </section>
-      <section class="prose" aria-labelledby="h-pic-labels"><h2 id="h-pic-labels">The five labels</h2>
-        <p>Every picture on the site carries one of these, on the picture itself.</p>
+      <section class="prose" aria-labelledby="h-pic-labels"><h2 id="h-pic-labels"{i18n.k("pic.labels")}>{T("pic.labels", "The five labels")}</h2>
+        <p{i18n.k("pic.labels.p")}>{T("pic.labels.p", "Every picture on the site carries one of these, on the picture itself.")}</p>
         <div class="tablewrap" tabindex="0" role="region" aria-labelledby="h-pic-labels"><table><tbody>{labels}</tbody></table></div>
-        <h2 id="h-pic-real">What is real and what is drawn</h2>
+        <h2 id="h-pic-real"{i18n.k("pic.real")}>{T("pic.real", "What is real and what is drawn")}</h2>
         <div class="tablewrap" tabindex="0" role="region" aria-labelledby="h-pic-real"><table><thead><tr><th scope="col">Where</th><th scope="col">What is drawn</th><th scope="col">What is measured in it</th></tr></thead><tbody>{surfaces}</tbody></table></div>
-        <h2 id="h-pic-colour">Star colour</h2>
+        <h2 id="h-pic-colour"{i18n.k("pic.colour")}>{T("pic.colour", "Star colour")}</h2>
         <p>The colour is computed, not picked: Planck's law at the star's Teff, sampled from 380 to 780 nm in 5 nm steps, weighted by the CIE 1931 colour-matching functions (the multi-lobe fit of Wyman, Sloan and Shirley 2013), converted from XYZ to linear sRGB, normalised to the brightest channel and gamma-encoded. Teff is clamped to 1,000–40,000 K. Because of the normalisation every star is equally bright on screen: the colour is a hue, not a luminosity. The limb darkening is the quadratic law with Claret's (2017) coefficients for the TESS band, a red-optical law applied to a visible disc.</p>
         <div class="tablewrap" tabindex="0" role="region" aria-labelledby="h-pic-colour"><table><thead><tr><th scope="col">Teff</th><th scope="col">Colour</th><th scope="col">For example</th></tr></thead><tbody>{swatches}</tbody></table></div>
       </section>
-      <section aria-labelledby="h-pic-draw"><h2 id="h-pic-draw">The star and the transit</h2>
+      <section aria-labelledby="h-pic-draw"><h2 id="h-pic-draw"{i18n.k("pic.draw")}>{T("pic.draw", "The star and the transit")}</h2>
         <div class="rendrow">{star}{tr}</div>
       </section>
-      <section class="prose" aria-labelledby="h-pic-still"><h2 id="h-pic-still">With reduced motion</h2>
-        <p>When your device asks for reduced motion, nothing loops: each drawing shows one designed frame, and anything that plays waits for its button.</p>
+      <section class="prose" aria-labelledby="h-pic-still"><h2 id="h-pic-still"{i18n.k("pic.still")}>{T("pic.still", "With reduced motion")}</h2>
+        <p{i18n.k("pic.still.p")}>{T("pic.still.p", "When your device asks for reduced motion, nothing loops: each drawing shows one designed frame, and anything that plays waits for its button.")}</p>
         <div class="tablewrap" tabindex="0" role="region" aria-labelledby="h-pic-still"><table><thead><tr><th scope="col">Drawing</th><th scope="col">Its still</th></tr></thead><tbody>{stills}</tbody></table></div>
       </section>"""
 
 
-NOTFOUND_LINES = {"explore": "The sky, the Galaxy and every catalogued planet.", "candidates": "Every dip the example runs found, with its checks.",
-                  "how": "Fifteen chapters on how planets are found.", "evidence": "The reviewers, the benchmark and the runs.",
-                  "docs": "Install SetuHQ and run it yourself."}
+NOTFOUND_LINES = {"explore": N_("nf.explore", "The sky, the Galaxy and every catalogued planet."), "candidates": N_("nf.candidates", "Every dip the example runs found, with its checks."),
+                  "how": N_("nf.how", "Fifteen chapters on how planets are found."), "evidence": N_("nf.evidence", "The reviewers, the benchmark and the runs."),
+                  "docs": N_("nf.docs", "Install SetuHQ and run it yourself.")}
 
 
 def notfound_section() -> str:
-    cards = "".join(f'<li><a class="docard" href="{from_hash(h)}"><b>{html.escape(label)}</b>'
-                    + (f'<span>{html.escape(NOTFOUND_LINES[k])}</span>' if k in NOTFOUND_LINES else "")
+    cards = "".join(f'<li><a class="docard" href="{from_hash(h)}"><b{i18n.k("nav." + k)}>{html.escape(label)}</b>'
+                    + (f'<span{i18n.k("nf." + k)}>{html.escape(NOTFOUND_LINES[k])}</span>' if k in NOTFOUND_LINES else "")
                     + '<i aria-hidden="true">›</i></a></li>' for k, label, h in NAV)
-    return f"""<header><h1 class="lead-h" id="h-notfound" tabindex="-1">This page is not here.</h1>
-        <p>The address may be mistyped, or the page may have moved when the site was reorganised. Old addresses forward on their own; this one has no new home.</p></header>
-      <div class="nfsearch"><a class="btn primary" href="/">Go to the home page</a><button class="btn" type="button" data-open-search>Search planets, stars and pages</button></div>
+    T = i18n.t
+    return f"""<header><h1 class="lead-h" id="h-notfound" tabindex="-1"{i18n.k("nf.h1")}>{T("nf.h1", "This page is not here.")}</h1>
+        <p{i18n.k("nf.intro")}>{T("nf.intro", "The address may be mistyped, or the page may have moved when the site was reorganised. Old addresses forward on their own; this one has no new home.")}</p></header>
+      <div class="nfsearch"><a class="btn primary" href="/"{i18n.k("nf.home")}>{T("nf.home", "Go to the home page")}</a><button class="btn" type="button" data-open-search{i18n.k("nf.search")}>{T("nf.search", "Search planets, stars and pages")}</button></div>
       <ul class="docards nfcards">{cards}</ul>"""
 
 
@@ -728,6 +813,8 @@ def _dip_header(section: str, d: dict, label: str, caveat: str = "", panel: dict
         out = out.replace('<p class="note" id="txcaveat" hidden></p>', f'<p class="note" id="txcaveat">What this run did not recover: {e(caveat)}</p>', 1)
     if d.get("outcome") == "rejected":  # a rejected dip is not called a transit
         out = out.replace('<span id="txcapword">The transit, played back</span>', '<span id="txcapword">The dip, played back</span>', 1)
+    out = out.replace('<div id="txjourney"></div>', f'<div id="txjourney">{d.get("journey") or ""}</div>', 1)
+    out = out.replace('<p class="small" id="txlight"></p>', f'<p class="small" id="txlight">{e(d.get("light") or "")}</p>', 1)
     out = out.replace('<p class="casefile" id="txcase"></p>', f'<p class="casefile" id="txcase"><a class="btn primary" href="{e(url_for("candidates", {"dip": d["id"]}))}">Open the full case file ›</a></p>', 1)
     ring = viz.panelring.html(panel) if panel else ""
     verdict = f'<p class="txverdict">{e(d["verdict"])}</p>' if d.get("verdict") else ""
@@ -783,6 +870,9 @@ def _star_section(section: str, cat: dict, name: str, idx: list[int]) -> tuple[s
     P = cat["planets"]
     out = section.replace('<h1 class="lead-h" id="h-star" tabindex="-1">Star</h1><p id="stsub"></p>',
                           f'<h1 class="lead-h" id="h-star" tabindex="-1">{e(name)}</h1><p id="stsub">{len(idx)} known planet{"s" if len(idx) != 1 else ""} in {e(cat["source_short"])}</p>', 1)
+    first = sorted(idx, key=lambda j: P["period"][j] if P["period"][j] is not None else 1e99)[0]  # the page's script reads the innermost
+    light = journey.light_line(P["dist"][first], f"{cat['source_short']}, fetched {str(cat['fetched_at'])[:10]}", what="this star")
+    out = out.replace('<p class="small" id="stlight"></p>', f'<p class="small" id="stlight">{e(light)}</p>', 1)
     out = out.replace('<div id="stplanets"></div>', f'<div id="stplanets">{still_list(cat, idx)}</div>', 1)
     out = out.replace('<div class="plextra" id="stextra"></div>', f'<div class="plextra" id="stextra">{star_extras(cat, name, idx)}</div>', 1)
     return out, f"{name}: a star with {len(idx)} known planet{'s' if len(idx) != 1 else ''}, from {cat['source_short']}."
@@ -829,6 +919,91 @@ STARFIELD = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 1100" pr
 STARFIELD_CSS = renderer.RENDER_CSS  # the starfield's rules live with the renderer (V11)
 
 
+# The language picker, the suggestion and the machine-translation note; and type for Japanese and Chinese, which the
+# self-hosted Latin fonts do not cover: the visitor's own system fonts, in each language's order (nothing is fetched).
+I18N_CSS = """
+.langpick{position:relative;flex:none}
+.langpick>summary{list-style:none;width:auto;min-width:44px;padding:0 8px;gap:4px;font:500 11.5px var(--mono);letter-spacing:.04em}
+.langpick>summary::-webkit-details-marker{display:none}
+.langpick>summary svg{width:18px;height:18px}
+.langmenu{position:absolute;right:0;top:calc(100% + 8px);z-index:60;width:min(320px,calc(100vw - 32px));padding:10px;border-radius:18px;border:1px solid var(--line-2);background:var(--bg-2);box-shadow:0 24px 40px -24px rgba(0,0,0,.6)}
+.langmenu ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.langmenu a{display:flex;align-items:center;min-height:44px;padding:0 10px;border-radius:10px;color:var(--ink-2);text-decoration:none;font-size:14px}
+.langmenu a:hover{background:var(--panel-2);color:var(--ink)}
+.langmenu a[aria-current]{background:var(--seg-bg);color:var(--seg-ink)}
+.langnote{margin:8px 6px 4px;font-size:12px;line-height:1.45;color:var(--ink-3)}
+.langnote a,.mtnote a{color:var(--ink-2)}
+.langhint{position:relative;z-index:45;display:flex;align-items:center;justify-content:center;gap:12px;padding:6px max(16px,env(safe-area-inset-right,0px)) 6px max(16px,env(safe-area-inset-left,0px));background:var(--bg-2);border-bottom:1px solid var(--line)}
+.langhint p{margin:0;font-size:14px;color:var(--ink-2)}
+.langhint .btn{min-height:44px;min-width:44px;padding:0}
+.sitefoot .mtnote{color:var(--ink-2)}
+:root:lang(ja){--sans:"Geist","Geist Fallback","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI","Yu Gothic",Meiryo,"Noto Sans CJK JP","Noto Sans JP","IPAexGothic","IPAGothic",system-ui,sans-serif}
+:root:lang(zh-Hans){--sans:"Geist","Geist Fallback","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC","Noto Sans SC","Source Han Sans SC",system-ui,sans-serif}
+:lang(ja) *,:lang(zh-Hans) *{letter-spacing:0!important;word-break:normal;line-break:strict;overflow-wrap:anywhere}
+:lang(ja) h1,:lang(ja) h2,:lang(zh-Hans) h1,:lang(zh-Hans) h2{line-height:1.25}
+@media (max-width:420px){.langpick>summary .langcode{display:none}}
+"""
+# Messages the shell's script declares (the suggestion bar, the theme and menu buttons).
+N_("i18n.suggest.label", "Language")
+N_("i18n.suggest.text", "This page is also in English.", note="Said in the language it offers: 'This page is also in German.' in German.")
+N_("i18n.suggest.go", "Read it in English", note="In the language it offers.")
+N_("i18n.suggest.dismiss", "Dismiss")
+
+
+def write_i18n_assets(out: Path) -> dict[str, str]:
+    """Each language's catalogue for the browser (assets/i18n/<lang>-<hash>.json); returns their addresses."""
+    d = out / "assets" / "i18n"
+    d.mkdir(parents=True, exist_ok=True)
+    urls = {}
+    for lang in i18n.TRANSLATIONS:
+        text = json.dumps(i18n.client_catalogue(lang), ensure_ascii=False, separators=(",", ":"))
+        name = f"{lang}-{_sha(text)}.json"
+        (d / name).write_text(text, encoding="utf-8")
+        urls[lang] = f"/assets/i18n/{name}"
+    return urls
+
+
+def i18n_script(cat_urls: dict[str, str]) -> str:
+    """The languages' script (i18n-*.js, before the shell's on every page): its configuration (the languages, the
+    catalogues' addresses and the pages that have an address in every language), then setuhq.i18n.SHELL_JS."""
+    conf = {"locales": list(i18n.LOCALES), "cat": cat_urls, "main": list(MAIN_PATHS)}
+    return "const I18N_CONF = " + json.dumps(conf, separators=(",", ":")) + ";\n" + i18n.SHELL_JS
+
+
+def localize_page(src: str, lang: str, path: str) -> str:
+    """The English page at ``path`` as its /<lang>/ twin: every keyed element in ``lang``, links to pages that have
+    an address in every language kept in it, its own canonical address, the picker, and the machine-translation
+    note shown."""
+    new = lang_path(path, lang)
+
+    def link(h: str) -> str:
+        if not h.startswith("/") or h.startswith("//"):
+            return h
+        base = re.split(r"(?=[?#])", h, maxsplit=1)
+        return lang_path(base[0], lang) + (h[len(base[0]):]) if base[0] in MAIN_PATHS else h
+
+    out = i18n.localize_html(src, lang, link=link)
+    out = out.replace('<html lang="en"', f'<html lang="{lang}"', 1)
+    url, nurl = html.escape(brand.SITE_URL + path), html.escape(brand.SITE_URL + new)
+    out = out.replace(f'<link rel="canonical" href="{url}">', f'<link rel="canonical" href="{nurl}">', 1)
+    out = out.replace(f'<meta property="og:url" content="{url}">', f'<meta property="og:url" content="{nurl}"><meta property="og:locale" content="{i18n.OG_LOCALE[lang]}">', 1)
+    out = re.sub(r'<details class="langpick">.*?</details>', lambda m: langpick(path, lang), out, count=1, flags=re.S)
+    return out.replace('<p class="mtnote" data-i18n="i18n.mtnote" hidden>', '<p class="mtnote" data-i18n="i18n.mtnote">', 1)
+
+
+def write_lang_pages(out: Path, main_pages: dict[str, str]) -> list[str]:
+    """Every page that has an address in every language, written under /<lang>/; returns their addresses."""
+    done = []
+    for lang in i18n.TRANSLATIONS:
+        for path, text in sorted(main_pages.items()):
+            new = lang_path(path, lang)
+            d = out / new.strip("/")
+            d.mkdir(parents=True, exist_ok=True)
+            (d / "index.html").write_text(localize_page(text, lang, path))
+            done.append(new)
+    return done
+
+
 def _clear(out: Path) -> None:
     """Empty the output folder, keeping CNAME (the custom domain) and .nojekyll."""
     if not out.exists():
@@ -839,7 +1014,14 @@ def _clear(out: Path) -> None:
         shutil.rmtree(p) if p.is_dir() else p.unlink()
 
 
-def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ", catalog_path: str | Path | None = None,
+def build_site(*args, **kwargs) -> Path:
+    """Write the whole site (see _build_site). The site's own pages are written in English and in every language
+    of setuhq.i18n, whatever language the command itself speaks."""
+    with i18n.use(i18n.SOURCE):
+        return _build_site(*args, **kwargs)
+
+
+def _build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ", catalog_path: str | Path | None = None,
                weights_path: str | Path | None = DEFAULT_WEIGHTS, star: str | None = None, require_crossmatch: bool = False,
                sweep_path: str | Path | None = DEFAULT_SWEEP, validation_md: str | Path | None = None,
                benchmark_md: str | Path | None = None, extras: bool = True, extra_runs: list | tuple = (),
@@ -879,9 +1061,18 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
     sections = {k: clean_links(v, lead) for k, v in route_sections(data).items()}
     sections["docs"] = clean_links(docs_section(data), lead)
     sections["pictures"] = clean_links(pictures_section(), lead)
+    sections["stellar"] = clean_links(stellarpages.evidence_section(), lead)
+    sections["stellardocs"] = clean_links(stellarpages.docs_stellar_section(), lead)
+    sections["propose"] = clean_links(stellarpages.docs_propose_section(), lead)
+    sections["tessnow"] = clean_links(tessnow.section(data), lead)
+    sections["vetter"] = clean_links(vetter.section(data), lead)
+    sections["editions"] = clean_links(editions.section(), lead)
     payload = json.dumps(app_payload(data), separators=(",", ":"), ensure_ascii=False, allow_nan=False)
-    app_js = APP_JS.replace("const RT = D.routes;\n", "const RT = D.routes;\n" + ROUTES_CORE_JS, 1)
-    css = APP_CSS + brand.LOGO_CSS + renderer.RENDER_CSS + SITE_CSS + viz.VIZ_CSS
+    app_js = APP_JS.replace("const RT = D.routes;\n", "const RT = D.routes;\n" + ROUTES_APP_JS, 1)
+    css = strip_css(APP_CSS + brand.LOGO_CSS + renderer.RENDER_CSS + SITE_CSS + I18N_CSS + viz.VIZ_CSS + stellarpages.CSS + journey.CSS + features.CSS)
+    app_js = strip_js(app_js)
+    i18n_js = strip_js(i18n_script(write_i18n_assets(out)))
+    shell_js = strip_js(f"const I18N_SRC = '/assets/i18n-{_sha(i18n_js)}.js';\n" + SHELL_JS)
     routes_html = "".join(f'<section class="route" id="route-{k}" data-route="{k}" aria-labelledby="h-{k}" hidden>{v}</section>'
                           for k, v in sections.items())
     # The shared system view's markup (the Galaxy's sheet copies it) rides in the shared views file, not in every page.
@@ -892,9 +1083,9 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
               f'{SEARCH_DIALOG}{LEARN_BAR}<template id="mxsystpl">{system_stage()}</template></div>')
     chrome = clean_links(chrome, lead)
     starfield = STARFIELD.format(dust=data["deco"]["dust"], bright=data["deco"]["bright"])
-    for key, name, text in (("shell", "shell", shell_css()), ("css", "site", css), ("js", "site", SHELL_JS), ("app", "app", app_js), ("data", "data/app", payload),
+    for key, name, text in (("shell", "shell", shell_css()), ("css", "site", css), ("js", "site", shell_js), ("i18n", "i18n", i18n_js), ("app", "app", app_js), ("data", "data/app", payload),
                             ("routes", "views", routes_html), ("starfield", "starfield", starfield), ("chrome", "chrome", chrome)):
-        ext = {"shell": "css", "css": "css", "js": "js", "app": "js", "data": "json", "routes": "html", "starfield": "svg", "chrome": "html"}[key]
+        ext = {"shell": "css", "css": "css", "js": "js", "i18n": "js", "app": "js", "data": "json", "routes": "html", "starfield": "svg", "chrome": "html"}[key]
         rel = f"assets/{name}-{_sha(text)}.{ext}"
         (out / rel).write_text(text)
         assets[key] = "/" + rel
@@ -910,29 +1101,39 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
         (out / VARIABLES_JSON).write_text(json.dumps(data["sweep_full"], separators=(",", ":"), ensure_ascii=False, allow_nan=False))
 
     pages: list[str] = []
+    main_pages: dict[str, str] = {}
 
     def write(path: str, text: str) -> None:
         d = out / path.strip("/")
         d.mkdir(parents=True, exist_ok=True)
         (d / "index.html").write_text(text)
         pages.append(path)
+        if path in MAIN_PATHS:
+            main_pages[path] = text
 
-    def view(route, title_, desc, path, body=None, **kw):
+    def view(route, title_, desc, path, body=None, *, did=None, dargs=None, targs=None, **kw):
+        tid = f"route.{route}.title"
+        if targs is None and "{name}" in (ROUTE_META[route].get("title_tpl") or ""):
+            targs = {"name": kw.get("name") or ROUTE_META[route]["label"]}
         write(path, page(route=route, title=title_, description=desc, path=path, body=body if body is not None else sections[route],
-                         assets=assets, lead=lead, **kw))
+                         assets=assets, lead=lead, keys=(tid, targs or {}, did, dargs or {}), **kw))
 
     run, hero = data["run"], data["hero"]
+    t = i18n.t
     view("overview", _title("overview"),
-         f"{brand.TAGLINE} A calibrated panel of Sentinels and Probes reads TESS light curves and explains every verdict. "
-         f"Every SetuHQ result is a {UNCONFIRMED}.", "/")
-    view("sky", _title("sky"), f"The run's star on an all-sky map, with the dips the panel marked and where surveys have looked. {hero['headline']}", "/explore/")
-    view("galaxy", _title("galaxy"), "Every known exoplanet with a stored distance, placed in 3D around the Sun, by discovery method and year.", "/explore/galaxy/", name="Galaxy")
-    view("mission", _title("mission"), "A tiling workspace of SetuHQ's views, linked by one selected star: the Galaxy, the sky, the light curve, the catalogue and the panel's feed.", "/explore/mission-control/", name="Mission Control")
-    view("catalogue", _title("catalogue"), "Every planet in exoplanet.eu, searchable and sortable, each with its own page. SetuHQ did not discover these planets.", "/catalogue/", name="Catalogue")
-    view("variables", _title("variables"), "SetuHQ's sweep of TESS sectors: every dip found and classified, each class set against its own null.", "/catalogue/everything-that-dims/", name="Everything that dims")
+         t("desc.overview", "{tagline} A calibrated panel of Sentinels and Probes reads TESS light curves and explains every verdict. "
+           "Every SetuHQ result is a {status}.", tagline=brand.TAGLINE, status=UNCONFIRMED), "/",
+         did="desc.overview", dargs={"tagline": brand.TAGLINE, "status": UNCONFIRMED, "status@": "honesty.unconfirmed"})
+    view("sky", _title("sky"), t("desc.sky", "The run's star on an all-sky map, with the dips the panel marked and where surveys have looked. {headline}", headline=hero["headline"]),
+         "/explore/", did="desc.sky", dargs={"headline": hero["headline"]})
+    view("galaxy", _title("galaxy"), t("desc.galaxy", "Every known exoplanet with a stored distance, placed in 3D around the Sun, by discovery method and year."), "/explore/galaxy/", name="Galaxy", did="desc.galaxy")
+    view("mission", _title("mission"), t("desc.mission", "A tiling workspace of SetuHQ's views, linked by one selected star: the Galaxy, the sky, the light curve, the catalogue and the panel's feed."), "/explore/mission-control/", name="Mission Control", did="desc.mission")
+    view("catalogue", _title("catalogue"), t("desc.catalogue", "Every planet in exoplanet.eu, searchable and sortable, each with its own page. SetuHQ did not discover these planets."), "/catalogue/", name="Catalogue", did="desc.catalogue")
+    view("variables", _title("variables"), t("desc.variables", "SetuHQ's sweep of TESS sectors: every dip found and classified, each class set against its own null."), "/catalogue/everything-that-dims/", name="Everything that dims", did="desc.variables")
     feed = data["catalog"]["candidates"]
-    view("explorer", _title("explorer"), f"The run's dips and their case files, and {len(feed)} entries of the search feed. Candidates are unconfirmed; none is a confirmed planet.", "/candidates/")
-    view("planets", _title("planets"), "What each candidate's depth would imply if it were a planet: the planet-to-star radius ratio, and why no planet size is stated.", "/candidates/radius-ratios/", name="Radius ratios")
+    view("explorer", _title("explorer"), t("desc.explorer", "The run's dips and their case files, and {n, plural, one {# entry} other {# entries}} of the search feed. Candidates are unconfirmed; none is a confirmed planet.", n=len(feed)),
+         "/candidates/", did="desc.explorer", dargs={"n": len(feed)})
+    view("planets", _title("planets"), t("desc.planets", "What each candidate's depth would imply if it were a planet: the planet-to-star radius ratio, and why no planet size is stated."), "/candidates/radius-ratios/", name="Radius ratios", did="desc.planets")
     target = hero.get("target") or "the run's star"
     for d in data["story"]["dips"] + data["showcase_dips"]:
         sec, h1 = _dip_header(sections["transit"], d, data["dips"][d["id"]]["label"],
@@ -941,17 +1142,25 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
         view("transit", _title("transit", h1), f"{h1}. The {what} played back from stored values, who on the panel marked it, and its vetting: {dip_state(d.get('outcome'))[2]}.",
              url_for("transit", {"dip": d["id"]}), body=sec, name=h1, params={"dip": d["id"]})
         view("candidates", _title("candidates", data["dips"][d["id"]]["label"]), f"Every check behind the verdict on {data['dips'][d['id']]['label']}: the transit strip, the measurements and the verdict ledger.",
-             url_for("candidates", {"dip": d["id"]}), name="Case file", params={"dip": d["id"]})
+             url_for("candidates", {"dip": d["id"]}), name="Case file", params={"dip": d["id"]}, targs={"name": data["dips"][d["id"]]["label"]})
     for i, (cid, ctitle) in enumerate(CHAPTERS):
         path = url_for("methods", {"ch": cid})
         view("methods", _title("methods", ctitle),
-             f"Chapter {i + 1} of {len(CHAPTERS)} of How it works: {ctitle}. An animated explainer with its physics and sources.",
-             path, body=_chapter_section(sections["methods"], cid), name=ctitle, params={"ch": cid}, partial=True)
-    view("sentinels", _title("sentinels"), f"The reviewers behind every verdict, their calibration, and how the panel scores blind on real TESS Objects of Interest. {ATTRIBUTION}", "/evidence/")
-    view("leaderboard", _title("leaderboard"), "Methods scored blind on the held-out half of the real-TOI benchmark, with Wilson 95% intervals.", "/evidence/leaderboard/", name="Leaderboard")
-    view("runs", _title("runs"), "Every search run, its errors as stored, and the configuration behind the candidate pages.", "/evidence/runs/", name="Runs")
-    view("docs", _title("docs"), "Install SetuHQ, search a star, contribute a sweep, connect an AI assistant over MCP, and download the data.", "/docs/")
-    view("pictures", _title("pictures"), "How SetuHQ draws its pictures: stars in their blackbody colour, and planets as artist's impressions chosen from measured radius and irradiation, with every rule and source.", "/docs/pictures/", name="How the pictures are drawn")
+             t("desc.methods", "Chapter {i} of {n} of How it works: {title}. An animated explainer with its physics and sources.", i=i + 1, n=len(CHAPTERS), title=ctitle),
+             path, body=_chapter_section(sections["methods"], cid), name=ctitle, params={"ch": cid}, partial=True,
+             did="desc.methods", dargs={"i": i + 1, "n": len(CHAPTERS), "title": ctitle, "title@": "chapter." + cid}, targs={"name": ctitle, "name@": "chapter." + cid})
+    view("sentinels", _title("sentinels"), t("desc.sentinels", "The reviewers behind every verdict, their calibration, and how the panel scores blind on real TESS Objects of Interest. {attribution}", attribution=ATTRIBUTION),
+         "/evidence/", did="desc.sentinels", dargs={"attribution": ATTRIBUTION, "attribution@": "honesty.attribution"})
+    view("leaderboard", _title("leaderboard"), t("desc.leaderboard", "Methods scored blind on the held-out half of the real-TOI benchmark, with Wilson 95% intervals."), "/evidence/leaderboard/", name="Leaderboard", did="desc.leaderboard")
+    view("runs", _title("runs"), t("desc.runs", "Every search run, its errors as stored, and the configuration behind the candidate pages."), "/evidence/runs/", name="Runs", did="desc.runs")
+    view("docs", _title("docs"), t("desc.docs", "Install SetuHQ, search a star, contribute a sweep, connect an AI assistant over MCP, and download the data."), "/docs/", did="desc.docs")
+    view("stellar", _title("stellar"), t("desc.stellar", "Flares, pulsations, CHEOPS light curves, eclipsing binaries, rotation and transients: how far each of SetuHQ's stellar tools is validated, with every counted check and figures of real TESS data."), "/evidence/stellar/", name="Stars", did="desc.stellar")
+    view("stellardocs", _title("stellardocs"), t("desc.stellardocs", "Run SetuHQ's stellar commands: flares, pulsations, public CHEOPS light curves, eclipsing binaries, rotation and transients, with their validation status and ESA's terms for CHEOPS data."), "/docs/stellar/", name="Flares and pulsations", did="desc.stellardocs")
+    view("propose", _title("propose"), t("desc.propose", "Prepare a CHEOPS Guest Observers proposal with setuhq propose cheops: a drafting aid that checks the rules and the target and never submits anything."), "/docs/cheops-proposals/", name="CHEOPS proposals", did="desc.propose")
+    view("tessnow", _title("tessnow"), t("desc.tessnow", "Where the TESS satellite points, sector by sector, from its published schedule: the four camera fields on the sky map and the catalogued stars inside them. Not live telemetry."), "/explore/tess-now/", name="Where TESS is now", did="desc.tessnow")
+    view("vetter", _title("vetter"), t("desc.vetter", "Look at a real stored dip from SetuHQ's example runs, call it pass, flag or reject, then see what the vetting decided. A learning exercise; answers are not collected."), "/candidates/be-the-vetter/", name="Be the vetter", did="desc.vetter")
+    view("editions", _title("editions"), t("desc.editions", "SetuHQ's editions: the free open core (AGPL-3.0 or a commercial licence), SetuHQ Pro (in development, under contract) and custom studies. No prices; every paid route starts with a message."), "/editions/", name="Editions", did="desc.editions")
+    view("pictures", _title("pictures"), t("desc.pictures", "How SetuHQ draws its pictures: stars in their blackbody colour, and planets as artist's impressions chosen from measured radius and irradiation, with every rule and source."), "/docs/pictures/", name="How the pictures are drawn", did="desc.pictures")
 
     # Planet and star pages for every object the site names.
     cat = data.get("catalogue")
@@ -1029,12 +1238,23 @@ def build_site(run_dir: str | Path, out_dir: str | Path, *, title: str = "SetuHQ
         d.mkdir(parents=True, exist_ok=True)
         (d / "index.html").write_text(forward_page(new, names[old], lead))
 
+    # Every page with an address in every language, in each: /<lang>/... (docs/TRANSLATING.md).
+    lang_pages = write_lang_pages(out, main_pages)
+    (out / "assets" / "pages-i18n.json").write_text(json.dumps(lang_pages, indent=0) + "\n")
+
     # sitemap.xml (an index; setuhq.stubs adds the catalogue's planets and stars at deploy time) and robots.txt
-    urls = "".join(f"<url><loc>{html.escape(brand.SITE_URL + p)}</loc></url>" for p in pages)
-    (out / "sitemap-pages.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n'
-                                           f'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>\n')
+    def urlset(paths):
+        urls = "".join(f"<url><loc>{html.escape(brand.SITE_URL + p)}</loc></url>" for p in paths)
+        return '<?xml version="1.0" encoding="UTF-8"?>\n' f'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>\n'
+
+    (out / "sitemap-pages.xml").write_text(urlset(pages))
+    maps = ["sitemap-pages.xml"]
+    for lang in i18n.TRANSLATIONS:
+        (out / f"sitemap-lang-{lang}.xml").write_text(urlset(sorted(lang_path(p, lang) for p in main_pages)))
+        maps.append(f"sitemap-lang-{lang}.xml")
+    maps.sort(key=lambda m: m != "sitemap-pages.xml")
     (out / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
-                                     f'<sitemap><loc>{brand.SITE_URL}/sitemap-pages.xml</loc></sitemap></sitemapindex>\n')
+                                     + "".join(f"<sitemap><loc>{brand.SITE_URL}/{m}</loc></sitemap>" for m in maps) + "</sitemapindex>\n")
     # The small pages for the rest of the catalogue: their template and the header and footer they borrow.
     (out / "assets" / "stub-template.html").write_text(stub_template(assets, lead))
     (out / "robots.txt").write_text(f"User-agent: *\nDisallow: /assets/frame/\nAllow: /\n\nSitemap: {brand.SITE_URL}/sitemap.xml\n")
@@ -1111,7 +1331,7 @@ def shell_css() -> str:
             ".shellscope .footnav h2{letter-spacing:0}"
             "nav.report-nav{top:60px}\n")
     site = "\n".join(l for l in SITE_CSS.split("\n") if not l.strip().startswith(("main{", "main ", "body[data-route")))
-    return tokens + base + brand.LOGO_CSS + site
+    return tokens + base + brand.LOGO_CSS + site + I18N_CSS
 
 
 def wrap_standalone(page_html: str, route: str, name: str, assets: dict, lead: str | None) -> str:
@@ -1120,27 +1340,36 @@ def wrap_standalone(page_html: str, route: str, name: str, assets: dict, lead: s
     left out; the page's own logo link goes, since the header has it."""
     page_html = re.sub(r'<a href="/" aria-label="SetuHQ, home">.*?</a>', "", page_html, count=1, flags=re.S)
     head = (f'<script>{THEME_HEAD_JS}</script><link rel="stylesheet" href="/assets/fonts/fonts.css">'
-            f'<link rel="stylesheet" href="{assets["shell"]}"><script src="{assets["js"]}" defer></script>')
+            f'<link rel="stylesheet" href="{assets["shell"]}"><script src="{assets["i18n"]}" defer></script><script src="{assets["js"]}" defer></script>')
     top = (_topbar(lead).replace(SEARCH_BUTTON, "").replace('<header class="topbar">', '<header class="topbar shellscope">', 1)
            .replace('<a class="skip" href="#content">Skip to content</a>\n', ""))
     bar = _pagebar(route, name, {}, lead).replace('<div class="pagebar">', '<div class="pagebar shellscope">', 1)
     bar = re.sub(r'<div class="pagetools">.*?</div></div></div>$', "</div></div>", bar, flags=re.S)
     foot = _footer_html(lead).replace('<footer class="sitefoot">', '<footer class="sitefoot shellscope">', 1)
     page_html = page_html.replace("</head>", head + "</head>", 1)
-    page_html = re.sub(r"(<body[^>]*>)", lambda m: m.group(1) + "\n" + top + "\n" + bar, page_html, count=1)
+    page_html = re.sub(r"(<body[^>]*)>", lambda m: m.group(1) + " data-i18n-auto>\n" + top + "\n" + bar, page_html, count=1)
     return page_html.replace("</body>", foot + '<div id="announce" class="sr" aria-live="polite"></div></body>', 1)
 
 
 # The shared files' budgets (bytes), and two pages' own (characters), on top of PAGE_BUDGET and STANDALONE_BUDGET.
-ASSET_BUDGET = {"site-*.css": 140_000, "app-*.js": 430_000, "render-*.js": renderer.RENDER_BUDGET,
+# The shell's script (site-*.js: the header, menu and theme, and SetuUI's figure utilities) runs on every page, the
+# stand-alone pages and deploy-time stubs included, so it stays small.
+SHELL_BUDGET = 16_000
+# The languages' script (i18n-*.js: the picker, the suggestion and the formatting) runs on every page too; the
+# catalogues themselves are separate files, one per language (assets/i18n/<lang>-*.json), fetched only when used.
+I18N_BUDGET = 10_000
+CATALOGUE_BUDGET = 160_000
+ASSET_BUDGET = {"site-*.css": 140_000, "app-*.js": 430_000, "site-*.js": SHELL_BUDGET, "i18n-*.js": I18N_BUDGET, "i18n/*.json": CATALOGUE_BUDGET,
+                "render-*.js": renderer.RENDER_BUDGET,
                 "data/sky-*.json": viz.DATA_BUDGET["sky"], "data/stories-*.json": viz.DATA_BUDGET["stories"]}
 PAGE_BUDGETS = {"index.html": 90_000, "explore/index.html": 160_000}
+PAGE_BUDGETS.update({f"{lang}/{rel}": cap for lang in i18n.TRANSLATIONS for rel, cap in list(PAGE_BUDGETS.items())})
 STILL_BUDGET = {512: 40_000, 160: 8_000, "all": 850_000}
 STUB_BUDGET = 4_096
 
 
 def check_asset_budget(out_dir: str | Path) -> list[str]:
-    """The shared files over their budgets (the stylesheet, the app's script, the renderer, the data files, each
+    """The shared files over their budgets (the stylesheet, the app's script, the shell's script, the renderer, the data files, each
     still and all of them) and the home and Explore pages over theirs, as 'path: size' lines."""
     out, bad = Path(out_dir), []
     for pattern, cap in ASSET_BUDGET.items():

@@ -12,6 +12,7 @@ from setuhq import docket as docket_mod
 from setuhq.app import APP_CSS, APP_JS, app_data, build_app
 from setuhq.story import decoration, mollweide, number_words, sky_geometry
 from conftest import site_bundle
+from setuhq.i18n import unkey
 
 
 @pytest.fixture(autouse=True)
@@ -137,7 +138,7 @@ def test_explorer_and_sentinels_read_the_stored_feed_and_calibration(run_dir, tm
     feed = [{"tic": 1, "candidate_id": "x-1", "period_days": 2.5, "depth_ppm": 900.0, "snr": 9.1, "duration_hours": 2.0,
              "status": "new_candidate", "sector_span": [3, 4], "t_center": 1500.0, "time_unit": "BTJD"}]
     cat = tmp_path / "c.json"
-    cat.write_text(json.dumps({"candidates": feed, "runs": []}))
+    cat.write_text(json.dumps({"embargo": False, "candidates": feed, "runs": []}))  # a private catalogue (embargo off)
     data = app_data(run_dir, title="t", catalog_path=cat)
     ex = data["story"]["explorer"]
     assert ex[0]["tic"] == 1 and ex[0]["sectors"] == "3–4" and ex[0]["depth_ppm"] == 900.0
@@ -155,7 +156,7 @@ def test_home_page_is_the_overview_linking_into_the_site(run_dir, tmp_path):
     from setuhq.cli import main
 
     assert main(["site", str(run_dir), "--out", str(tmp_path / "site"), "--title", "setuhq", "--no-extras", "--allow-missing-crossmatch"]) == 0
-    page = (tmp_path / "site" / "index.html").read_text()
+    page = unkey((tmp_path / "site" / "index.html").read_text())
     assert "The sky, reviewed." in page and "What this page does not claim" in page
     assert 'href="/explore/"' in page and 'href="/candidates/" data-nav="candidates">Candidates</a>' in page
     assert f'href="{FONTS_CSS}"' in page and "fonts.googleapis" not in page

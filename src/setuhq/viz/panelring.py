@@ -32,6 +32,7 @@ import json
 import math
 from decimal import ROUND_HALF_UP, Decimal
 
+from setuhq.i18n import N_, k as ik, span
 from setuhq.names import ATTRIBUTION, DIP_STATE, PROBES_ONLY, dip_state
 from setuhq.viz import require_source
 
@@ -103,6 +104,31 @@ def aria(data: dict, rs: list[dict]) -> str:
             f"Panel score {sc} as stored: {dip_state(data.get('outcome'))[2]}.")
 
 
+def _verdict(rs: list[dict], score, outcome) -> str:
+    cls, _, phrase = dip_state(outcome)
+    k = sum(1 for r in rs if r.get("marked"))
+    said = (span("pr.marked_none", "{k} of {n} marked it · panel score not stored, as stored", k=k, n=len(rs)) if score is None
+            else span("pr.marked", "{k} of {n} marked it · panel score {score}, as stored", k=k, n=len(rs), score=_f2(score)))
+    return (f'<p class="prverdict">{said}'
+            f'<strong class="prword {_e(cls)}" data-verdict="{_e(phrase)}"{ik("dip.state." + cls)}>{_e(phrase)}</strong></p>')
+
+
+WHAT_DIP = N_("pr.what.dip", "Each reviewer's stored mark on this dip (a solid line: it marked the dip; dashed: no mark), each sized by "
+              "its calibrated weight; the ring fills to the panel score as the run stored it.")
+WHAT_PANEL = N_("pr.what.panel", "Every reviewer in the panel, sized by its calibrated weight; no dip is selected, so no score is drawn.")
+N_("pr.table", "The marks and weights as a table")
+N_("pr.score", "panel score")
+N_("pr.score_none", "score not stored")
+N_("pr.reviewers", "reviewers")
+N_("pr.col.reviewer", "Reviewer")
+N_("pr.col.role", "Role")
+N_("pr.col.provider", "Provider")
+N_("pr.col.marked", "Marked this dip")
+N_("pr.col.weight", "Calibrated weight")
+N_("pr.yes", "yes")
+N_("pr.no", "no")
+
+
 def html(data: dict, **opts) -> str:
     """A black stage with the reviewers, their lines to the ring and the stored score, the status, a caption with the
     source, and a table of the same marks and weights. Raises ValueError without ``data["source"]``."""
@@ -136,35 +162,30 @@ def html(data: dict, **opts) -> str:
     if score is not None:
         ring = (f'{track}<circle class="prring" cx="{CX}" cy="{CY}" r="{RING}" stroke-dasharray="{_n(circ)}" '
                 f'style="--off:{_n(circ * (1 - _cl(score)))};--c:{_n(circ)}" transform="rotate(-90 {CX} {CY})"/>'
-                f'<text class="prnum" x="{CX}" y="{CY + 7}">{_f2(score)}</text><text class="prsub" x="{CX}" y="{CY + 22}">panel score</text>')
+                f'<text class="prnum" x="{CX}" y="{CY + 7}">{_f2(score)}</text><text class="prsub" x="{CX}" y="{CY + 22}"{ik("pr.score")}>panel score</text>')
     elif mode == "dip":
-        ring = f'{track}<text class="prsub" x="{CX}" y="{CY + 4}">score not stored</text>'
+        ring = f'{track}<text class="prsub" x="{CX}" y="{CY + 4}"{ik("pr.score_none")}>score not stored</text>'
     else:
-        ring = f'{track}<text class="prnum" x="{CX}" y="{CY + 7}">{len(rs)}</text><text class="prsub" x="{CX}" y="{CY + 22}">reviewers</text>'
+        ring = f'{track}<text class="prnum" x="{CX}" y="{CY + 7}">{len(rs)}</text><text class="prsub" x="{CX}" y="{CY + 22}"{ik("pr.reviewers")}>reviewers</text>'
     verdict = ""
     if mode == "dip":
-        cls, _, phrase = dip_state(data.get("outcome"))
-        k = sum(1 for r in rs if r.get("marked"))
-        verdict = (f'<p class="prverdict"><span>{k} of {len(rs)} marked it · panel score '
-                   f'{"not stored" if score is None else _f2(score)}, as stored</span>'
-                   f'<strong class="prword {_e(cls)}" data-verdict="{_e(phrase)}">{_e(phrase)}</strong></p>')
-        what = ("Each reviewer's stored mark on this dip (a solid line: it marked the dip; dashed: no mark), each sized by "
-                "its calibrated weight; the ring fills to the panel score as the run stored it.")
+        verdict = _verdict(rs, score, data.get("outcome"))
+        what = f'<span{ik("pr.what.dip")}>{_e(WHAT_DIP)}</span>'
     else:
-        what = "Every reviewer in the panel, sized by its calibrated weight; no dip is selected, so no score is drawn."
-    note = (f" {_e(PROBES_ONLY)}." if data.get("probes_only") else "") + \
-        (f" {_e(ATTRIBUTION)}" if any(r["role"] == "sentinel" for r in rs) else "")
+        what = f'<span{ik("pr.what.panel")}>{_e(WHAT_PANEL)}</span>'
+    note = (f' <span{ik("honesty.probes_only")}>{_e(PROBES_ONLY)}</span>.' if data.get("probes_only") else "") + \
+        (f' <span{ik("honesty.attribution")}>{_e(ATTRIBUTION)}</span>' if any(r["role"] == "sentinel" for r in rs) else "")
     rows = "".join(f'<tr><th scope="row">{_e(r.get("name") or r["id"])} <span class="mono">{_e(r["id"])}</span></th>'
                    f'<td>{"Sentinel" if r["role"] == "sentinel" else "Probe"}</td><td>{_e(r.get("provider") or "")}</td>'
-                   + ("" if mode == "panel" else f'<td>{"yes" if r.get("marked") else "no"}</td>')
+                   + ("" if mode == "panel" else (f'<td{ik("pr.yes")}>yes</td>' if r.get("marked") else f'<td{ik("pr.no")}>no</td>'))
                    + f'<td class="num">{_w(r.get("weight"))}</td></tr>' for r in rs)
-    head = ('<tr><th scope="col">Reviewer</th><th scope="col">Role</th><th scope="col">Provider</th>'
-            + ("" if mode == "panel" else '<th scope="col">Marked this dip</th>') + '<th scope="col" class="num">Calibrated weight</th></tr>')
+    head = (f'<tr><th scope="col"{ik("pr.col.reviewer")}>Reviewer</th><th scope="col"{ik("pr.col.role")}>Role</th><th scope="col"{ik("pr.col.provider")}>Provider</th>'
+            + ("" if mode == "panel" else f'<th scope="col"{ik("pr.col.marked")}>Marked this dip</th>') + f'<th scope="col" class="num"{ik("pr.col.weight")}>Calibrated weight</th></tr>')
     return (f'<div class="panelring" data-panelring="{_e(mode)}"><figure class="stage prfig" aria-labelledby="prcap-{uid}">'
-            f'<span class="stage-tag">{LABEL}</span><svg viewBox="0 0 {W} {H}" role="img" aria-label="{_e(aria({**data, "mode": mode}, rs))}">'
+            f'<span class="stage-tag" data-i18n="label.real">{LABEL}</span><svg viewBox="0 0 {W} {H}" role="img" aria-label="{_e(aria({**data, "mode": mode}, rs))}">'
             f'<g class="prlines" aria-hidden="true">{"".join(lines)}</g>{ring}<g class="prnodes">{"".join(dots)}</g></svg>{verdict}'
-            f'<figcaption class="readout" id="prcap-{uid}">{what} Source: {_e(data["source"])}.{note}</figcaption></figure>'
-            f'<details class="prtable"><summary>The marks and weights as a table</summary><div class="tablewrap">'
+            f'<figcaption class="readout" id="prcap-{uid}">{what} {span("limits.source", "Source: {s}.", s=data["source"])}{note}</figcaption></figure>'
+            f'<details class="prtable"><summary{ik("pr.table")}>The marks and weights as a table</summary><div class="tablewrap">'
             f'<table><thead>{head}</thead><tbody>{rows}</tbody></table></div></details></div>')
 
 
@@ -199,12 +220,9 @@ def summary(data: dict, dip_id: str) -> str:
     score = data.get("score")
     if not rs and score is None:
         return ""
-    cls, _, phrase = dip_state(data.get("outcome"))
-    k = sum(1 for r in rs if r.get("marked"))
     return (f'<div class="panelring" data-panelring="dip" data-pr-dip="{_e(dip_id)}" data-pr-uid="{_e(data.get("uid") or "pr")}">'
-            f'<figure class="stage prfig"><span class="stage-tag">{LABEL}</span><p class="prverdict"><span>{k} of {len(rs)} marked it · panel score '
-            f'{"not stored" if score is None else _f2(score)}, as stored</span><strong class="prword {_e(cls)}" data-verdict="{_e(phrase)}">{_e(phrase)}</strong></p>'
-            f'<figcaption class="readout">Source: {_e(data["source"])}.</figcaption></figure></div>')
+            f'<figure class="stage prfig"><span class="stage-tag" data-i18n="label.real">{LABEL}</span>{_verdict(rs, score, data.get("outcome"))}'
+            f'<figcaption class="readout">{span("limits.source", "Source: {s}.", s=data["source"])}</figcaption></figure></div>')
 
 
 def weights_of(app_data: dict) -> dict:
@@ -275,8 +293,9 @@ JS = r"""
 // ---------- viz/panelring (V06): the markup of setuhq.viz.panelring.html, and a one-time convergence on screen ----------
 window.SetuPanelRing = (function(){
   const W = 360, H = 240, CX = 180, CY = 120, RING = 46, COL = {left: 56, right: 304};
-  const STATE = __DIP_STATE__, FEED = ['new_candidate', 'known_toi'], PROBES_ONLY = __PROBES_ONLY__, ATTRIBUTION = __ATTRIBUTION__;
-  const state = o => STATE[FEED.includes(o) ? 'passed' : (o || '')] || STATE.flagged;
+  const STATE = __DIP_STATE__, FEED = ['new_candidate', 'known_toi'], PROBES_ONLY = __PROBES_ONLY__, ATTRIBUTION = __ATTRIBUTION__, WHAT_DIP = __WHAT_DIP__, WHAT_PANEL = __WHAT_PANEL__;
+  const TT = (id, en, a) => (window.SetuI18n ? SetuI18n.T(id, en, a) : en.replace(/\{(\w+)\}/g, (m, k) => a && k in a ? a[k] : m)).replace(/&#(\d+);/g, (x, d) => String.fromCharCode(d));
+  const state = o => { const s = STATE[FEED.includes(o) ? 'passed' : (o || '')] || STATE.flagged; return [s[0], s[1], TT('dip.state.' + s[0], s[2])]; };
   const n = x => String(Math.floor(x * 10 + 0.5) / 10);
   const e = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
   const wf = w => (w === null || w === undefined) ? 'not stored' : w.toFixed(2);
@@ -311,20 +330,28 @@ window.SetuPanelRing = (function(){
       dots.push(`<g class="prnode ${cls}"><circle cx="${n(r.x)}" cy="${n(r.y)}" r="${n(r.rad)}"/><text x="${n(r.x)}" y="${n(ly)}">${e(head)}</text><text x="${n(r.x)}" y="${n(ly + 12)}">${e(tail)}${tail ? ' · ' : ''}${wf(r.weight)}</text></g>`);
     });
     const track = `<circle class="prtrack" cx="${CX}" cy="${CY}" r="${RING}"/>`;
+    // The same keyed markup as setuhq.viz.panelring.html (each text names its message, so the page can switch language).
+    const L = () => window.SetuI18n && SetuI18n.lang !== 'en', E0 = v => String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const KA = a => JSON.stringify(a).replace(/&/g, '&amp;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const SP = (id, en, a) => `<span data-i18n="${id}"${a ? ` data-i18n-args='${KA(a)}'` : ''}>${L() ? e(TT(id, en, a)) : en.replace(/\{(\w+)\}/g, (m, k) => a && k in a ? E0(a[k]) : m)}</span>`;
+    const W8 = (id, en) => L() ? e(TT(id, en)) : en, K = id => ` data-i18n="${id}"`;
     const ring = score !== null
-      ? `${track}<circle class="prring" cx="${CX}" cy="${CY}" r="${RING}" stroke-dasharray="${n(circ)}" style="--off:${n(circ * (1 - cl(score)))};--c:${n(circ)}" transform="rotate(-90 ${CX} ${CY})"/><text class="prnum" x="${CX}" y="${CY + 7}">${score.toFixed(2)}</text><text class="prsub" x="${CX}" y="${CY + 22}">panel score</text>`
-      : mode === 'dip' ? `${track}<text class="prsub" x="${CX}" y="${CY + 4}">score not stored</text>`
-      : `${track}<text class="prnum" x="${CX}" y="${CY + 7}">${rs.length}</text><text class="prsub" x="${CX}" y="${CY + 22}">reviewers</text>`;
-    let verdict = '', what = 'Every reviewer in the panel, sized by its calibrated weight; no dip is selected, so no score is drawn.';
+      ? `${track}<circle class="prring" cx="${CX}" cy="${CY}" r="${RING}" stroke-dasharray="${n(circ)}" style="--off:${n(circ * (1 - cl(score)))};--c:${n(circ)}" transform="rotate(-90 ${CX} ${CY})"/><text class="prnum" x="${CX}" y="${CY + 7}">${score.toFixed(2)}</text><text class="prsub" x="${CX}" y="${CY + 22}"${K('pr.score')}>${W8('pr.score', 'panel score')}</text>`
+      : mode === 'dip' ? `${track}<text class="prsub" x="${CX}" y="${CY + 4}"${K('pr.score_none')}>${W8('pr.score_none', 'score not stored')}</text>`
+      : `${track}<text class="prnum" x="${CX}" y="${CY + 7}">${rs.length}</text><text class="prsub" x="${CX}" y="${CY + 22}"${K('pr.reviewers')}>${W8('pr.reviewers', 'reviewers')}</text>`;
+    let verdict = '', what = `<span${K('pr.what.panel')}>${e(TT('pr.what.panel', WHAT_PANEL))}</span>`;
     if (mode === 'dip'){
-      const [c, , phrase] = state(d.outcome);
-      verdict = `<p class="prverdict"><span>${rs.filter(r => r.marked).length} of ${rs.length} marked it · panel score ${score !== null ? score.toFixed(2) : 'not stored'}, as stored</span><strong class="prword ${e(c)}" data-verdict="${e(phrase)}">${e(phrase)}</strong></p>`;
-      what = "Each reviewer's stored mark on this dip (a solid line: it marked the dip; dashed: no mark), each sized by its calibrated weight; the ring fills to the panel score as the run stored it.";
+      const [c, , phrase] = state(d.outcome), k = rs.filter(r => r.marked).length;
+      const said = score !== null ? SP('pr.marked', '{k} of {n} marked it · panel score {score}, as stored', {k, n: rs.length, score: score.toFixed(2)})
+        : SP('pr.marked_none', '{k} of {n} marked it · panel score not stored, as stored', {k, n: rs.length});
+      verdict = `<p class="prverdict">${said}<strong class="prword ${e(c)}" data-verdict="${e(phrase)}"${K('dip.state.' + c)}>${e(phrase)}</strong></p>`;
+      what = `<span${K('pr.what.dip')}>${e(TT('pr.what.dip', WHAT_DIP))}</span>`;
     }
-    const note = (d.probes_only ? ` ${e(PROBES_ONLY)}.` : '') + (rs.some(r => r.role === 'sentinel') ? ` ${e(ATTRIBUTION)}` : '');
-    const rows = rs.map(r => `<tr><th scope="row">${e(r.name || r.id)} <span class="mono">${e(r.id)}</span></th><td>${r.role === 'sentinel' ? 'Sentinel' : 'Probe'}</td><td>${e(r.provider || '')}</td>` + (mode === 'panel' ? '' : `<td>${r.marked ? 'yes' : 'no'}</td>`) + `<td class="num">${wf(r.weight)}</td></tr>`).join('');
-    const head = '<tr><th scope="col">Reviewer</th><th scope="col">Role</th><th scope="col">Provider</th>' + (mode === 'panel' ? '' : '<th scope="col">Marked this dip</th>') + '<th scope="col" class="num">Calibrated weight</th></tr>';
-    return `<div class="panelring" data-panelring="${e(mode)}"><figure class="stage prfig" aria-labelledby="prcap-${uid}"><span class="stage-tag">__LABEL__</span><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${e(aria(Object.assign({}, d, {mode}), rs))}"><g class="prlines" aria-hidden="true">${lines.join('')}</g>${ring}<g class="prnodes">${dots.join('')}</g></svg>${verdict}<figcaption class="readout" id="prcap-${uid}">${what} Source: ${e(d.source)}.${note}</figcaption></figure><details class="prtable"><summary>The marks and weights as a table</summary><div class="tablewrap"><table><thead>${head}</thead><tbody>${rows}</tbody></table></div></details></div>`;
+    const note = (d.probes_only ? ` <span${K('honesty.probes_only')}>${e(TT('honesty.probes_only', PROBES_ONLY))}</span>.` : '')
+      + (rs.some(r => r.role === 'sentinel') ? ` <span${K('honesty.attribution')}>${e(TT('honesty.attribution', ATTRIBUTION))}</span>` : '');
+    const rows = rs.map(r => `<tr><th scope="row">${e(r.name || r.id)} <span class="mono">${e(r.id)}</span></th><td>${r.role === 'sentinel' ? 'Sentinel' : 'Probe'}</td><td>${e(r.provider || '')}</td>` + (mode === 'panel' ? '' : (r.marked ? `<td${K('pr.yes')}>${W8('pr.yes', 'yes')}</td>` : `<td${K('pr.no')}>${W8('pr.no', 'no')}</td>`)) + `<td class="num">${wf(r.weight)}</td></tr>`).join('');
+    const head = `<tr><th scope="col"${K('pr.col.reviewer')}>${W8('pr.col.reviewer', 'Reviewer')}</th><th scope="col"${K('pr.col.role')}>${W8('pr.col.role', 'Role')}</th><th scope="col"${K('pr.col.provider')}>${W8('pr.col.provider', 'Provider')}</th>` + (mode === 'panel' ? '' : `<th scope="col"${K('pr.col.marked')}>${W8('pr.col.marked', 'Marked this dip')}</th>`) + `<th scope="col" class="num"${K('pr.col.weight')}>${W8('pr.col.weight', 'Calibrated weight')}</th></tr>`;
+    return `<div class="panelring" data-panelring="${e(mode)}"><figure class="stage prfig" aria-labelledby="prcap-${uid}"><span class="stage-tag" data-i18n="label.real">__LABEL__</span><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${e(aria(Object.assign({}, d, {mode}), rs))}"><g class="prlines" aria-hidden="true">${lines.join('')}</g>${ring}<g class="prnodes">${dots.join('')}</g></svg>${verdict}<figcaption class="readout" id="prcap-${uid}">${what} ${SP('limits.source', 'Source: {s}.', {s: d.source})}${note}</figcaption></figure><details class="prtable"><summary${K('pr.table')}>${W8('pr.table', 'The marks and weights as a table')}</summary><div class="tablewrap"><table><thead>${head}</thead><tbody>${rows}</tbody></table></div></details></div>`;
   }
   // The data for one dip, as setuhq.viz.panelring.dip_model builds it.
   function dipModel(dip, o){
@@ -369,5 +396,5 @@ window.SetuPanelRing = (function(){
 })();
 """
 JS = (JS.replace("__DIP_STATE__", json.dumps({k: list(v) for k, v in DIP_STATE.items()}), 1)
-      .replace("__PROBES_ONLY__", json.dumps(PROBES_ONLY), 1).replace("__ATTRIBUTION__", json.dumps(ATTRIBUTION), 1)
+      .replace("__PROBES_ONLY__", json.dumps(PROBES_ONLY), 1).replace("__ATTRIBUTION__", json.dumps(ATTRIBUTION), 1).replace("__WHAT_DIP__", json.dumps(WHAT_DIP), 1).replace("__WHAT_PANEL__", json.dumps(WHAT_PANEL), 1)
       .replace("__LABEL__", LABEL, 1).replace("__PROBE_PROVIDER__", PROBE_PROVIDER, 1))

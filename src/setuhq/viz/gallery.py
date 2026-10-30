@@ -20,12 +20,15 @@ canvas with the shared renderer's star (granulation and glow) when it comes on s
 
 from __future__ import annotations
 
+from setuhq.i18n import N_, k as ik, span, t
+
 import html as _html
 import json
 import math
 from pathlib import Path
 
 from setuhq.looks import teff_rgb
+from setuhq.names import dip_count_html, panel_html
 from setuhq.viz import require_source
 
 LABEL = "Model from stored values"
@@ -150,7 +153,7 @@ def caption(st: dict) -> str:
 
 
 # What every stage shares, said once under the cards rather than on each.
-STAGE_NOTE = ("Each stage: the star's disc in its blackbody colour at the Teff its run stores, and what the run measured "
+STAGE_NOTE = N_("gal.note", "Each stage: the star's disc in its blackbody colour at the Teff its run stores, and what the run measured "
               "as a shadow at its fitted Rp/R★ (a planet the run missed is a dashed outline). Sizes are to scale against "
               "the disc; where each sits on it is illustrative.")
 
@@ -191,7 +194,7 @@ def figure(st: dict, uid: str) -> str:
     cap = caption(st)
     p = {"teff": st["teff"], "bodies": [{k: b[k] for k in ("x", "y", "k", "kind")} | {"l": _letter(b["name"])} for b in st["bodies"]]}
     return (f"<figure class=\"stage gstage\" data-viz=\"gstage\" data-params='{e(json.dumps(p, separators=(',', ':')))}' "
-            f'aria-labelledby="gcap-{uid}"><div class="gbox">{svg(st, uid)}</div><span class="stage-tag">{LABEL}</span>'
+            f'aria-labelledby="gcap-{uid}"><div class="gbox">{svg(st, uid)}</div><span class="stage-tag" data-i18n="label.model">{LABEL}</span>'
             f'<figcaption id="gcap-{uid}" class="readout">{e(cap)}</figcaption></figure>')
 
 
@@ -201,6 +204,11 @@ def from_app(app: dict) -> dict:
     meta = showcase(app)
     return {"source": (app.get("showcase_source") or "docs/results/showcase.json") + "; each run's stellar.json (TESS Input Catalog v8.2)"
             if cards else "", "cards": cards, "stages": {c["run"]: stage(c, app, meta.get(c["run"]) or {}) for c in cards}}
+
+
+def sk(card: dict, field: str) -> str:
+    """The key of a worked example's editorial line (docs/results/showcase.json), when it has that line."""
+    return ik(f"showcase.{card['run']}.{field}") if card.get(field if field != "outcome" else "outcome_line") else ""
 
 
 def html(data: dict, **opts) -> str:
@@ -215,22 +223,22 @@ def html(data: dict, **opts) -> str:
     for c in cards:
         first = c["lead_dip"]
         sectors = ", ".join(str(x) for x in c["sectors"]) or "not stored"
-        links = (f'<a href="{e(c["case_file"])}">Case file</a><a href="{e(c["plates"])}">Plates</a>'
-                 f'<a href="{e(c["report"])}">Run report</a>')
+        links = (f'<a href="{e(c["case_file"])}" data-i18n="route.candidates.label">Case file</a><a href="{e(c["plates"])}" data-i18n="subnav.plates">Plates</a>'
+                 f'<a href="{e(c["report"])}" data-i18n="subnav.report">Run report</a>')
         st = (data.get("stages") or {}).get(c["run"])
         items.append(f"""<li><article class="excard" aria-labelledby="ex-{e(c["slug"])}">{figure(st, e(c["slug"])) if st else ""}
-          <div class="exbody"><p class="exkind">{e(c["kind"] or "Example run")}</p>
+          <div class="exbody"><p class="exkind"{sk(c, "kind")}>{e(c["kind"]) if c["kind"] else span("gal.example", "Example run")}</p>
           <h3 id="ex-{e(c["slug"])}">{f'<a href="#/transit?dip={e(first)}">{e(c["star"])}</a>' if first else e(c["star"])}</h3>
-          <p class="exsum">{e(c["summary"])}</p>
-          <p class="excount">{e(c["count"])}</p>{f'<p class="excaveat">{e(c["caveat"])}</p>' if c["caveat"] else ""}
-          <p class="exmeta">{e(c["mission"])} sector{"s" if len(c["sectors"]) != 1 else ""} {e(sectors)} · {e(c["panel_label"])}</p>
+          <p class="exsum"{sk(c, "summary")}>{e(c["summary"])}</p>
+          <p class="excount">{dip_count_html(c["n_dips"], c["counts"]) if "counts" in c else e(c["count"])}</p>{f'<p class="excaveat"{sk(c, "caveat")}>{e(c["caveat"])}</p>' if c["caveat"] else ""}
+          <p class="exmeta">{span("gal.sectors", "{mission} {n, plural, one {sector} other {sectors}} {list}", mission=c["mission"], n=len(c["sectors"]), list=sectors)} · {panel_html(c["panel_label"])}</p>
           <p class="exlinks">{links}</p></div>
         </article></li>""")
     return f"""<section class="examples" id="examples" aria-labelledby="h-examples">
-        <div class="secthead"><h2 id="h-examples">Worked examples: {len(cards)} stars, one pipeline</h2>
-        <p>Each is a stored run on public TESS light curves from MAST, with its data, configuration and code hashed. Every dip is counted by its vetting outcome; a candidate stays unconfirmed, and a rejected dip is not a candidate.</p></div>
+        <div class="secthead"><h2 id="h-examples"{ik("home.examples", n=len(cards))}>{t("home.examples", "Worked examples: {n, plural, one {# star} other {# stars}}, one pipeline", n=len(cards))}</h2>
+        <p{ik("home.examples.p")}>{t("home.examples.p", "Each is a stored run on public TESS light curves from MAST, with its data, configuration and code hashed. Every dip is counted by its vetting outcome; a candidate stays unconfirmed, and a rejected dip is not a candidate.")}</p></div>
         <ul class="excards">{"".join(items)}</ul>
-        <p class="bandsrc">{e(STAGE_NOTE)} No candidate is given planet art. Stages: {e(data["source"])}.</p>
+        <p class="bandsrc">{span("gal.note", STAGE_NOTE)} {span("gal.noart", "No candidate is given planet art.")} {span("gal.stages", "Stages: {s}.", s=data["source"])}</p>
       </section>"""
 
 

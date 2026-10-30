@@ -18,6 +18,8 @@ tables and a static bar chart of its entries per night.
 
 from __future__ import annotations
 
+from setuhq.i18n import k as ik, localize_output, span, t
+
 import csv
 import html
 import json
@@ -324,7 +326,7 @@ def build_report(
   <h1>{html.escape(title)}</h1>
   <p class='count'>{html.escape(count_line)}</p>
   <p class='lead'>A transit search where a panel of independent reviewers marks dips in blind-coded light curves, consensus is skill-weighted, and every candidate keeps its provenance. Only a dip that passed vetting is a candidate, and a candidate is unconfirmed.</p>
-  {f"<p class='runstar'>{star_words}</p>" if star_words else ""}{f"<p class='probes'><b>{html.escape(PROBES_ONLY)}.</b></p>" if probes_only else ""}
+  {f"<p class='runstar'>{star_words}</p>" if star_words else ""}{f"<p class='probes'><b><span{ik('honesty.probes_only')}>{html.escape(PROBES_ONLY)}</span>.</b></p>" if probes_only else ""}
  </div></div>
 </div></header>
 <nav class='report-nav' aria-label='Sections'><div class='wrap'>{nav}</div></nav>
@@ -338,7 +340,7 @@ def build_report(
   <div class='card stat cand'>{n_cand}<small>{_pl(n_cand, 'candidate')} (passed vetting, unconfirmed)</small></div>
 </section>
 
-<section id='pipeline'><h2>How a run works</h2>
+<section id='pipeline'><h2{ik("out.report.pipeline")}>{t("out.report.pipeline", "How a run works")}</h2>
 <div class='pipeline'>
   <div class='step'><b>1 · Ingest</b><span>TESS SPOC from MAST or CHEOPS FITS, time system kept as delivered</span></div><div class='arrow'>→</div>
   <div class='step'><b>2 · Clean &amp; detrend</b><span>Spike clip, masked local-quadratic baseline, 10-min bins</span></div><div class='arrow'>→</div>
@@ -350,20 +352,20 @@ def build_report(
 <p class='note'>Thresholds, weights and every input are written to <code>manifest.json</code>, so a result can be rerun exactly.</p>
 </section>
 
-<section id='candidates'><h2>Candidates</h2>
+<section id='candidates'><h2{ik("out.report.candidates")}>{t("out.report.candidates", "Candidates")}</h2>
 <p class='note'>{html.escape(count_line)}. Each dip is named by its vetting outcome: a candidate passed vetting and is unconfirmed; a flagged dip is open; a rejected dip is not a candidate. Rejected and flagged dips are kept on purpose, so a reader can see what the vetting decided and why. Each image is the blind-coded plot the reviewers saw, byte for byte.</p>
 <div class='cands'>{''.join(cards)}</div>
 </section>
 
-<section id='panel'><h2>Panel decisions</h2>
-<p class='note'>Every reviewer's answer for every blind-coded subject. Disagreement is kept visible, because it is where the consensus is earned. {html.escape(ATTRIBUTION)}{f" {html.escape(PROBES_ONLY)}." if probes_only else ""}</p>
+<section id='panel'><h2{ik("out.report.panel")}>{t("out.report.panel", "Panel decisions")}</h2>
+<p class='note'>{span("out.report.panel.p", "Every reviewer's answer for every blind-coded subject. Disagreement is kept visible, because it is where the consensus is earned.")} <span{ik("honesty.attribution")}>{html.escape(ATTRIBUTION)}</span>{f" <span{ik('honesty.probes_only')}>{html.escape(PROBES_ONLY)}</span>." if probes_only else ""}</p>
 {_panel_section(run_dir)}
 </section>
 
-<section id='validation'><h2>Validation against known planets</h2>{validation_html}</section>
-<section id='benchmark'><h2>Injection recovery</h2>{benchmark_html}</section>
+<section id='validation'><h2{ik("out.report.validation")}>{t("out.report.validation", "Validation against known planets")}</h2>{validation_html}</section>
+<section id='benchmark'><h2{ik("out.report.benchmark")}>{t("out.report.benchmark", "Injection recovery")}</h2>{benchmark_html}</section>
 
-<section id='provenance'><h2>Provenance</h2>
+<section id='provenance'><h2{ik("out.report.provenance")}>{t("out.report.provenance", "Provenance")}</h2>
 <div class='grid'>
  <div class='card'><h3>Reviewer panel</h3><div class='scroll' tabindex='0' role='region' aria-label='Reviewer panel table'><table><thead><tr><th>id</th><th>kind</th><th>weight</th></tr></thead><tbody>{reviewers}</tbody></table></div>
  <p class='note'>Skipped (unavailable here): {html.escape(skipped)}</p></div>
@@ -384,7 +386,7 @@ def build_report(
     from setuhq.codenote import code_note, with_code_note
 
     out_path = out_dir / "index.html"
-    out_path.write_text(with_code_note(page, code_note(run_dir)))
+    out_path.write_text(localize_output(with_code_note(page, code_note(run_dir))))
     if not path:
         from setuhq.docket import copy_page_fonts
 
@@ -437,7 +439,11 @@ def night_chart(catalog: dict) -> str:
 
 def build_discovery_site(catalog_path: str | Path, out_dir: str | Path) -> Path:
     """Public page for the search feed. Every entry is labelled a candidate, not a confirmed planet."""
-    catalog = json.loads(Path(catalog_path).read_text())
+    from setuhq.discover import held_line, load_public_catalog
+
+    catalog = load_public_catalog(catalog_path)  # the embargo: signals held for review never reach the page
+    embargo = catalog.get("embargo") is not False
+    held = html.escape(held_line())
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     rows = catalog.get("candidates", [])
@@ -467,7 +473,7 @@ def build_discovery_site(catalog_path: str | Path, out_dir: str | Path) -> Path:
 
     runs = catalog.get("runs", [])[-5:]
     run_rows = "".join(
-        f"<tr><td>{html.escape(r['time'])}</td><td>{len(r['targets'])}</td><td>{r['new']}</td><td>{r['known']}</td><td>{len(r['errors'])}</td></tr>"
+        f"<tr><td>{html.escape(r['time'])}</td><td>{r.get('n_targets', len(r.get('targets') or []))}</td><td>{r.get('new', '–')}</td><td>{r['known']}</td><td>{len(r['errors'])}</td></tr>"
         for r in reversed(runs)
     )
     title = "SetuHQ search feed"
@@ -479,20 +485,21 @@ def build_discovery_site(catalog_path: str | Path, out_dir: str | Path) -> Path:
  <div class='stage herostage' style='grid-template-columns:minmax(0,1fr)'><div>
   <a href="/" aria-label="SetuHQ, home">{brand.logo(themed=False, height=24)}</a>
   <p class='kick'>setuhq discover · scheduled batches</p>
-  <h1>Search feed</h1>
+  <h1{ik("out.feed.h1")}>{t("out.feed.h1", "Search feed")}</h1>
   <p class='count'>{html.escape(dip_count([r['status'] for r in rows]))}, from {catalog.get('targets_reviewed', 0)} {_pl(catalog.get('targets_reviewed', 0), 'target')} reviewed</p>
-  <p class='lead'>An AI review panel searches TESS light curves on a schedule. Each entry is a dip that passed the pipeline's vetting and matches no known ephemeris, or a match to a known TOI that checks the pipeline. These are candidates. None is a confirmed planet until independent follow-up confirms it.</p>
+  <p class='lead'>An AI review panel searches TESS light curves on a schedule. {"Signals that match no known TOI are held for private review and reporting, so this feed shows only matches to known TOIs, which check the pipeline." if embargo else "Each entry is a dip that passed the pipeline's vetting and matches no known ephemeris, or a match to a known TOI that checks the pipeline."} {span("out.feed.candidates", "These are candidates.")} {span("honesty.none_confirmed", "None is a confirmed planet until independent follow-up confirms it.", note="A required caveat. Never weaker or stronger than the English.")}</p>
+  {f"<p class='note'{ik('honesty.embargo')}>{held}</p>" if embargo else ""}
  </div></div>
 </div></header>
 <main class='wrap'>
 <section class='grid' style='margin-top:24px' aria-label='The feed in numbers'>
-  <div class='card stat cand'>{len(new)}<small>new {_pl(len(new), 'candidate')} (no TOI match)</small></div>
+  {"" if embargo else f"<div class='card stat cand'>{len(new)}<small>new {_pl(len(new), 'candidate')} (no TOI match)</small></div>"}
   <div class='card stat'>{len(known)}<small>{'match' if len(known) == 1 else 'matches'} to known TOIs</small></div>
   <div class='card stat'>{catalog.get('targets_reviewed', 0)}<small>{_pl(catalog.get('targets_reviewed', 0), 'target')} reviewed</small></div>
   <div class='card stat' style='font-size:18px'>{html.escape(str(catalog.get('updated', 'never'))[:16].replace('T', ' '))}<small>last update (UTC)</small></div>
 </section>
-<section><h2>Entries per night</h2>{night_chart(catalog)}</section>
-<section><h2>New candidates</h2>{table(new, "New candidates")}</section>
+<section><h2{ik("out.feed.nights")}>{t("out.feed.nights", "Entries per night")}</h2>{night_chart(catalog)}</section>
+{f"<section><h2{ik('out.feed.held')}>{t('out.feed.held', 'Held for review')}</h2><p class='note'{ik('honesty.embargo')}>{held}</p></section>" if embargo else f"<section><h2>New candidates</h2>{table(new, 'New candidates')}</section>"}
 <section><h2>Matches to known TOIs</h2><p class='note'>Recovery of published signals. This is how the pipeline is checked on real data.</p>{table(known, "Matches to known TOIs")}</section>
 <section><h2>Recent runs</h2><div class='scroll' tabindex='0' role='region' aria-label='Recent runs'><table><thead><tr><th>run (UTC)</th><th>targets</th><th>new</th><th>known</th><th>errors</th></tr></thead><tbody>{run_rows or "<tr><td colspan='5'>no runs yet</td></tr>"}</tbody></table></div></section>
 <footer>Generated by SetuHQ from <code>{html.escape(catalog.get('config', ''))}</code>. Config SHA-256 <code>{html.escape(catalog.get('config_sha256', '')[:16])}</code>. Results on synthetic data are not claims about real sky data.</footer>
@@ -502,7 +509,7 @@ def build_discovery_site(catalog_path: str | Path, out_dir: str | Path) -> Path:
     from setuhq.docket import copy_page_fonts
 
     out = out_dir / "index.html"
-    out.write_text(with_code_note(page, catalog.get("code_note")))
+    out.write_text(localize_output(with_code_note(page, catalog.get("code_note"))))
     copy_page_fonts(out_dir)
     brand.copy_assets(out_dir)
     return out

@@ -1,0 +1,3751 @@
+{
+ "@@locale": "en",
+ "@@x-generated-by": "tools/i18n.py extract (do not edit by hand)",
+ "cat.h1": "Every known exoplanet.",
+ "@cat.h1": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "cat.h1b": "{n, number} records, searchable.",
+ "@cat.h1b": {
+  "x-file": "src/setuhq/catalogue.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "cat.intro": "All {n, number} planets in {source}, including the {nodist, number} with no stored distance that the Galaxy map cannot place. SetuHQ did not discover these planets; it catalogues them.",
+ "@cat.intro": {
+  "x-file": "src/setuhq/catalogue.py",
+  "placeholders": {
+   "n": {},
+   "nodist": {},
+   "source": {}
+  }
+ },
+ "cat.not_ours": "SetuHQ did not discover these planets.",
+ "@cat.not_ours": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "cf.h1": "Every signal, its dips, and the checks behind each verdict.",
+ "@cf.h1": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "cf.intro": "The case file for the dip's run: every signal and its dips, with the vetting outcome, the transit strip and the verdict ledger. Each signal that passed vetting is a {status}; a rejected or flagged one is named by its status.",
+ "@cf.intro": {
+  "x-file": "src/setuhq/app.py",
+  "placeholders": {
+   "status": {}
+  }
+ },
+ "cf.link": "Case file ›",
+ "@cf.link": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "chapter.astrometry": "Astrometry",
+ "@chapter.astrometry": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "chapter.doppler": "Toward and away",
+ "@chapter.doppler": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "chapter.equations": "Equations of life",
+ "@chapter.equations": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "chapter.falsepos": "False positives",
+ "@chapter.falsepos": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "chapter.history": "History and papers",
+ "@chapter.history": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "chapter.imaging": "Blocking starlight",
+ "@chapter.imaging": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "chapter.microlensing": "Microlensing",
+ "@chapter.microlensing": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "chapter.molecules": "Molecules and life",
+ "@chapter.molecules": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "chapter.population": "Population",
+ "@chapter.population": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "chapter.radio": "Radio",
+ "@chapter.radio": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "chapter.rv": "Radial velocity",
+ "@chapter.rv": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "chapter.spectroscopy": "Reading atmospheres",
+ "@chapter.spectroscopy": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "chapter.survey": "How a survey works",
+ "@chapter.survey": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "chapter.timing": "Timing and phase",
+ "@chapter.timing": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "chapter.transit": "Transit",
+ "@chapter.transit": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "cli.argparse.argument": "argument %(argument_name)s: %(message)s",
+ "@cli.argparse.argument": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "One of argparse's own words; keep every %(...)s and %s."
+ },
+ "cli.argparse.choice": "invalid choice: %(value)r (choose from %(choices)s)",
+ "@cli.argparse.choice": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "One of argparse's own words; keep every %(...)s and %s."
+ },
+ "cli.argparse.error": "%(prog)s: error: %(message)s\n",
+ "@cli.argparse.error": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "One of argparse's own words; keep every %(...)s and %s."
+ },
+ "cli.argparse.help": "show this help message and exit",
+ "@cli.argparse.help": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "One of argparse's own words; keep every %(...)s and %s."
+ },
+ "cli.argparse.one": "expected one argument",
+ "@cli.argparse.one": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "One of argparse's own words; keep every %(...)s and %s."
+ },
+ "cli.argparse.options": "options",
+ "@cli.argparse.options": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "One of argparse's own words; keep every %(...)s and %s."
+ },
+ "cli.argparse.positional": "positional arguments",
+ "@cli.argparse.positional": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "One of argparse's own words; keep every %(...)s and %s."
+ },
+ "cli.argparse.required": "the following arguments are required: %s",
+ "@cli.argparse.required": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "One of argparse's own words; keep every %(...)s and %s."
+ },
+ "cli.argparse.unrecognized": "unrecognized arguments: %s",
+ "@cli.argparse.unrecognized": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "One of argparse's own words; keep every %(...)s and %s."
+ },
+ "cli.argparse.usage": "usage: ",
+ "@cli.argparse.usage": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "One of argparse's own words; keep every %(...)s and %s."
+ },
+ "cli.argparse.version": "show program's version number and exit",
+ "@cli.argparse.version": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "One of argparse's own words; keep every %(...)s and %s."
+ },
+ "cli.cmd.app": "the same as 'setuhq site' (the old name, when the site was one app page)",
+ "@cli.cmd.app": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.batch": "run the discover flow over a target list, cached and resumable",
+ "@cli.cmd.batch": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.benchmark": "injection-recovery benchmark for the configured panel",
+ "@cli.cmd.benchmark": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.binaries": "eclipsing binaries and ellipsoidal or reflection variables: period, eclipses, secondary phase (e cos w hint), morphology; a candidate flag with reasons",
+ "@cli.cmd.binaries": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.bundle": "export a sweep's sector record as a contribution bundle, sealed with content hashes",
+ "@cli.cmd.bundle": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.calibrate": "estimate reviewer weights by injection",
+ "@cli.cmd.calibrate": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.check-sweep": "check that every contribution was ingested and is intact, and that the catalogue is what its verified sources rebuild to",
+ "@cli.cmd.check-sweep": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.cheops": "CHEOPS Guest Observers Running Call: write a proposal preparation pack",
+ "@cli.cmd.cheops": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.crossmatch": "query the NASA Exoplanet Archive for the run's targets and store crossmatch.json",
+ "@cli.cmd.crossmatch": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.dashboard": "build the interactive dashboard from a run and optional discovery catalogue",
+ "@cli.cmd.dashboard": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.discover": "run one scheduled discovery batch and update the catalogue",
+ "@cli.cmd.discover": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.docket": "build the candidate case-file view for a run",
+ "@cli.cmd.docket": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.export": "write an ExoFOP CTOI-style table and predicted transit windows for a run",
+ "@cli.cmd.export": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.flares": "detect stellar flares: morphology, energies, completeness and a null",
+ "@cli.cmd.flares": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.ingest": "validate a contribution bundle and merge it into the catalogue, with credit",
+ "@cli.cmd.ingest": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.leaderboard": "score a submission on the frozen real-TOI benchmark's held-out half, or rebuild docs/leaderboard from every stored submission",
+ "@cli.cmd.leaderboard": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.lint": "scan proposal text (or PDF, with pypdf) for anything that breaks anonymity; an aid, not a guarantee",
+ "@cli.cmd.lint": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.mcp": "start the MCP server over stdio, as setuhq-mcp does (needs the mcp extra: pip install 'setuhq[mcp]')",
+ "@cli.cmd.mcp": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.plate": "build the print-ready plates page: one plate per star, with captions",
+ "@cli.cmd.plate": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.propose": "prepare an observing proposal (a preparation pack; nothing is submitted)",
+ "@cli.cmd.propose": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.pulsations": "frequency analysis: pre-whitening, combinations, background, numax/Δν, type",
+ "@cli.cmd.pulsations": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.rebuild": "re-vet a stored run (fit, FAP, flags) from its stored classifications",
+ "@cli.cmd.rebuild": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.report": "build a static HTML report site from a run directory",
+ "@cli.cmd.report": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.rotation": "a rotation period from spot modulation (Lomb-Scargle and ACF), per sector; periods beyond about 13 d are not measured",
+ "@cli.cmd.rotation": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.run": "run the pipeline on the targets in a config file",
+ "@cli.cmd.run": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.site": "build the website (every page, the shared files, the reports, plates and case files) from one or more runs",
+ "@cli.cmd.site": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.sweep": "search a TESS sector's SPOC 2-minute targets (resumable) into the variability catalogue",
+ "@cli.cmd.sweep": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.cmd.transients": "non-periodic brightenings: rise, decay, amplitude, class hints and false-alarm screens, in a SPOC light curve or a TESScut cutout of any position",
+ "@cli.cmd.transients": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.desc.propose.cheops": "SetuHQ is independent and is not affiliated with, endorsed by or operated on behalf of ESA, the CHEOPS mission or the CHEOPS Consortium. It does not replace ESA's Target Checker, Visibility Tool, Exposure Time Calculator, Scheduling Feasibility Checker or the Policies & Procedures document; the official call and tools govern.",
+ "@cli.desc.propose.cheops": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.desc.setuhq": "Command-line interface: ``setuhq run``, ``setuhq benchmark``, ``setuhq calibrate``, ``setuhq site``, ``setuhq plate`` and more.",
+ "@cli.desc.setuhq": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.batch.max-targets": "stop after this many targets this session",
+ "@cli.opt.batch.max-targets": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.batch.retries": "retries of a failed target in later sessions",
+ "@cli.opt.batch.retries": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.batch.sectors": "latest sectors per target",
+ "@cli.opt.batch.sectors": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.batch.targets": "text file of TIC ids, one per line",
+ "@cli.opt.batch.targets": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.batch.tic": "TIC ids",
+ "@cli.opt.batch.tic": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.batch.toi-cache": "cached archive TOI table, to tag feed entries known_toi or new_candidate",
+ "@cli.opt.batch.toi-cache": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.batch.weights": "reviewer weights JSON",
+ "@cli.opt.batch.weights": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.benchmark.out": "markdown file to write",
+ "@cli.opt.benchmark.out": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.benchmark.weights": "weights JSON",
+ "@cli.opt.benchmark.weights": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.binaries.cache": "cache root (MAST files, TIC values)",
+ "@cli.opt.binaries.cache": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.binaries.exptime": "TESS cadence in seconds",
+ "@cli.opt.binaries.exptime": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.binaries.out": "write the JSON record here",
+ "@cli.opt.binaries.out": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.binaries.sector": "TESS sectors (default: every SPOC sector)",
+ "@cli.opt.binaries.sector": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.binaries.target": "a TIC id (e.g. 'TIC 441420236'), a SPOC *_lc.fits file or a CSV (time, flux[, flux_err])",
+ "@cli.opt.binaries.target": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.binaries.transit-duration": "its duration (d)",
+ "@cli.opt.binaries.transit-duration": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.binaries.transit-epoch": "its mid-transit time (BTJD)",
+ "@cli.opt.binaries.transit-epoch": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.binaries.transit-period": "advisory vetting hints at a transit candidate's period (d)",
+ "@cli.opt.binaries.transit-period": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.bundle.contributor": "the name to credit (yours to choose; shown on the site)",
+ "@cli.opt.bundle.contributor": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.bundle.out": "bundle directory to write",
+ "@cli.opt.bundle.out": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.bundle.record": "the sector record, e.g. my-sweep/sector_0005.json.gz",
+ "@cli.opt.bundle.record": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.calibrate.image-dir": "where to render calibration images, if reviewers need them",
+ "@cli.opt.calibrate.image-dir": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.calibrate.out": "weights JSON to write",
+ "@cli.opt.calibrate.out": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.check-sweep.fix": "rebuild catalogue.json from the verified sources",
+ "@cli.opt.check-sweep.fix": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.check-sweep.ledger-base": "a git ref whose ingest ledger this one must only extend; 'auto' is the merge-base with the base branch (SETUHQ_BASE, GITHUB_BASE_REF or the remote's default). A missing base fails when CI is set",
+ "@cli.opt.check-sweep.ledger-base": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.cheops.denoise": "with --flares: wavelet denoising first",
+ "@cli.opt.cheops.denoise": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.cheops.file-key": "one visit (CH_PR..._TG..._V....)",
+ "@cli.opt.cheops.file-key": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.cheops.flares": "also detect flares in each visit",
+ "@cli.opt.cheops.flares": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.cheops.offline": "cache only, no network",
+ "@cli.opt.cheops.offline": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.cheops.out": "write the JSON record here",
+ "@cli.opt.cheops.out": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.cheops.points": "include the detrended points in the record",
+ "@cli.opt.cheops.points": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.cheops.target": "a star name or 'RA DEC' in degrees",
+ "@cli.opt.cheops.target": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.crossmatch.star": "star name (hostname or pl_name); TIC targets also match on tic_id",
+ "@cli.opt.crossmatch.star": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.dashboard.catalog": "discovery catalogue JSON to include",
+ "@cli.opt.dashboard.catalog": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.discover.publish-new": "private deployments only: keep signals that match no known TOI in the catalogue. By default they are withheld from every public output (held for private review); the public workflow never passes this",
+ "@cli.opt.discover.publish-new": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.docket.allow-missing-crossmatch": "build even when no stored archive cross-match is usable; the page then prints the stored error",
+ "@cli.opt.docket.allow-missing-crossmatch": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.docket.refresh-crossmatch": "run 'setuhq crossmatch' first: query the archive and store crossmatch.json",
+ "@cli.opt.docket.refresh-crossmatch": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.docket.star": "star name for the archive cross-match (hostname or pl_name); TIC targets also match on tic_id",
+ "@cli.opt.docket.star": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.export.allow-unchecked": "export even when the TOI duplicate check cannot be done (rows say so)",
+ "@cli.opt.export.allow-unchecked": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.export.days": "how far ahead to predict transit windows",
+ "@cli.opt.export.days": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.export.toi-cache": "cached archive TOI table (fetched and written here when missing)",
+ "@cli.opt.export.toi-cache": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.flares.cache": "cache root (MAST files, TIC values)",
+ "@cli.opt.flares.cache": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.flares.completeness": "N injection-recovery trials (10 flares each)",
+ "@cli.opt.flares.completeness": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.flares.denoise": "stationary-wavelet denoising first (needs setuhq[wavelets])",
+ "@cli.opt.flares.denoise": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.flares.distance-pc": "override the TIC distance (pc)",
+ "@cli.opt.flares.distance-pc": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.flares.exptime": "TESS cadence in seconds",
+ "@cli.opt.flares.exptime": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.flares.mission": "sets the detection defaults and band",
+ "@cli.opt.flares.mission": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.flares.no-null": "skip the flux-inverted null",
+ "@cli.opt.flares.no-null": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.flares.out": "write the JSON record here",
+ "@cli.opt.flares.out": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.flares.radius": "override the TIC radius (solar radii)",
+ "@cli.opt.flares.radius": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.flares.sector": "TESS sectors (default: every SPOC sector)",
+ "@cli.opt.flares.sector": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.flares.target": "a TIC id (e.g. 'TIC 441420236'), a SPOC *_lc.fits file or a CSV (time, flux[, flux_err])",
+ "@cli.opt.flares.target": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.flares.teff": "override the TIC Teff (K)",
+ "@cli.opt.flares.teff": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.flares.tmag": "override the TIC TESS magnitude",
+ "@cli.opt.flares.tmag": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.ingest.accept-sentinels": "accept a bundle with Sentinels, whose dips cannot be searched again here (the catalogue says so)",
+ "@cli.opt.ingest.accept-sentinels": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.ingest.attested-by": "the GitHub login of the person who sent the bundle (the pull request's author)",
+ "@cli.opt.ingest.attested-by": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.ingest.bundle": "bundle directory or .zip",
+ "@cli.opt.ingest.bundle": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.ingest.verify-lightcurves": "how many star-sectors to fetch and search again at random, beyond every one with a planet candidate or an entry in a class that exceeds its null (default: max(3, 5%%)); every entry must agree",
+ "@cli.opt.ingest.verify-lightcurves": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.leaderboard.submission": "a submission JSON (docs/leaderboard/README.md); omit to rebuild the table",
+ "@cli.opt.leaderboard.submission": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.leaderboard.submissions": "directory of submissions to score when rebuilding",
+ "@cli.opt.leaderboard.submissions": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.plate.allow-missing-crossmatch": "build even when no stored archive cross-match is usable; the page then prints the stored error",
+ "@cli.opt.plate.allow-missing-crossmatch": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.plate.catalog": "discovery catalogue JSON: its stars get plates and join the river of time",
+ "@cli.opt.plate.catalog": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.plate.star": "star name for the archive cross-match, as in 'setuhq docket'",
+ "@cli.opt.plate.star": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.cheops.author-name": "a name the anonymity lint must flag (repeatable; never written into the pack)",
+ "@cli.opt.propose.cheops.author-name": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.cheops.coord-source": "where --ra/--dec came from (ExoFOP and Gaia positions are refused: wrong epoch)",
+ "@cli.opt.propose.cheops.coord-source": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.cheops.cycle": "submission cycle YYYY-MM (default: the next open one for the programme)",
+ "@cli.opt.propose.cheops.cycle": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.cheops.dec": "your Dec in degrees (ICRS, J2000)",
+ "@cli.opt.propose.cheops.dec": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.cheops.depth-ppm": "event depth (transit, eclipse) or flare amplitude, ppm",
+ "@cli.opt.propose.cheops.depth-ppm": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.cheops.duration-hours": "event duration in hours",
+ "@cli.opt.propose.cheops.duration-hours": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.cheops.efficiency": "observing efficiency to assume (placeholder; take yours from the Visibility Tool)",
+ "@cli.opt.propose.cheops.efficiency": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.cheops.flare-rate": "flares per day above the amplitude (for --event flare)",
+ "@cli.opt.propose.cheops.flare-rate": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.cheops.gmag": "Gaia G magnitude (default: SIMBAD's)",
+ "@cli.opt.propose.cheops.gmag": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.cheops.institution": "an institution the anonymity lint must flag (repeatable; never written into the pack)",
+ "@cli.opt.propose.cheops.institution": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.cheops.name": "pack name under runs/propose/ (default cheops-<target>-<cycle>)",
+ "@cli.opt.propose.cheops.name": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.cheops.no-cache": "do not read or write cache/cheops-propose/",
+ "@cli.opt.propose.cheops.no-cache": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.cheops.offline": "make no network request (cache only; checks then say 'not checked')",
+ "@cli.opt.propose.cheops.offline": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.cheops.orbits": "orbits you intend to request (checked against the programme's limits)",
+ "@cli.opt.propose.cheops.orbits": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.cheops.out": "pack directory to create (default runs/propose/<name>; never overwritten)",
+ "@cli.opt.propose.cheops.out": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.cheops.period": "period, days",
+ "@cli.opt.propose.cheops.period": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.cheops.period-err": "its 1-sigma error, days",
+ "@cli.opt.propose.cheops.period-err": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.cheops.ra": "your RA in degrees (ICRS, J2000), instead of SIMBAD's",
+ "@cli.opt.propose.cheops.ra": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.cheops.snr": "target S/N on the event (default 10)",
+ "@cli.opt.propose.cheops.snr": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.cheops.t0": "transit mid-time, BJD_TDB (or BTJD)",
+ "@cli.opt.propose.cheops.t0": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.cheops.t0-err": "its 1-sigma error, days",
+ "@cli.opt.propose.cheops.t0-err": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.cheops.target": "target name as SIMBAD knows it (e.g. 'TOI-1987', 'HD 39091', 'TIC 349088467')",
+ "@cli.opt.propose.cheops.target": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.cheops.window-end": "last date to observe (default 2029-12-31)",
+ "@cli.opt.propose.cheops.window-end": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.cheops.window-start": "first date to observe (default: the cycle's earliest start)",
+ "@cli.opt.propose.cheops.window-start": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.lint.author-name": "a name to flag, in its usual variants (repeatable)",
+ "@cli.opt.propose.lint.author-name": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.propose.lint.institution": "an institution to flag (repeatable)",
+ "@cli.opt.propose.lint.institution": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.pulsations.cache": "cache root (MAST files, TIC values)",
+ "@cli.opt.pulsations.cache": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.pulsations.exptime": "TESS cadence in seconds",
+ "@cli.opt.pulsations.exptime": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.pulsations.fmax": "highest frequency (d⁻¹; default Nyquist)",
+ "@cli.opt.pulsations.fmax": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.pulsations.fmin": "lowest frequency (d⁻¹)",
+ "@cli.opt.pulsations.fmin": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.pulsations.out": "write the JSON record here",
+ "@cli.opt.pulsations.out": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.pulsations.sector": "TESS sectors (default: every SPOC sector)",
+ "@cli.opt.pulsations.sector": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.pulsations.solar": "always run the numax/Δν analysis",
+ "@cli.opt.pulsations.solar": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.pulsations.surrogates": "red-noise surrogates for the false-frequency rate",
+ "@cli.opt.pulsations.surrogates": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.pulsations.target": "a TIC id (e.g. 'TIC 441420236'), a SPOC *_lc.fits file or a CSV (time, flux[, flux_err])",
+ "@cli.opt.pulsations.target": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.pulsations.teff": "Teff (K) for the type heuristic (default: TIC)",
+ "@cli.opt.pulsations.teff": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.report.benchmark": "benchmark markdown to embed",
+ "@cli.opt.report.benchmark": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.report.out": "site directory to write",
+ "@cli.opt.report.out": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.report.validation": "validation markdown to embed",
+ "@cli.opt.report.validation": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.rotation.cache": "cache root (MAST files, TIC values)",
+ "@cli.opt.rotation.cache": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.rotation.exptime": "TESS cadence in seconds",
+ "@cli.opt.rotation.exptime": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.rotation.out": "write the JSON record here",
+ "@cli.opt.rotation.out": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.rotation.sector": "TESS sectors (default: every SPOC sector)",
+ "@cli.opt.rotation.sector": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.rotation.target": "a TIC id (e.g. 'TIC 441420236'), a SPOC *_lc.fits file or a CSV (time, flux[, flux_err])",
+ "@cli.opt.rotation.target": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.run.cache": "cache root for Claude responses",
+ "@cli.opt.run.cache": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.run.calibrated-weights": "calibrated weights used by default when their reviewer ids match the config's",
+ "@cli.opt.run.calibrated-weights": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.run.out": "output directory",
+ "@cli.opt.run.out": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.run.uniform-weights": "weigh every reviewer 1.0",
+ "@cli.opt.run.uniform-weights": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.run.weights": "JSON file of reviewer weights from 'setuhq calibrate' (overrides the default)",
+ "@cli.opt.run.weights": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.setuhq.lang": "language of the output and help (en, nl, pl, pt, fi, sv, da, nb, cs, uk, ru, de, fr, es, et, ja, zh-Hans); else SETUHQ_LANG, LC_ALL, LC_MESSAGES or LANG; English by default. Files and JSON stay English",
+ "@cli.opt.setuhq.lang": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.site.allow-missing-crossmatch": "build even when no stored archive cross-match is usable; the page then prints the stored error",
+ "@cli.opt.site.allow-missing-crossmatch": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.site.benchmark": "benchmark notes for the run report",
+ "@cli.opt.site.benchmark": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.site.catalog": "discovery catalogue JSON for the Candidates and Runs pages",
+ "@cli.opt.site.catalog": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.site.no-extras": "leave out the run report, the plates and the stand-alone case file",
+ "@cli.opt.site.no-extras": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.site.out": "the site's root folder (site/ for setuhq.com)",
+ "@cli.opt.site.out": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.site.run_dir": "the stored runs: the lead run first (the sky map, the panel and the home page's reference check), then any other example runs; each gets its dips' pages, its case file, its plates and its report",
+ "@cli.opt.site.run_dir": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.site.showcase": "the example runs' descriptions and literature comparisons (scripts/showcase_compare.py)",
+ "@cli.opt.site.showcase": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.site.star": "star name for the case file's archive cross-match, as in 'setuhq docket'",
+ "@cli.opt.site.star": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.site.sweep": "the sweep catalogue (setuhq sweep) for Everything that dims, the home counter and the sky layer",
+ "@cli.opt.site.sweep": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.site.validation": "validation notes for the run report",
+ "@cli.opt.site.validation": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.site.weights": "calibrated reviewer weights JSON shown on the Evidence page",
+ "@cli.opt.site.weights": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.sweep.cache": "cache root: target lists, light-curve files, per-star records",
+ "@cli.opt.sweep.cache": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.sweep.classified-commit": "with --reclassify: the git revision that last classified such records",
+ "@cli.opt.sweep.classified-commit": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.sweep.config": "sweep config, e.g. configs/sweep.toml (Probes) or configs/sweep_sentinels.toml",
+ "@cli.opt.sweep.config": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.sweep.contributor": "the name credited for this sweep",
+ "@cli.opt.sweep.contributor": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.sweep.limit": "how many targets of the sector, in sweep order",
+ "@cli.opt.sweep.limit": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.sweep.min-interval": "seconds between MAST requests (at least)",
+ "@cli.opt.sweep.min-interval": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.sweep.no-control": "skip the flux-inverted control run of each star",
+ "@cli.opt.sweep.no-control": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.sweep.out": "where the sector record and catalogue.json go",
+ "@cli.opt.sweep.out": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.sweep.reclassify": "re-apply the classification rules to the stored star-sectors (after a change to variables.py only)",
+ "@cli.opt.sweep.reclassify": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.sweep.rule-change": "with --reclassify: what changed in the rules (repeat for each)",
+ "@cli.opt.sweep.rule-change": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.sweep.search-commit": "with --reclassify: the git revision that searched records naming one code only",
+ "@cli.opt.sweep.search-commit": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.sweep.time-budget-min": "stop starting new stars after this many minutes",
+ "@cli.opt.sweep.time-budget-min": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.sweep.weights": "calibrated weights; a reviewer not in the file weighs 1.0",
+ "@cli.opt.sweep.weights": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.sweep.workers": "processes searching stars at once (downloads stay one at a time)",
+ "@cli.opt.sweep.workers": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.transients.cache": "cache root (MAST files, TIC values, cutouts)",
+ "@cli.opt.transients.cache": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.transients.dec": "Dec (deg)",
+ "@cli.opt.transients.dec": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.transients.exptime": "TESS cadence in seconds",
+ "@cli.opt.transients.exptime": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.transients.keep-cutout": "keep the downloaded cutout in the cache",
+ "@cli.opt.transients.keep-cutout": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.transients.out": "write the JSON record here",
+ "@cli.opt.transients.out": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.transients.ra": "RA (deg): photometry on a TESScut cutout of the full-frame images",
+ "@cli.opt.transients.ra": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.transients.sector": "TESS sectors (with --ra/--dec: the one sector to cut out)",
+ "@cli.opt.transients.sector": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.transients.size": "cutout size in pixels (default 11)",
+ "@cli.opt.transients.size": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.transients.target": "a TIC id, a SPOC *_lc.fits file or a CSV (omit with --ra/--dec)",
+ "@cli.opt.transients.target": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.opt.transients.time": "with --ra/--dec and no --sector: the sector containing this BTJD",
+ "@cli.opt.transients.time": {
+  "x-file": "src/setuhq/cli.py",
+  "description": "A help text of the setuhq command line. Option names, metavariables, %(...)s and code stay as written."
+ },
+ "cli.out.asset_budget": "over an asset budget: {line}",
+ "@cli.out.asset_budget": {
+  "x-file": "src/setuhq/cli.py",
+  "placeholders": {
+   "line": {}
+  }
+ },
+ "cli.out.catalogue_site": "catalogue {catalogue}, site {site}",
+ "@cli.out.catalogue_site": {
+  "x-file": "src/setuhq/cli.py",
+  "placeholders": {
+   "catalogue": {},
+   "site": {}
+  }
+ },
+ "cli.out.classifications": "classifications: {n}",
+ "@cli.out.classifications": {
+  "x-file": "src/setuhq/cli.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "cli.out.consensus": "consensus events: {n} ({k} pass vetting)",
+ "@cli.out.consensus": {
+  "x-file": "src/setuhq/cli.py",
+  "placeholders": {
+   "k": {},
+   "n": {}
+  }
+ },
+ "cli.out.dashboard": "dashboard written to {path}",
+ "@cli.out.dashboard": {
+  "x-file": "src/setuhq/cli.py",
+  "placeholders": {
+   "path": {}
+  }
+ },
+ "cli.out.discover": "targets reviewed this run: {n}, known TOI matches: {k}",
+ "@cli.out.discover": {
+  "x-file": "src/setuhq/cli.py",
+  "placeholders": {
+   "k": {},
+   "n": {}
+  }
+ },
+ "cli.out.docket": "docket written to {path}",
+ "@cli.out.docket": {
+  "x-file": "src/setuhq/cli.py",
+  "placeholders": {
+   "path": {}
+  }
+ },
+ "cli.out.lightcurves": "light curves: {n}",
+ "@cli.out.lightcurves": {
+  "x-file": "src/setuhq/cli.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "cli.out.outputs": "outputs in {path}",
+ "@cli.out.outputs": {
+  "x-file": "src/setuhq/cli.py",
+  "placeholders": {
+   "path": {}
+  }
+ },
+ "cli.out.page_budget": "over the per-page budget: {line}",
+ "@cli.out.page_budget": {
+  "x-file": "src/setuhq/cli.py",
+  "placeholders": {
+   "line": {}
+  }
+ },
+ "cli.out.plates": "plates written to {path}",
+ "@cli.out.plates": {
+  "x-file": "src/setuhq/cli.py",
+  "placeholders": {
+   "path": {}
+  }
+ },
+ "cli.out.rebuilt": "rebuilt {n} consensus events ({k} pass vetting) in {path}",
+ "@cli.out.rebuilt": {
+  "x-file": "src/setuhq/cli.py",
+  "placeholders": {
+   "k": {},
+   "n": {},
+   "path": {}
+  }
+ },
+ "cli.out.site": "site written to {path}",
+ "@cli.out.site": {
+  "x-file": "src/setuhq/cli.py",
+  "placeholders": {
+   "path": {}
+  }
+ },
+ "cli.out.subjects": "subjects:     {n}",
+ "@cli.out.subjects": {
+  "x-file": "src/setuhq/cli.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "cli.out.weights": "reviewer weights: {source}",
+ "@cli.out.weights": {
+  "x-file": "src/setuhq/cli.py",
+  "placeholders": {
+   "source": {}
+  }
+ },
+ "cli.out.weights_written": "weights written to {path}, rates to {rates}",
+ "@cli.out.weights_written": {
+  "x-file": "src/setuhq/cli.py",
+  "placeholders": {
+   "path": {},
+   "rates": {}
+  }
+ },
+ "cov.bulge": "Bulge microlensing",
+ "@cov.bulge": {
+  "x-file": "src/setuhq/galaxy.py"
+ },
+ "cov.corot": "CoRoT zones",
+ "@cov.corot": {
+  "x-file": "src/setuhq/galaxy.py"
+ },
+ "cov.k2": "K2 campaigns",
+ "@cov.k2": {
+  "x-file": "src/setuhq/galaxy.py"
+ },
+ "cov.kepler": "Kepler field",
+ "@cov.kepler": {
+  "x-file": "src/setuhq/galaxy.py"
+ },
+ "cov.tess": "TESS sectors",
+ "@cov.tess": {
+  "x-file": "src/setuhq/galaxy.py"
+ },
+ "cov.unmapped": "Unmapped by transit surveys",
+ "@cov.unmapped": {
+  "x-file": "src/setuhq/galaxy.py"
+ },
+ "desc.catalogue": "Every planet in exoplanet.eu, searchable and sortable, each with its own page. SetuHQ did not discover these planets.",
+ "@desc.catalogue": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "desc.docs": "Install SetuHQ, search a star, contribute a sweep, connect an AI assistant over MCP, and download the data.",
+ "@desc.docs": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "desc.editions": "SetuHQ's editions: the free open core (AGPL-3.0 or a commercial licence), SetuHQ Pro (in development, under contract) and custom studies. No prices; every paid route starts with a message.",
+ "@desc.editions": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "desc.explorer": "The run's dips and their case files, and {n, plural, one {# entry} other {# entries}} of the search feed. Candidates are unconfirmed; none is a confirmed planet.",
+ "@desc.explorer": {
+  "x-file": "src/setuhq/site.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "desc.galaxy": "Every known exoplanet with a stored distance, placed in 3D around the Sun, by discovery method and year.",
+ "@desc.galaxy": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "desc.leaderboard": "Methods scored blind on the held-out half of the real-TOI benchmark, with Wilson 95% intervals.",
+ "@desc.leaderboard": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "desc.methods": "Chapter {i} of {n} of How it works: {title}. An animated explainer with its physics and sources.",
+ "@desc.methods": {
+  "x-file": "src/setuhq/site.py",
+  "placeholders": {
+   "i": {},
+   "n": {},
+   "title": {}
+  }
+ },
+ "desc.mission": "A tiling workspace of SetuHQ's views, linked by one selected star: the Galaxy, the sky, the light curve, the catalogue and the panel's feed.",
+ "@desc.mission": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "desc.overview": "{tagline} A calibrated panel of Sentinels and Probes reads TESS light curves and explains every verdict. Every SetuHQ result is a {status}.",
+ "@desc.overview": {
+  "x-file": "src/setuhq/site.py",
+  "placeholders": {
+   "status": {},
+   "tagline": {}
+  }
+ },
+ "desc.pictures": "How SetuHQ draws its pictures: stars in their blackbody colour, and planets as artist's impressions chosen from measured radius and irradiation, with every rule and source.",
+ "@desc.pictures": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "desc.planets": "What each candidate's depth would imply if it were a planet: the planet-to-star radius ratio, and why no planet size is stated.",
+ "@desc.planets": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "desc.propose": "Prepare a CHEOPS Guest Observers proposal with setuhq propose cheops: a drafting aid that checks the rules and the target and never submits anything.",
+ "@desc.propose": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "desc.runs": "Every search run, its errors as stored, and the configuration behind the candidate pages.",
+ "@desc.runs": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "desc.sentinels": "The reviewers behind every verdict, their calibration, and how the panel scores blind on real TESS Objects of Interest. {attribution}",
+ "@desc.sentinels": {
+  "x-file": "src/setuhq/site.py",
+  "placeholders": {
+   "attribution": {}
+  }
+ },
+ "desc.sky": "The run's star on an all-sky map, with the dips the panel marked and where surveys have looked. {headline}",
+ "@desc.sky": {
+  "x-file": "src/setuhq/site.py",
+  "placeholders": {
+   "headline": {}
+  }
+ },
+ "desc.stellar": "Flares, pulsations, CHEOPS light curves, eclipsing binaries, rotation and transients: how far each of SetuHQ's stellar tools is validated, with every counted check and figures of real TESS data.",
+ "@desc.stellar": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "desc.stellardocs": "Run SetuHQ's stellar commands: flares, pulsations, public CHEOPS light curves, eclipsing binaries, rotation and transients, with their validation status and ESA's terms for CHEOPS data.",
+ "@desc.stellardocs": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "desc.tessnow": "Where the TESS satellite points, sector by sector, from its published schedule: the four camera fields on the sky map and the catalogued stars inside them. Not live telemetry.",
+ "@desc.tessnow": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "desc.variables": "SetuHQ's sweep of TESS sectors: every dip found and classified, each class set against its own null.",
+ "@desc.variables": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "desc.vetter": "Look at a real stored dip from SetuHQ's example runs, call it pass, flag or reject, then see what the vetting decided. A learning exercise; answers are not collected.",
+ "@desc.vetter": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "dip.state.cand": "candidate, unconfirmed",
+ "@dip.state.cand": {
+  "x-file": "src/setuhq/names.py"
+ },
+ "dip.state.open": "flagged for review, open",
+ "@dip.state.open": {
+  "x-file": "src/setuhq/names.py"
+ },
+ "dip.state.rej": "rejected by vetting, not a candidate",
+ "@dip.state.rej": {
+  "x-file": "src/setuhq/names.py"
+ },
+ "dip.tag.cand": "candidate",
+ "@dip.tag.cand": {
+  "x-file": "src/setuhq/names.py"
+ },
+ "dip.tag.open": "flagged",
+ "@dip.tag.open": {
+  "x-file": "src/setuhq/names.py"
+ },
+ "dip.tag.rej": "rejected",
+ "@dip.tag.rej": {
+  "x-file": "src/setuhq/names.py"
+ },
+ "dips.cand": "{n, plural, one {# candidate} other {# candidates}}",
+ "@dips.cand": {
+  "x-file": "src/setuhq/names.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "dips.flag": "{n, plural, other {# flagged}}",
+ "@dips.flag": {
+  "x-file": "src/setuhq/names.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "dips.n": "{n, plural, one {# dip} other {# dips}}",
+ "@dips.n": {
+  "x-file": "src/setuhq/names.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "dips.rej": "{n, plural, other {# rejected}}",
+ "@dips.rej": {
+  "x-file": "src/setuhq/names.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "docs.contribute": "Contribute a sweep",
+ "@docs.contribute": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "docs.contribute.a": "How to contribute ›",
+ "@docs.contribute.a": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "docs.contribute.p": "Search a slice of a TESS sector on your own machine and send the result, with credit.",
+ "@docs.contribute.p": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "docs.data": "Data and files",
+ "@docs.data": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "docs.data.a": "Downloads ›",
+ "@docs.data.a": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "docs.data.p": "Every catalogue on this site as a download, and the reports behind the evidence.",
+ "@docs.data.p": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "docs.editions": "Editions",
+ "@docs.editions": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "docs.editions.a": "Compare the editions ›",
+ "@docs.editions.a": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "docs.editions.p": "The open core is free. SetuHQ Pro (in development) and custom studies are under contract, with no prices: each starts with a message.",
+ "@docs.editions.p": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "docs.h1": "Run it yourself.",
+ "@docs.h1": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "docs.install": "Install and first run",
+ "@docs.install": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "docs.intro": "SetuHQ is open source. Install it, search a star's light curve with the same panel this site shows, contribute a sweep of the sky, or let your AI assistant use it.",
+ "@docs.intro": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "docs.mcp": "Use it from an assistant",
+ "@docs.mcp": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "docs.mcp.a": "Connect over MCP ›",
+ "@docs.mcp.a": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "docs.mcp.h": "Use it from an AI assistant (MCP)",
+ "@docs.mcp.h": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "docs.mcp.p": "The MCP server lets an assistant run SetuHQ's own code and read its results.",
+ "@docs.mcp.p": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "docs.pictures": "How the pictures are drawn",
+ "@docs.pictures": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "docs.pictures.a": "The pictures ›",
+ "@docs.pictures.a": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "docs.pictures.p": "Stars in their blackbody colour; planets as artist's impressions chosen from measured radius and irradiation. Every rule and source.",
+ "@docs.pictures.p": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "docs.prov": "Technical details: where the figures come from",
+ "@docs.prov": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "docs.python": "SetuHQ needs Python {v} or newer.",
+ "@docs.python": {
+  "x-file": "src/setuhq/site.py",
+  "placeholders": {
+   "v": {}
+  }
+ },
+ "docs.runfiles": "<a href=\"{report}\">the run report</a>, <a href=\"{plates}\">the plates</a> and <a href=\"{cf}\">the case file</a> of run {run}.",
+ "@docs.runfiles": {
+  "x-file": "src/setuhq/site.py",
+  "placeholders": {
+   "cf": {},
+   "plates": {},
+   "report": {},
+   "run": {}
+  }
+ },
+ "docs.start": "Get started",
+ "@docs.start": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "docs.start.a": "Install and first run ›",
+ "@docs.start.a": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "docs.start.p": "Install, then search any TESS star's light curve, as each of this site's example runs did.",
+ "@docs.start.p": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "ed.compare": "Compare the editions",
+ "@ed.compare": {
+  "x-file": "src/setuhq/editions.py"
+ },
+ "ed.compare.p": "Read across a row to compare the three.",
+ "@ed.compare.p": {
+  "x-file": "src/setuhq/editions.py"
+ },
+ "ed.h1": "Editions.",
+ "@ed.h1": {
+  "x-file": "src/setuhq/editions.py"
+ },
+ "ed.intro": "The whole engine is free, and stays free. Ashforde OÜ sustains it with a commercial licence, SetuHQ Pro and custom studies, not with a feature gate. There are no prices on this site: every paid route starts with a message.",
+ "@ed.intro": {
+  "x-file": "src/setuhq/editions.py"
+ },
+ "ex.h1": "{n, plural, one {# dip} other {# dips}} you can open, from {stars, plural, =1 {one example star} =2 {two example stars} =3 {three example stars} =4 {four example stars} =5 {five example stars} =6 {six example stars} =7 {seven example stars} =8 {eight example stars} =9 {nine example stars} =10 {ten example stars} one {# example star} other {# example stars}}.",
+ "@ex.h1": {
+  "x-file": "src/setuhq/app.py",
+  "placeholders": {
+   "n": {},
+   "stars": {}
+  }
+ },
+ "ex.intro": "Dips the panel marked in each example star's TESS light curve, grouped by star and counted by vetting outcome. A dip that passed vetting is a {status}; a flagged one is open; a rejected one is not a candidate. None is a confirmed planet. Open one to watch it played back, or its case file for every check behind its verdict.",
+ "@ex.intro": {
+  "x-file": "src/setuhq/app.py",
+  "placeholders": {
+   "status": {}
+  }
+ },
+ "ex.more": " Further down: the search feed's {n} entries from other stars, which have no case file yet.",
+ "@ex.more": {
+  "x-file": "src/setuhq/app.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "fold.a": "Unfolded: in time order",
+ "@fold.a": {
+  "x-file": "src/setuhq/viz/fold.py"
+ },
+ "fold.b": "Folded on the {p}-day period",
+ "@fold.b": {
+  "x-file": "src/setuhq/viz/fold.py",
+  "placeholders": {
+   "p": {}
+  }
+ },
+ "fold.fold": "Fold on the period",
+ "@fold.fold": {
+  "x-file": "src/setuhq/viz/fold.py"
+ },
+ "fold.folded": "<b>Folded</b> on the {p}-day period",
+ "@fold.folded": {
+  "x-file": "src/setuhq/viz/fold.py",
+  "placeholders": {
+   "p": {}
+  }
+ },
+ "fold.said": "Folded on {p} days: the dip appears at zero hours.",
+ "@fold.said": {
+  "x-file": "src/setuhq/viz/fold.py",
+  "placeholders": {
+   "p": {}
+  }
+ },
+ "fold.said_time": "In time order: each transit is a handful of points among the rest.",
+ "@fold.said_time": {
+  "x-file": "src/setuhq/viz/fold.py"
+ },
+ "fold.short": "{n, number} points folded on {p} d: a {depth} ppm, {t14} h dip. Source: {run}.",
+ "@fold.short": {
+  "x-file": "src/setuhq/viz/fold.py",
+  "placeholders": {
+   "depth": {},
+   "n": {},
+   "p": {},
+   "run": {},
+   "t14": {}
+  }
+ },
+ "fold.source": "Source: {s}",
+ "@fold.source": {
+  "x-file": "src/setuhq/viz/fold.py",
+  "placeholders": {
+   "s": {}
+  }
+ },
+ "fold.unfold": "Unfold to time",
+ "@fold.unfold": {
+  "x-file": "src/setuhq/viz/fold.py"
+ },
+ "fold.unfolded": "<b>Unfolded</b> · {d} days in time order",
+ "@fold.unfolded": {
+  "x-file": "src/setuhq/viz/fold.py",
+  "placeholders": {
+   "d": {}
+  }
+ },
+ "footer.all_chapters": "All {n} chapters",
+ "@footer.all_chapters": {
+  "x-file": "src/setuhq/site.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "footer.contribute": "Contributing a sweep",
+ "@footer.contribute": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "footer.data": "Data downloads",
+ "@footer.data": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "footer.nav": "Site",
+ "@footer.nav": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "footer.overview": "Overview",
+ "@footer.overview": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "footer.pictures": "How the pictures are drawn ›",
+ "@footer.pictures": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "footer.source": "Source code",
+ "@footer.source": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "gal.example": "Example run",
+ "@gal.example": {
+  "x-file": "src/setuhq/viz/gallery.py"
+ },
+ "gal.noart": "No candidate is given planet art.",
+ "@gal.noart": {
+  "x-file": "src/setuhq/viz/gallery.py"
+ },
+ "gal.note": "Each stage: the star's disc in its blackbody colour at the Teff its run stores, and what the run measured as a shadow at its fitted Rp/R★ (a planet the run missed is a dashed outline). Sizes are to scale against the disc; where each sits on it is illustrative.",
+ "@gal.note": {
+  "x-file": "src/setuhq/viz/gallery.py"
+ },
+ "gal.sectors": "{mission} {n, plural, one {sector} other {sectors}} {list}",
+ "@gal.sectors": {
+  "x-file": "src/setuhq/viz/gallery.py",
+  "placeholders": {
+   "list": {},
+   "mission": {},
+   "n": {}
+  }
+ },
+ "gal.stages": "Stages: {s}.",
+ "@gal.stages": {
+  "x-file": "src/setuhq/viz/gallery.py",
+  "placeholders": {
+   "s": {}
+  }
+ },
+ "gx.h1": "Every known exoplanet,",
+ "@gx.h1": {
+  "x-file": "src/setuhq/galaxy.py"
+ },
+ "gx.h1b": "around the Sun.",
+ "@gx.h1b": {
+  "x-file": "src/setuhq/galaxy.py"
+ },
+ "gx.intro": "{n, number} planets around {hosts, number} stars, placed where they are. SetuHQ did not find these planets; it maps them from {source}.",
+ "@gx.intro": {
+  "x-file": "src/setuhq/galaxy.py",
+  "placeholders": {
+   "hosts": {},
+   "n": {},
+   "source": {}
+  }
+ },
+ "hero.disc": "{star}'s star disc is in its blackbody colour; the planet is an artist's impression ({look}).",
+ "@hero.disc": {
+  "x-file": "src/setuhq/viz/hero.py",
+  "placeholders": {
+   "look": {},
+   "star": {}
+  }
+ },
+ "hero.model": "Model from stored values.",
+ "@hero.model": {
+  "x-file": "src/setuhq/viz/hero.py"
+ },
+ "hero.pause": "Pause",
+ "@hero.pause": {
+  "x-file": "src/setuhq/viz/hero.py"
+ },
+ "hint.dismiss": "Dismiss the hint: {h}",
+ "@hint.dismiss": {
+  "x-file": "src/setuhq/features.py",
+  "placeholders": {
+   "h": {}
+  }
+ },
+ "hint.orbits": "Sizes not to scale · phases illustrative",
+ "@hint.orbits": {
+  "x-file": "src/setuhq/features.py",
+  "description": "A first-visit hint on the orbit figures."
+ },
+ "home.band.counters": "The evidence, counted",
+ "@home.band.counters": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.band.counters.e": "Every number links to its proof",
+ "@home.band.counters.e": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.band.fold": "How a planet hides in the noise",
+ "@home.band.fold": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.band.fold.e": "Real data",
+ "@home.band.fold.e": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.band.lineup": "The showcase planets, to scale",
+ "@home.band.lineup": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.band.lineup.e": "Planets to scale",
+ "@home.band.lineup.e": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.band.panel": "Who reviews a dip",
+ "@home.band.panel": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.band.panel.e": "The panel",
+ "@home.band.panel.e": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.band.sky": "Every known planet's star, by the year it was found",
+ "@home.band.sky": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.band.sky.e": "The sky",
+ "@home.band.sky.e": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.band.tempstrip": "{n, plural, =1 {The example star's colour} =2 {Two example stars: {lo, number, integer} K to {hi, number, integer} K, one pipeline} =3 {Three example stars: {lo, number, integer} K to {hi, number, integer} K, one pipeline} =4 {Four example stars: {lo, number, integer} K to {hi, number, integer} K, one pipeline} =5 {Five example stars: {lo, number, integer} K to {hi, number, integer} K, one pipeline} =6 {Six example stars: {lo, number, integer} K to {hi, number, integer} K, one pipeline} one {# example star: {lo, number, integer} K to {hi, number, integer} K, one pipeline} other {# example stars: {lo, number, integer} K to {hi, number, integer} K, one pipeline}}",
+ "@home.band.tempstrip": {
+  "x-file": "src/setuhq/home.py",
+  "description": "The temperature strip's heading: how many example stars and their range of temperature (K, kelvin). Never 'every star'.",
+  "placeholders": {
+   "hi": {},
+   "lo": {},
+   "n": {}
+  }
+ },
+ "home.band.tempstrip.e": "The example stars' colours",
+ "@home.band.tempstrip.e": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.ctr.benchmark": "real TESS Objects of Interest in the blind benchmark",
+ "@home.ctr.benchmark": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.ctr.catalogue": "planets in the catalogue SetuHQ checks against",
+ "@home.ctr.catalogue": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.ctr.chapters": "illustrated chapters on how planets are found",
+ "@home.ctr.chapters": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.ctr.completeness": "of the held-out known planets found blind (Wilson 95% interval)",
+ "@home.ctr.completeness": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.ctr.fetched": "{source}, fetched {date, date}",
+ "@home.ctr.fetched": {
+  "x-file": "src/setuhq/home.py",
+  "placeholders": {
+   "date": {},
+   "source": {}
+  }
+ },
+ "home.ctr.fetched_file": "{source}, fetched {date, date} ({file})",
+ "@home.ctr.fetched_file": {
+  "x-file": "src/setuhq/home.py",
+  "placeholders": {
+   "date": {},
+   "file": {},
+   "source": {}
+  }
+ },
+ "home.ctr.heldout": "held-out half of the benchmark ({file})",
+ "@home.ctr.heldout": {
+  "x-file": "src/setuhq/home.py",
+  "placeholders": {
+   "file": {}
+  }
+ },
+ "home.do.docs": "Run it yourself",
+ "@home.do.docs": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.do.docs.d": "Install SetuHQ, search a star, contribute a sweep of the sky, or connect your AI assistant over MCP.",
+ "@home.do.docs.d": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.do.explorer": "See the candidates",
+ "@home.do.explorer": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.do.explorer.d": "Dips the panel marked in the example stars' TESS light curves, each with its full case file. Candidates, never confirmed planets.",
+ "@home.do.explorer.d": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.do.methods": "Learn how it works",
+ "@home.do.methods": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.do.methods.d": "Fifteen illustrated chapters on how planets are found, from a star's wobble to reading an atmosphere.",
+ "@home.do.methods.d": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.do.sentinels": "Check the evidence",
+ "@home.do.sentinels": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.do.sentinels.d": "How the panel scores on real, known objects: the blind benchmark, the public leaderboard and the calibration.",
+ "@home.do.sentinels.d": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.do.sky": "Explore the sky",
+ "@home.do.sky": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.do.sky.d": "Every known exoplanet on a 3D map of the Galaxy, the sky TESS has covered, and a searchable catalogue of known planets.",
+ "@home.do.sky.d": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.dohere": "What you can do here",
+ "@home.dohere": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.examples": "Worked examples: {n, plural, one {# star} other {# stars}}, one pipeline",
+ "@home.examples": {
+  "x-file": "src/setuhq/viz/gallery.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "home.examples.p": "Each is a stored run on public TESS light curves from MAST, with its data, configuration and code hashed. Every dip is counted by its vetting outcome; a candidate stays unconfirmed, and a rejected dip is not a candidate.",
+ "@home.examples.p": {
+  "x-file": "src/setuhq/viz/gallery.py"
+ },
+ "home.hero.h1": "The sky, reviewed.",
+ "@home.hero.h1": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.hero.more": "{n, plural, =2 {See two worked examples ›} =3 {See three worked examples ›} =4 {See four worked examples ›} =5 {See five worked examples ›} =6 {See six worked examples ›} one {See # worked example ›} other {See # worked examples ›}}",
+ "@home.hero.more": {
+  "x-file": "src/setuhq/home.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "home.hero.sub": "SetuHQ searches any TESS star's public light curve for transits. A calibrated panel of Sentinels (AI reviewers) and Probes (deterministic detectors) marks the dips, and vetting explains every verdict. Nothing is called a planet until it is one.",
+ "@home.hero.sub": {
+  "x-file": "src/setuhq/home.py",
+  "description": "The home page promise. Nothing stronger: no planet is claimed."
+ },
+ "home.honest.archive": "<b>Archive values only.</b> This page claims no detection. A TOI or archive match compares a stored period with published values.",
+ "@home.honest.archive": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.honest.h": "What this page does not claim",
+ "@home.honest.h": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.honest.image": "<b>No image of the planet.</b> Planet pictures are artist's impressions, chosen from measured radius and irradiation; <a href=\"/docs/pictures/\">How the pictures are drawn ›</a>",
+ "@home.honest.image": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.honest.panel": "The panel is the Sentinels and the Probes:",
+ "@home.honest.panel": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.honest.people": "No people on the panel.",
+ "@home.honest.people": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.honest.planet": "<b>No confirmed planet.</b> Every dip, signal and feed entry here is a {status}. Passing vetting is not a confirmation.{match, select, none {} other { The match with {match} says the planet is already known, not that this run confirmed it.}}",
+ "@home.honest.planet": {
+  "x-file": "src/setuhq/home.py",
+  "placeholders": {
+   "match": {},
+   "status": {}
+  }
+ },
+ "home.honest.sizes": "<b>No planet sizes.</b> No stellar radius is stored, so a depth gives only a planet-to-star radius ratio. The radius-ratio page shows the working.",
+ "@home.honest.sizes": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.honest.weights": " Their weights rest on calibration with {n} planted and {n} empty light curves each, so they are rough.",
+ "@home.honest.weights": {
+  "x-file": "src/setuhq/home.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "home.more.sky": "Explore the sky ›",
+ "@home.more.sky": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.more.transit": "How transits are found ›",
+ "@home.more.transit": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.proof": "What the reference run shows",
+ "@home.proof": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "home.refcheck": "The reference check: {planet}, a known planet, found again in run {run}",
+ "@home.refcheck": {
+  "x-file": "src/setuhq/home.py",
+  "placeholders": {
+   "planet": {},
+   "run": {}
+  }
+ },
+ "home.refrun": "The reference run: {run}",
+ "@home.refrun": {
+  "x-file": "src/setuhq/home.py",
+  "placeholders": {
+   "run": {}
+  }
+ },
+ "honesty.attribution": "Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. Probes are deterministic matched-filter detectors.",
+ "@honesty.attribution": {
+  "x-file": "src/setuhq/names.py",
+  "description": "The attribution line. Its meaning must not change: Sentinels and Probes stay as written; Claude (Anthropic) is named."
+ },
+ "honesty.cheops_disclaimer": "SetuHQ is independent and is not affiliated with, endorsed by or operated on behalf of ESA, the CHEOPS mission or the CHEOPS Consortium.",
+ "@honesty.cheops_disclaimer": {
+  "x-file": "src/setuhq/cheops.py",
+  "description": "ESA requires this disclaimer. Keep its full meaning; ESA and CHEOPS stay as written."
+ },
+ "honesty.embargo": "Signals that match no known TOI are held for private review; they are published only after review and reporting.",
+ "@honesty.embargo": {
+  "x-file": "src/setuhq/discover.py",
+  "description": "The feed embargo line. Static: never add a number, a count or a date in any language."
+ },
+ "honesty.footer": "Every SetuHQ result on this site is a candidate, never a confirmed planet. Open source under the AGPL-3.0; SetuHQ's data under CC BY 4.0. \"SetuHQ\" and the Setu mark are trademarks of Ashforde OÜ.",
+ "@honesty.footer": {
+  "x-file": "src/setuhq/site.py",
+  "description": "The footer's honesty line. Keep 'a candidate, never a confirmed planet' exactly as strong; licence names stay as written."
+ },
+ "honesty.no_detection": "Archive values only. This page claims no detection.",
+ "@honesty.no_detection": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "honesty.none_confirmed": "None is a confirmed planet until independent follow-up confirms it.",
+ "@honesty.none_confirmed": {
+  "x-file": "src/setuhq/report.py",
+  "description": "A required caveat. Never weaker or stronger than the English."
+ },
+ "honesty.probes_only": "Probes only; Sentinels not run on this example",
+ "@honesty.probes_only": {
+  "x-file": "src/setuhq/names.py",
+  "description": "The label on every run made without AI reviewers."
+ },
+ "honesty.tess_pointing": "Pointing from the published schedule, not live telemetry",
+ "@honesty.tess_pointing": {
+  "x-file": "src/setuhq/tessnow.py"
+ },
+ "honesty.transients_aid": "The transient tools are a search aid whose candidates need checking by eye; their detections, class hints and false-alarm screens are not validated.",
+ "@honesty.transients_aid": {
+  "x-file": "src/setuhq/stellar_tools.py",
+  "description": "Carried by every transient output. Never stronger than the English."
+ },
+ "honesty.unconfirmed": "candidate, unconfirmed",
+ "@honesty.unconfirmed": {
+  "x-file": "src/setuhq/app.py",
+  "description": "The status of every SetuHQ result. Never stronger than the English: not confirmed, not discovered."
+ },
+ "i18n.mtnote": "This translation is machine-assisted and has not yet been reviewed by a native speaker. <a rel=\"noopener\" href=\"https://github.com/ashfordeOU/SetuHQ/blob/main/docs/TRANSLATING.md\">Corrections are welcome</a>.",
+ "@i18n.mtnote": {
+  "x-file": "src/setuhq/site.py",
+  "description": "Shown on every translated page. Say plainly that the translation was made with machine assistance and is not yet reviewed."
+ },
+ "i18n.picker.label": "Language: {name}",
+ "@i18n.picker.label": {
+  "x-file": "src/setuhq/site.py",
+  "placeholders": {
+   "name": {}
+  }
+ },
+ "i18n.picker.note": "Every language but English is machine-assisted and not yet reviewed by a native speaker. <a rel=\"noopener\" href=\"https://github.com/ashfordeOU/SetuHQ/blob/main/docs/TRANSLATING.md\">Corrections are welcome</a>.",
+ "@i18n.picker.note": {
+  "x-file": "src/setuhq/site.py",
+  "description": "In the language picker, in each language. Plain: machine-assisted, not yet reviewed by a native speaker."
+ },
+ "i18n.suggest.dismiss": "Dismiss",
+ "@i18n.suggest.dismiss": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "i18n.suggest.go": "Read it in English",
+ "@i18n.suggest.go": {
+  "x-file": "src/setuhq/site.py",
+  "description": "In the language it offers."
+ },
+ "i18n.suggest.label": "Language",
+ "@i18n.suggest.label": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "i18n.suggest.text": "This page is also in English.",
+ "@i18n.suggest.text": {
+  "x-file": "src/setuhq/site.py",
+  "description": "Said in the language it offers: 'This page is also in German.' in German."
+ },
+ "label.art": "Artist's impression",
+ "@label.art": {
+  "x-file": "src/setuhq/methods.py",
+  "description": "Figure label on planet pictures: not an observation."
+ },
+ "label.illustration": "Illustration",
+ "@label.illustration": {
+  "x-file": "src/setuhq/methods.py",
+  "description": "One of the five figure labels: explains an idea, not data."
+ },
+ "label.model": "Model from stored values",
+ "@label.model": {
+  "x-file": "src/setuhq/methods.py",
+  "description": "Figure label: a model drawn from stored numbers, not an image."
+ },
+ "label.real": "Real data, cited",
+ "@label.real": {
+  "x-file": "src/setuhq/methods.py",
+  "description": "Figure label: stored measurements, with their source."
+ },
+ "label.speculative": "Speculative model",
+ "@label.speculative": {
+  "x-file": "src/setuhq/methods.py",
+  "description": "Figure label: beyond what is measured."
+ },
+ "lb.h1": "Methods, scored blind on real TOIs.",
+ "@lb.h1": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "lb.intro": "The public leaderboard on the frozen real-TOI benchmark: each entry's detected events, scored by the leaderboard itself on the held-out half only, with Wilson 95% intervals. Not the injection threshold sweep (docs/threshold_sweep.md), which tunes Probe thresholds on synthetic light curves.",
+ "@lb.intro": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "lb.note": "Measured on a stated benchmark; nothing here is a discovery.",
+ "@lb.note": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "learn.again": "Start again from step 1",
+ "@learn.again": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.all": "All {n} steps",
+ "@learn.all": {
+  "x-file": "src/setuhq/learn.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "learn.back": "‹ Back",
+ "@learn.back": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.cleared": "Learn path progress cleared.",
+ "@learn.cleared": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.complete": " · path complete",
+ "@learn.complete": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.continue": "Continue: {step}",
+ "@learn.continue": {
+  "x-file": "src/setuhq/learn.py",
+  "placeholders": {
+   "step": {}
+  }
+ },
+ "learn.count": "{k} of {n} visited",
+ "@learn.count": {
+  "x-file": "src/setuhq/learn.py",
+  "placeholders": {
+   "k": {},
+   "n": {}
+  }
+ },
+ "learn.finish": "Finish ›",
+ "@learn.finish": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.finish_label": "Finish the path",
+ "@learn.finish_label": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.h": "Learn path",
+ "@learn.h": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.intro": "{n} steps, from how a survey works to every known exoplanet. Optional: go in order or skip around; any page you open counts. Progress stays in this browser.",
+ "@learn.intro": {
+  "x-file": "src/setuhq/learn.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "learn.kind.catalogue": "Catalogue",
+ "@learn.kind.catalogue": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.kind.ch": "Methods chapter",
+ "@learn.kind.ch": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.kind.galaxy": "Galaxy",
+ "@learn.kind.galaxy": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.kind.run": "SetuHQ's run",
+ "@learn.kind.run": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.leave": "Leave",
+ "@learn.leave": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.leave_label": "Leave the path",
+ "@learn.leave_label": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.left": "Left the Learn path. Your progress is kept.",
+ "@learn.left": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.next": "Next",
+ "@learn.next": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.next_btn": "Next ›",
+ "@learn.next_btn": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.next_label": "Next: {step}",
+ "@learn.next_label": {
+  "x-file": "src/setuhq/learn.py",
+  "placeholders": {
+   "step": {}
+  }
+ },
+ "learn.pos": "{i} of {n}",
+ "@learn.pos": {
+  "x-file": "src/setuhq/learn.py",
+  "placeholders": {
+   "i": {},
+   "n": {}
+  }
+ },
+ "learn.progress": "Learn path progress",
+ "@learn.progress": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.reset": "Reset progress",
+ "@learn.reset": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.seen": ", visited",
+ "@learn.seen": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.start": "Start the path",
+ "@learn.start": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.step.catalogue": "Every record, searchable",
+ "@learn.step.catalogue": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.step.galaxy": "Every known exoplanet, around the Sun",
+ "@learn.step.galaxy": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.step.transit": "SetuHQ's own transit: the case file",
+ "@learn.step.transit": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "learn.unseen": ", not visited yet",
+ "@learn.unseen": {
+  "x-file": "src/setuhq/learn.py"
+ },
+ "limits.art": "Not an observation: a look chosen from measured radius and irradiation.",
+ "@limits.art": {
+  "x-file": "src/setuhq/features.py"
+ },
+ "limits.caption": "as the caption states",
+ "@limits.caption": {
+  "x-file": "src/setuhq/features.py"
+ },
+ "limits.illustration": "Explains an idea; not data.",
+ "@limits.illustration": {
+  "x-file": "src/setuhq/features.py"
+ },
+ "limits.model": "A model drawn from stored numbers; not an image of the object.",
+ "@limits.model": {
+  "x-file": "src/setuhq/features.py"
+ },
+ "limits.real": "Stored measurements, binned or folded as stored.",
+ "@limits.real": {
+  "x-file": "src/setuhq/features.py"
+ },
+ "limits.source": "Source: {s}.",
+ "@limits.source": {
+  "x-file": "src/setuhq/features.py",
+  "placeholders": {
+   "s": {}
+  }
+ },
+ "limits.speculative": "Beyond what is measured: a possibility, not a result.",
+ "@limits.speculative": {
+  "x-file": "src/setuhq/features.py"
+ },
+ "limits.summary": "Source / limits",
+ "@limits.summary": {
+  "x-file": "src/setuhq/features.py"
+ },
+ "lu.cap": "To scale: one Earth radius is the same width all along the row, so {big} is {x} times as wide as {small}. Each picture is an artist's impression chosen from the measured radius and the computed irradiation; composition is not measured. Earth, Neptune and Jupiter are the Solar System references (only Earth is drawn with oceans). Radii: {src} (1 RJ = 11.209 R⊕).",
+ "@lu.cap": {
+  "x-file": "src/setuhq/viz/lineup.py",
+  "placeholders": {
+   "big": {},
+   "small": {},
+   "src": {},
+   "x": {}
+  }
+ },
+ "lu.earth": "Earth",
+ "@lu.earth": {
+  "x-file": "src/setuhq/viz/lineup.py"
+ },
+ "lu.jupiter": "Jupiter",
+ "@lu.jupiter": {
+  "x-file": "src/setuhq/viz/lineup.py"
+ },
+ "lu.neptune": "Neptune",
+ "@lu.neptune": {
+  "x-file": "src/setuhq/viz/lineup.py"
+ },
+ "mc.intro": "Pick a star in any pane; every pane and every popped-out window follows.",
+ "@mc.intro": {
+  "x-file": "src/setuhq/mission.py"
+ },
+ "mcp.honesty.candidate": "A candidate, not a discovery: SetuHQ finds and vets dips in public TESS data. Confirming a planet needs follow-up (radial velocities, imaging, statistical validation) by others.",
+ "@mcp.honesty.candidate": {
+  "x-file": "src/setuhq/tools.py"
+ },
+ "mcp.honesty.catalogue": "Catalogue values are the source's measurements, shown as stored; a missing value is not a guess. SetuHQ did not discover these planets.",
+ "@mcp.honesty.catalogue": {
+  "x-file": "src/setuhq/tools.py"
+ },
+ "mcp.honesty.computed": "Computed now by SetuHQ's own code from the inputs given; not a stored, reviewed result.",
+ "@mcp.honesty.computed": {
+  "x-file": "src/setuhq/tools.py"
+ },
+ "mcp.honesty.formula": "A textbook formula evaluated as stated; it describes an idealised case, not a measurement.",
+ "@mcp.honesty.formula": {
+  "x-file": "src/setuhq/tools.py"
+ },
+ "mcp.honesty.panel": "Sentinels are AI models, not people (Claude by default; other providers are labelled). Only Claude has been benchmarked. Probes are deterministic matched-filter detectors.",
+ "@mcp.honesty.panel": {
+  "x-file": "src/setuhq/tools.py"
+ },
+ "mcp.honesty.stored": "Read from stored files; nothing was recomputed.",
+ "@mcp.honesty.stored": {
+  "x-file": "src/setuhq/tools.py"
+ },
+ "mcp.honesty.unreviewed": "No reviewer panel looked at this: it is a detector and vetting output only.",
+ "@mcp.honesty.unreviewed": {
+  "x-file": "src/setuhq/tools.py"
+ },
+ "mcp.instructions": "SetuHQ searches public NASA TESS light curves for transits with a reviewer panel of Sentinels (AI models; Claude by default, other providers labelled) and Probes (deterministic detectors), then vets and fits each dip. Call these tools instead of estimating: they run SetuHQ's own code or read its stored, reviewed results. Every answer carries provenance and honesty labels; keep them when you report. Anything SetuHQ finds is a candidate, not a discovery. Do not submit, post or send anything outward without the user's explicit approval.",
+ "@mcp.instructions": {
+  "x-file": "src/setuhq/mcp_server.py",
+  "description": "The MCP server's instructions to the assistant. Keep every honesty rule: a candidate, not a discovery; nothing is sent without approval."
+ },
+ "mcp.tool.benchmark_results": "A stored benchmark or validation result: real_tois (the blind 662-TOI benchmark), leaderboard (the real-TOI\nleaderboard), injection (Probes' injection-recovery), pi_men_validation, weights (calibration) or\nthreshold_sweep (synthetic, not the leaderboard). Returned as stored.",
+ "@mcp.tool.benchmark_results": {
+  "x-file": "src/setuhq/tools.py",
+  "description": "The MCP tool benchmark_results's description, read by AI assistants and people choosing a tool."
+ },
+ "mcp.tool.cheops_proposal_pack": "Write a CHEOPS Guest Observers proposal PREPARATION pack (``propose.pack.build_pack``) into a new\nruns/propose/<run_name> (refused if it exists; nothing outside it is written, no cache): the Running Call's rules\ncheck (orbit limits, April/October rule for Large programmes, the next deadline in Paris time, earliest start),\nthe target's status (public Reserved Target List, public CHEOPS archive metadata, SIMBAD/MAST J2000\ncoordinates), SetuHQ's stored evidence, rough precision and orbit ESTIMATES, anonymised drafts with an anonymity\nlint, and ESA's step-by-step checklist. Reads public pages only; never logs in or submits. SetuHQ is independent\nof ESA and the CHEOPS mission: the official call and ESA's tools govern.",
+ "@mcp.tool.cheops_proposal_pack": {
+  "x-file": "src/setuhq/tools.py",
+  "description": "The MCP tool cheops_proposal_pack's description, read by AI assistants and people choosing a tool."
+ },
+ "mcp.tool.compute_fap": "The empirical false-alarm probability of the strongest periodic signal (``search.false_alarm_probability``):\nblock-bootstrap BLS reruns that keep red noise. Bounded: with N trials it is never reported below 1/(N + 1),\nand the Gumbel tail is labelled indicative. N is capped at 2000 per call.",
+ "@mcp.tool.compute_fap": {
+  "x-file": "src/setuhq/tools.py",
+  "description": "The MCP tool compute_fap's description, read by AI assistants and people choosing a tool."
+ },
+ "mcp.tool.find_eclipsing_binary": "Eclipsing binaries and ellipsoidal or reflection variables in a light curve (``binaries.analyse``): the\norbital period from a box search and a periodogram (doubled on an odd/even difference or for equal minima, and\nsaid to be ambiguous then), the primary and secondary eclipses (phase, depth, width, significance), the\nsecondary's phase with its e·cosω hint, a heuristic morphology class and an eclipsing-binary candidate flag\nwith its reasons. With a transit candidate's period, epoch and duration it also returns advisory vetting hints\n(odd/even depths, a secondary at any phase, ellipsoidal and reflection amplitudes) that SetuHQ's vetting does\nnot use. Time in days (BTJD for TESS).",
+ "@mcp.tool.find_eclipsing_binary": {
+  "x-file": "src/setuhq/tools.py",
+  "description": "The MCP tool find_eclipsing_binary's description, read by AI assistants and people choosing a tool."
+ },
+ "mcp.tool.find_flares": "Detect and characterise stellar flares in a light curve (``flares.detect_flares``): flare-preserving\ndetrend, sigma-clipping candidates (Chang et al. 2015 criteria), optional wavelet denoising (Poyatos et al.\n2025), Mendoza et al. 2022 template fits with multi-component models chosen by BIC, rise/decay times,\namplitude, FWHM, equivalent duration, and energies (9000 K blackbody) when Teff and radius are given. Also\nruns the flux-inverted null. Time in days (BTJD for TESS); mission TESS or CHEOPS sets the defaults.",
+ "@mcp.tool.find_flares": {
+  "x-file": "src/setuhq/tools.py",
+  "description": "The MCP tool find_flares's description, read by AI assistants and people choosing a tool."
+ },
+ "mcp.tool.find_transients": "Non-periodic brightenings in a light curve (``transients.find_transients``) on three time scales, each\nwith its peak, amplitude, rise and decay times, FWHM and a class hint (flare-like, extragalactic-transient-like,\nasteroid-crossing-like, momentum-dump-like, scattered-light-like or periodic-variability-like) with its reasons;\nthe last four are likely false alarms. difference_flux=True for a difference-imaging light curve in e-/s.\nMomentum-dump and scattered-light times (TESS quality bits 32, 2048, 4096) sharpen the screens. Every event is\na transient candidate, never a new or confirmed object. Time in days (BTJD for TESS).",
+ "@mcp.tool.find_transients": {
+  "x-file": "src/setuhq/tools.py",
+  "description": "The MCP tool find_transients's description, read by AI assistants and people choosing a tool."
+ },
+ "mcp.tool.fit_transit": "Fit SetuHQ's limb-darkened transit model (``transitfit.fit_transit``) around one transit: depth, T14,\nimpact parameter b, mid-time, Rp/R★ and the transit density ρ★, each with its error and range. Limb darkening\nfrom Claret 2017 for the star's Teff and log g (Sun-like when not given). t0, duration and depth are guesses.",
+ "@mcp.tool.fit_transit": {
+  "x-file": "src/setuhq/tools.py",
+  "description": "The MCP tool fit_transit's description, read by AI assistants and people choosing a tool."
+ },
+ "mcp.tool.get_candidate": "One consensus dip with its full provenance: the stored candidate (vetting, fit, FAP, each reviewer's mark\naudit), the run manifest (code, config hash, inputs with SHA-256, reviewers with provider and model) and every\nreviewer's stored classification of its subject (label, marks, rationale, provider, model).",
+ "@mcp.tool.get_candidate": {
+  "x-file": "src/setuhq/tools.py",
+  "description": "The MCP tool get_candidate's description, read by AI assistants and people choosing a tool."
+ },
+ "mcp.tool.get_cheops_lightcurve": "Public CHEOPS DRP light curves of a target from the CHEOPS archive through DACE (``cheops.get_cheops_lightcurve``;\nneeds ``pip install 'setuhq[cheops]'`` and network unless cached): visits listed by position, proprietary ones\nskipped, each fetched once and cached, roll-angle/background/centroid systematics decorrelated (terms chosen\nby BIC). Returns each visit's provenance (programme, file key, obs id, credit), the detrend summary and,\nwith include_points, the detrended points on BTJD. Carries ESA's acknowledgement and SetuHQ's disclaimer.",
+ "@mcp.tool.get_cheops_lightcurve": {
+  "x-file": "src/setuhq/tools.py",
+  "description": "The MCP tool get_cheops_lightcurve's description, read by AI assistants and people choosing a tool."
+ },
+ "mcp.tool.get_planet": "One planet's stored catalogue record and its host star's (exact name match; use search_catalogue first).",
+ "@mcp.tool.get_planet": {
+  "x-file": "src/setuhq/tools.py",
+  "description": "The MCP tool get_planet's description, read by AI assistants and people choosing a tool."
+ },
+ "mcp.tool.get_star": "A host star's stored record and every catalogued planet around it (exact star name).",
+ "@mcp.tool.get_star": {
+  "x-file": "src/setuhq/tools.py",
+  "description": "The MCP tool get_star's description, read by AI assistants and people choosing a tool."
+ },
+ "mcp.tool.habitable_zone": "The habitable zone's edges in AU for a star (``methods.hz_distance_au``, Kopparapu et al. 2014, 1 M⊕):\nrecent Venus and runaway greenhouse (inner), maximum greenhouse and early Mars (outer).",
+ "@mcp.tool.habitable_zone": {
+  "x-file": "src/setuhq/tools.py",
+  "description": "The MCP tool habitable_zone's description, read by AI assistants and people choosing a tool."
+ },
+ "mcp.tool.list_candidates": "The consensus dips of a stored run, with whether each passed vetting and its flags (``candidates.json``).",
+ "@mcp.tool.list_candidates": {
+  "x-file": "src/setuhq/tools.py",
+  "description": "The MCP tool list_candidates's description, read by AI assistants and people choosing a tool."
+ },
+ "mcp.tool.microlensing_magnification": "The point-lens magnification A(u) = (u² + 2) / (u √(u² + 4)) at impact parameter u, in Einstein radii\n(``methods.paczynski``).",
+ "@mcp.tool.microlensing_magnification": {
+  "x-file": "src/setuhq/tools.py",
+  "description": "The MCP tool microlensing_magnification's description, read by AI assistants and people choosing a tool."
+ },
+ "mcp.tool.pulsation_spectrum": "Frequency analysis of a light curve (``pulsations.analyse``): Lomb-Scargle amplitude spectrum, iterative\npre-whitening with a non-linear multi-sine refit down to S/N 4 (Breger et al. 1993), combination-frequency\nflags, a Harvey-profile granulation background, numax/Δν for solar-like oscillators, and a heuristic\nvariability type with its uncertainty. Frequencies in d⁻¹ and µHz; time in days. n_surrogates > 0 runs the\nred-noise null (at most 20).",
+ "@mcp.tool.pulsation_spectrum": {
+  "x-file": "src/setuhq/tools.py",
+  "description": "The MCP tool pulsation_spectrum's description, read by AI assistants and people choosing a tool."
+ },
+ "mcp.tool.rotation_period": "A stellar rotation period from spot modulation (``rotation.measure``): a Lomb-Scargle periodogram and the\nautocorrelation function, with an uncertainty, half/double alias handling and a detected flag. One TESS sector\ncannot measure periods longer than about 13 days; those are reported as beyond the limit. Pass one sector (or\na light curve you stitched yourself, with care for sector-to-sector offsets). Time in days.",
+ "@mcp.tool.rotation_period": {
+  "x-file": "src/setuhq/tools.py",
+  "description": "The MCP tool rotation_period's description, read by AI assistants and people choosing a tool."
+ },
+ "mcp.tool.run_pipeline_csv": "Run the full pipeline (``pipeline.run_pipeline``) on a CSV light curve (time, flux[, flux_err]) and write\na new run directory, runs/mcp/<run_name> (refused if it exists: nothing is ever overwritten). Probes only\nunless sentinels=True; Sentinels then run only where their key, SDK or CLI is present (the manifest lists\nthe skipped ones and why).",
+ "@mcp.tool.run_pipeline_csv": {
+  "x-file": "src/setuhq/tools.py",
+  "description": "The MCP tool run_pipeline_csv's description, read by AI assistants and people choosing a tool."
+ },
+ "mcp.tool.run_pipeline_tess": "Download a TESS SPOC light curve from MAST (``loaders.load_tess``; needs network and ``pip install -e '.[tess]'``)\nfor a TIC id and sectors, and run the pipeline on it into a new runs/mcp/<run_name> (never an existing\ndirectory). Probes only unless sentinels=True.",
+ "@mcp.tool.run_pipeline_tess": {
+  "x-file": "src/setuhq/tools.py",
+  "description": "The MCP tool run_pipeline_tess's description, read by AI assistants and people choosing a tool."
+ },
+ "mcp.tool.rv_semi_amplitude": "The radial-velocity semi-amplitude K (m/s) of a star with one planet (``methods.rv_semi_amplitude``).",
+ "@mcp.tool.rv_semi_amplitude": {
+  "x-file": "src/setuhq/tools.py",
+  "description": "The MCP tool rv_semi_amplitude's description, read by AI assistants and people choosing a tool."
+ },
+ "mcp.tool.search_catalogue": "Search the exoplanet catalogue by planet or star name (or alternate name, e.g. a TIC id), optionally by\ndiscovery method (``transit``, ``rv``, ``imaging``, ``microlensing``, ``astrometry``, ``timing``). Wraps ``catalogue.catalogue_filter``.",
+ "@mcp.tool.search_catalogue": {
+  "x-file": "src/setuhq/tools.py",
+  "description": "The MCP tool search_catalogue's description, read by AI assistants and people choosing a tool."
+ },
+ "mcp.tool.sentinel_providers": "The Sentinel providers SetuHQ supports, how each is configured, and whether it can run here (its key\nvariable is set, its SDK or CLI is present). Never returns a key.",
+ "@mcp.tool.sentinel_providers": {
+  "x-file": "src/setuhq/tools.py",
+  "description": "The MCP tool sentinel_providers's description, read by AI assistants and people choosing a tool."
+ },
+ "mcp.tool.transit_depth": "The depth of a central transit: (Rp/R★)² geometrically, and with TESS quadratic limb darkening for the\nstar's Teff (``methods.transit_flux`` at z = 0, Claret 2017 coefficients). Give Rp/R★, or Rp in Earth radii\nand R★ in solar radii.",
+ "@mcp.tool.transit_depth": {
+  "x-file": "src/setuhq/tools.py",
+  "description": "The MCP tool transit_depth's description, read by AI assistants and people choosing a tool."
+ },
+ "mcp.tool.vet_lightcurve": "Search a light curve for a periodic transit (BLS, ``search.bls_search``) and vet one dip with SetuHQ's\nvetting (``vet.vet_event``: SNR, duration, edges, odd/even depths, secondary eclipse). Give the dip as\nt_start/t_end, or leave them out to vet the strongest periodic signal's first transit. The light curve is\nprepared as the pipeline prepares it (clean, detrend, bin).",
+ "@mcp.tool.vet_lightcurve": {
+  "x-file": "src/setuhq/tools.py",
+  "description": "The MCP tool vet_lightcurve's description, read by AI assistants and people choosing a tool."
+ },
+ "method.astrometry": "astrometry",
+ "@method.astrometry": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "method.imaging": "imaging",
+ "@method.imaging": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "method.microlensing": "microlensing",
+ "@method.microlensing": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "method.other": "other",
+ "@method.other": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "method.rv": "radial velocity",
+ "@method.rv": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "method.timing": "timing",
+ "@method.timing": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "method.transit": "transit",
+ "@method.transit": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "methods.chapter_n": "Chapter {i} of {n}",
+ "@methods.chapter_n": {
+  "x-file": "src/setuhq/methods.py",
+  "placeholders": {
+   "i": {},
+   "n": {}
+  }
+ },
+ "methods.h1": "How planets are found.",
+ "@methods.h1": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "methods.h1b": "And how SetuHQ finds them.",
+ "@methods.h1b": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "methods.intro": "{n} chapters, each an animated explainer with its physics and sources. Every drawing says whether it is an illustration, a model from stored values, or real data, and by how much it is exaggerated. Only the transit chapter is something SetuHQ itself does.",
+ "@methods.intro": {
+  "x-file": "src/setuhq/methods.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "methods.planets": "Planets in this chapter",
+ "@methods.planets": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "methods.sources": "Sources",
+ "@methods.sources": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "mx.from": "From",
+ "@mx.from": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "mx.numbers": "Numbers in this chapter",
+ "@mx.numbers": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "mx.quantity": "Quantity",
+ "@mx.quantity": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "mx.speed": "Speed",
+ "@mx.speed": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "mx.value": "Value",
+ "@mx.value": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "nav.candidates": "Candidates",
+ "@nav.candidates": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "nav.docs": "Docs",
+ "@nav.docs": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "nav.evidence": "Evidence",
+ "@nav.evidence": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "nav.explore": "Explore",
+ "@nav.explore": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "nav.how": "How it works",
+ "@nav.how": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "nf.candidates": "Every dip the example runs found, with its checks.",
+ "@nf.candidates": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "nf.docs": "Install SetuHQ and run it yourself.",
+ "@nf.docs": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "nf.evidence": "The reviewers, the benchmark and the runs.",
+ "@nf.evidence": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "nf.explore": "The sky, the Galaxy and every catalogued planet.",
+ "@nf.explore": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "nf.h1": "This page is not here.",
+ "@nf.h1": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "nf.home": "Go to the home page",
+ "@nf.home": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "nf.how": "Fifteen chapters on how planets are found.",
+ "@nf.how": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "nf.intro": "The address may be mistyped, or the page may have moved when the site was reorganised. Old addresses forward on their own; this one has no new home.",
+ "@nf.intro": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "nf.search": "Search planets, stars and pages",
+ "@nf.search": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "obj.cls.bymass": " (by mass)",
+ "@obj.cls.bymass": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.cls.earth": "Earth-size",
+ "@obj.cls.earth": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.cls.giant": "Gas giant",
+ "@obj.cls.giant": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.cls.nep": "Neptune-like",
+ "@obj.cls.nep": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.cls.none": "class not determinable (no radius or mass stored)",
+ "@obj.cls.none": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.cls.subnep": "Sub-Neptune",
+ "@obj.cls.subnep": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.cls.super": "Super-Earth",
+ "@obj.cls.super": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.discovered": "discovered {year}",
+ "@obj.discovered": {
+  "x-file": "src/setuhq/catalogue.py",
+  "placeholders": {
+   "year": {}
+  }
+ },
+ "obj.discovered_none": "discovered year not stored",
+ "@obj.discovered_none": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.host": "Its star and other planets",
+ "@obj.host": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.nohost": "host not stored",
+ "@obj.nohost": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.params": "Stored parameters",
+ "@obj.params": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.planets": "Its planets",
+ "@obj.planets": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.refs": "Discovery and references",
+ "@obj.refs": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.row.a": "Semi-major axis",
+ "@obj.row.a": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.row.b": "Impact parameter",
+ "@obj.row.b": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.row.dec": "Dec (J2000)",
+ "@obj.row.dec": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.row.dist": "Distance",
+ "@obj.row.dist": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.row.e": "Eccentricity",
+ "@obj.row.e": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.row.incl": "Inclination",
+ "@obj.row.incl": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.row.k": "RV semi-amplitude K",
+ "@obj.row.k": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.row.lambda": "Spin–orbit angle λ",
+ "@obj.row.lambda": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.row.mass": "Mass",
+ "@obj.row.mass": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.row.msini": "Minimum mass (m sin i)",
+ "@obj.row.msini": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.row.period": "Orbital period",
+ "@obj.row.period": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.row.ra": "RA (J2000)",
+ "@obj.row.ra": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.row.radius": "Radius",
+ "@obj.row.radius": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.row.sage": "Age",
+ "@obj.row.sage": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.row.smass": "Mass",
+ "@obj.row.smass": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.row.smet": "Metallicity [Fe/H]",
+ "@obj.row.smet": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.row.srad": "Radius",
+ "@obj.row.srad": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.row.steff": "Effective temperature",
+ "@obj.row.steff": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.row.teq": "Equilibrium temperature",
+ "@obj.row.teq": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.row.tmeas": "Measured temperature",
+ "@obj.row.tmeas": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.row.vmag": "V magnitude",
+ "@obj.row.vmag": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.sysview": "System view of",
+ "@obj.sysview": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "obj.units": "Units as stored by {source}. Errors are the stored lower and upper bounds; none is shown where none is stored.",
+ "@obj.units": {
+  "x-file": "src/setuhq/catalogue.py",
+  "placeholders": {
+   "source": {}
+  }
+ },
+ "obj.where": "Where it is",
+ "@obj.where": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "out.dash.footer": "Generated by SetuHQ. Results on synthetic data are not claims about real sky data.",
+ "@out.dash.footer": {
+  "x-file": "src/setuhq/dashboard.py"
+ },
+ "out.feed.candidates": "These are candidates.",
+ "@out.feed.candidates": {
+  "x-file": "src/setuhq/report.py"
+ },
+ "out.feed.h1": "Search feed",
+ "@out.feed.h1": {
+  "x-file": "src/setuhq/report.py"
+ },
+ "out.feed.held": "Held for review",
+ "@out.feed.held": {
+  "x-file": "src/setuhq/report.py"
+ },
+ "out.feed.nights": "Entries per night",
+ "@out.feed.nights": {
+  "x-file": "src/setuhq/report.py"
+ },
+ "out.plate.interval": "A dip's consensus interval is where their marks agree.",
+ "@out.plate.interval": {
+  "x-file": "src/setuhq/plate.py"
+ },
+ "out.plate.others": "Plates of the other example stars",
+ "@out.plate.others": {
+  "x-file": "src/setuhq/plate.py"
+ },
+ "out.plate.panel": "The panel is the Sentinels and the Probes, no people.",
+ "@out.plate.panel": {
+  "x-file": "src/setuhq/plate.py"
+ },
+ "out.report.benchmark": "Injection recovery",
+ "@out.report.benchmark": {
+  "x-file": "src/setuhq/report.py"
+ },
+ "out.report.candidates": "Candidates",
+ "@out.report.candidates": {
+  "x-file": "src/setuhq/report.py"
+ },
+ "out.report.panel": "Panel decisions",
+ "@out.report.panel": {
+  "x-file": "src/setuhq/report.py"
+ },
+ "out.report.panel.p": "Every reviewer's answer for every blind-coded subject. Disagreement is kept visible, because it is where the consensus is earned.",
+ "@out.report.panel.p": {
+  "x-file": "src/setuhq/report.py"
+ },
+ "out.report.pipeline": "How a run works",
+ "@out.report.pipeline": {
+  "x-file": "src/setuhq/report.py"
+ },
+ "out.report.provenance": "Provenance",
+ "@out.report.provenance": {
+  "x-file": "src/setuhq/report.py"
+ },
+ "out.report.validation": "Validation against known planets",
+ "@out.report.validation": {
+  "x-file": "src/setuhq/report.py"
+ },
+ "panel.both": "{s, plural, one {# Sentinel} other {# Sentinels}} and {p, plural, one {# Probe} other {# Probes}}",
+ "@panel.both": {
+  "x-file": "src/setuhq/home.py",
+  "description": "How many reviewers of each kind. Sentinel and Probe stay as written.",
+  "placeholders": {
+   "p": {},
+   "s": {}
+  }
+ },
+ "panel.probes": "{p, plural, one {# Probe} other {# Probes}}",
+ "@panel.probes": {
+  "x-file": "src/setuhq/home.py",
+  "placeholders": {
+   "p": {}
+  }
+ },
+ "panel.probes_sentinels": "Probes and Sentinels",
+ "@panel.probes_sentinels": {
+  "x-file": "src/setuhq/names.py"
+ },
+ "panel.sentinels": "{s, plural, one {# Sentinel} other {# Sentinels}}",
+ "@panel.sentinels": {
+  "x-file": "src/setuhq/home.py",
+  "placeholders": {
+   "s": {}
+  }
+ },
+ "pic.colour": "Star colour",
+ "@pic.colour": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "pic.draw": "The star and the transit",
+ "@pic.draw": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "pic.h1": "How the pictures are drawn.",
+ "@pic.h1": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "pic.intro": "Every star on SetuHQ is drawn in its blackbody colour from its stored temperature. Every planet is an artist's impression: its look is chosen from two measured things, its radius (or, without one, its mass) and the light it gets from its star. Nothing in a picture is measured beyond those numbers, and composition never is.",
+ "@pic.intro": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "pic.labels": "The five labels",
+ "@pic.labels": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "pic.labels.p": "Every picture on the site carries one of these, on the picture itself.",
+ "@pic.labels.p": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "pic.real": "What is real and what is drawn",
+ "@pic.real": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "pic.rules": "The rules",
+ "@pic.rules": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "pic.still": "With reduced motion",
+ "@pic.still": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "pic.still.p": "When your device asks for reduced motion, nothing loops: each drawing shows one designed frame, and anything that plays waits for its button.",
+ "@pic.still.p": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "pic.table": "The look table",
+ "@pic.table": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "pr.col.marked": "Marked this dip",
+ "@pr.col.marked": {
+  "x-file": "src/setuhq/viz/panelring.py"
+ },
+ "pr.col.provider": "Provider",
+ "@pr.col.provider": {
+  "x-file": "src/setuhq/viz/panelring.py"
+ },
+ "pr.col.reviewer": "Reviewer",
+ "@pr.col.reviewer": {
+  "x-file": "src/setuhq/viz/panelring.py"
+ },
+ "pr.col.role": "Role",
+ "@pr.col.role": {
+  "x-file": "src/setuhq/viz/panelring.py"
+ },
+ "pr.col.weight": "Calibrated weight",
+ "@pr.col.weight": {
+  "x-file": "src/setuhq/viz/panelring.py"
+ },
+ "pr.h1": "Prepare a CHEOPS proposal.",
+ "@pr.h1": {
+  "x-file": "src/setuhq/stellarpages.py"
+ },
+ "pr.intro": "<code>setuhq propose cheops</code> writes a preparation pack for the CHEOPS Guest Observers Running Call: the rules checked, the target's status, planning estimates, anonymised drafts and ESA's seven steps as a checklist. You run ESA's tools and submit yourself.",
+ "@pr.intro": {
+  "x-file": "src/setuhq/stellarpages.py"
+ },
+ "pr.marked": "{k} of {n} marked it · panel score {score}, as stored",
+ "@pr.marked": {
+  "x-file": "src/setuhq/viz/panelring.py",
+  "placeholders": {
+   "k": {},
+   "n": {},
+   "score": {}
+  }
+ },
+ "pr.marked_none": "{k} of {n} marked it · panel score not stored, as stored",
+ "@pr.marked_none": {
+  "x-file": "src/setuhq/viz/panelring.py",
+  "placeholders": {
+   "k": {},
+   "n": {}
+  }
+ },
+ "pr.no": "no",
+ "@pr.no": {
+  "x-file": "src/setuhq/viz/panelring.py"
+ },
+ "pr.reviewers": "reviewers",
+ "@pr.reviewers": {
+  "x-file": "src/setuhq/viz/panelring.py"
+ },
+ "pr.score": "panel score",
+ "@pr.score": {
+  "x-file": "src/setuhq/viz/panelring.py"
+ },
+ "pr.score_none": "score not stored",
+ "@pr.score_none": {
+  "x-file": "src/setuhq/viz/panelring.py"
+ },
+ "pr.table": "The marks and weights as a table",
+ "@pr.table": {
+  "x-file": "src/setuhq/viz/panelring.py"
+ },
+ "pr.what.dip": "Each reviewer's stored mark on this dip (a solid line: it marked the dip; dashed: no mark), each sized by its calibrated weight; the ring fills to the panel score as the run stored it.",
+ "@pr.what.dip": {
+  "x-file": "src/setuhq/viz/panelring.py"
+ },
+ "pr.what.panel": "Every reviewer in the panel, sized by its calibrated weight; no dip is selected, so no score is drawn.",
+ "@pr.what.panel": {
+  "x-file": "src/setuhq/viz/panelring.py"
+ },
+ "pr.yes": "yes",
+ "@pr.yes": {
+  "x-file": "src/setuhq/viz/panelring.py"
+ },
+ "route.candidates.label": "Case file",
+ "@route.candidates.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.candidates.title": "Case file for {name} · Candidates · SetuHQ",
+ "@route.candidates.title": {
+  "x-file": "src/setuhq/app.py",
+  "placeholders": {
+   "name": {}
+  }
+ },
+ "route.catalogue.label": "Catalogue",
+ "@route.catalogue.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.catalogue.title": "Catalogue of known exoplanets · SetuHQ",
+ "@route.catalogue.title": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.docs.label": "Docs",
+ "@route.docs.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.docs.title": "Docs: get started with SetuHQ · SetuHQ",
+ "@route.docs.title": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.editions.label": "Editions",
+ "@route.editions.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.editions.title": "Editions: open core, SetuHQ Pro and custom study · SetuHQ",
+ "@route.editions.title": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.explorer.label": "Candidates",
+ "@route.explorer.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.explorer.title": "Candidates · SetuHQ",
+ "@route.explorer.title": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.galaxy.label": "Galaxy",
+ "@route.galaxy.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.galaxy.title": "Galaxy · Explore · SetuHQ",
+ "@route.galaxy.title": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.leaderboard.label": "Leaderboard",
+ "@route.leaderboard.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.leaderboard.title": "Leaderboard · Evidence · SetuHQ",
+ "@route.leaderboard.title": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.methods.label": "How it works",
+ "@route.methods.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.methods.title": "{name} · How it works · SetuHQ",
+ "@route.methods.title": {
+  "x-file": "src/setuhq/app.py",
+  "placeholders": {
+   "name": {}
+  }
+ },
+ "route.mission.label": "Mission Control",
+ "@route.mission.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.mission.title": "Mission Control · Explore · SetuHQ",
+ "@route.mission.title": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.notfound.label": "Page not found",
+ "@route.notfound.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.notfound.title": "Page not found · SetuHQ",
+ "@route.notfound.title": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.overview.label": "Home",
+ "@route.overview.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.overview.title": "SetuHQ: the sky, reviewed",
+ "@route.overview.title": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.pictures.label": "How the pictures are drawn",
+ "@route.pictures.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.pictures.title": "How the pictures are drawn · Docs · SetuHQ",
+ "@route.pictures.title": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.planet.label": "Planet",
+ "@route.planet.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.planet.title": "{name} · Planets · SetuHQ",
+ "@route.planet.title": {
+  "x-file": "src/setuhq/app.py",
+  "placeholders": {
+   "name": {}
+  }
+ },
+ "route.planets.label": "Radius ratios",
+ "@route.planets.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.planets.title": "Radius ratios · Candidates · SetuHQ",
+ "@route.planets.title": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.plates.label": "Plates",
+ "@route.plates.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.propose.label": "CHEOPS proposals",
+ "@route.propose.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.propose.title": "Prepare a CHEOPS proposal · Docs · SetuHQ",
+ "@route.propose.title": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.report.label": "Run report",
+ "@route.report.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.runs.label": "Runs",
+ "@route.runs.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.runs.title": "Runs · Evidence · SetuHQ",
+ "@route.runs.title": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.sentinels.label": "The panel",
+ "@route.sentinels.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.sentinels.title": "Evidence: the panel, measured · SetuHQ",
+ "@route.sentinels.title": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.sky.label": "Sky map",
+ "@route.sky.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.sky.title": "Explore the sky · SetuHQ",
+ "@route.sky.title": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.star.label": "Star",
+ "@route.star.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.star.title": "{name} · Stars · SetuHQ",
+ "@route.star.title": {
+  "x-file": "src/setuhq/app.py",
+  "placeholders": {
+   "name": {}
+  }
+ },
+ "route.stellar.label": "Stars",
+ "@route.stellar.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.stellar.title": "Stars, measured: flares and pulsations · Evidence · SetuHQ",
+ "@route.stellar.title": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.stellardocs.label": "Flares and pulsations",
+ "@route.stellardocs.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.stellardocs.title": "Flares, pulsations and CHEOPS · Docs · SetuHQ",
+ "@route.stellardocs.title": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.tessnow.label": "Where TESS is now",
+ "@route.tessnow.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.tessnow.title": "Where TESS is looking · Explore · SetuHQ",
+ "@route.tessnow.title": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.transit.label": "Candidate",
+ "@route.transit.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.transit.title": "{name} · Candidates · SetuHQ",
+ "@route.transit.title": {
+  "x-file": "src/setuhq/app.py",
+  "placeholders": {
+   "name": {}
+  }
+ },
+ "route.variables.label": "Everything that dims",
+ "@route.variables.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.variables.title": "Everything that dims · Catalogue · SetuHQ",
+ "@route.variables.title": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.vetter.label": "Be the vetter",
+ "@route.vetter.label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "route.vetter.title": "Be the vetter · Candidates · SetuHQ",
+ "@route.vetter.title": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "rr.h1": "What each depth would imply, if it were a planet.",
+ "@rr.h1": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "rr.intro": "One card per star in the run or the feed. Each entry is a {status}; the ratio below is what its stored depth implies if it were a planet.",
+ "@rr.intro": {
+  "x-file": "src/setuhq/app.py",
+  "placeholders": {
+   "status": {}
+  }
+ },
+ "run.casefile": "The run's case file ›",
+ "@run.casefile": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "run.plates": "Plates ›",
+ "@run.plates": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "run.report": "Run report ›",
+ "@run.report": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "run.sectors": "Run {run}, TESS {n, plural, one {sector} other {sectors}} {list}.",
+ "@run.sectors": {
+  "x-file": "src/setuhq/app.py",
+  "placeholders": {
+   "list": {},
+   "n": {},
+   "run": {}
+  }
+ },
+ "runs.h1": "Every search run, its errors as stored, and the configuration behind these pages.",
+ "@runs.h1": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "runs.hist": "Search runs",
+ "@runs.hist": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "runs.intro": "The search run history from the catalogue, and the configuration of run {run}. Error messages are shown as stored.",
+ "@runs.intro": {
+  "x-file": "src/setuhq/app.py",
+  "placeholders": {
+   "run": {}
+  }
+ },
+ "sd.h1": "Flares, pulsations and CHEOPS.",
+ "@sd.h1": {
+  "x-file": "src/setuhq/stellarpages.py"
+ },
+ "sd.intro": "Six commands look at the star rather than its planets. Each writes one JSON record with its result, its provenance (version, code fingerprint, every input's sha256) and its labels. A flare or a frequency is detected at a stated significance, never confirmed; a variability type is likely or a candidate.",
+ "@sd.intro": {
+  "x-file": "src/setuhq/stellarpages.py"
+ },
+ "search.hint": "↑ ↓ to move · Enter to open · Esc to close",
+ "@search.hint": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "search.placeholder": "Search planets, stars, pages",
+ "@search.placeholder": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "search.results": "Results",
+ "@search.results": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "sen.h1": "{n, plural, =1 {One reviewer.} =2 {Two reviewers.} =3 {Three reviewers.} =4 {Four reviewers.} =5 {Five reviewers.} =6 {Six reviewers.} =7 {Seven reviewers.} =8 {Eight reviewers.} =9 {Nine reviewers.} =10 {Ten reviewers.} one {# reviewer.} other {# reviewers.}}",
+ "@sen.h1": {
+  "x-file": "src/setuhq/app.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "sen.h1b": "Each one earns its vote.",
+ "@sen.h1b": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "sen.intro": "The panel that marked dips in run {run}: the Sentinels and the Probes, no people.",
+ "@sen.intro": {
+  "x-file": "src/setuhq/app.py",
+  "placeholders": {
+   "run": {}
+  }
+ },
+ "shell.bootnote": "The interactive parts of this page could not load. Its text above is complete; reload to try again.",
+ "@shell.bootnote": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "shell.breadcrumb": "Breadcrumb",
+ "@shell.breadcrumb": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "shell.copy_view": "Copy link to this view",
+ "@shell.copy_view": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "shell.home": "SetuHQ, home",
+ "@shell.home": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "shell.in_section": "In this section",
+ "@shell.in_section": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "shell.menu_close": "Close the menu",
+ "@shell.menu_close": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "shell.menu_open": "Open the menu",
+ "@shell.menu_open": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "shell.nav_main": "Main",
+ "@shell.nav_main": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "shell.search": "Search planets, stars and pages (press /)",
+ "@shell.search": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "shell.search_title": "Search (/)",
+ "@shell.search_title": {
+  "x-file": "src/setuhq/catalogue.py"
+ },
+ "shell.skip": "Skip to content",
+ "@shell.skip": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "shell.theme.dark": "dark",
+ "@shell.theme.dark": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "shell.theme.label": "Colour theme: {t}. Switch to {next}",
+ "@shell.theme.label": {
+  "x-file": "src/setuhq/site.py",
+  "placeholders": {
+   "next": {},
+   "t": {}
+  }
+ },
+ "shell.theme.light": "light",
+ "@shell.theme.light": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "shell.theme.system": "your device's setting",
+ "@shell.theme.system": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "shell.theme.title": "Theme: {t}",
+ "@shell.theme.title": {
+  "x-file": "src/setuhq/site.py",
+  "placeholders": {
+   "t": {}
+  }
+ },
+ "shell.view_link": "Link to this view",
+ "@shell.view_link": {
+  "x-file": "src/setuhq/site.py"
+ },
+ "showcase.tess-hd-15337-s4.caveat": "Found 1 of b's 5 transits and both of c's; neither published period was recovered (the BLS period on those dips is not the planet's).",
+ "@showcase.tess-hd-15337-s4.caveat": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example HD 15337: its caveat, from docs/results/showcase.json."
+ },
+ "showcase.tess-hd-15337-s4.kind": "Small planets near the limit",
+ "@showcase.tess-hd-15337-s4.kind": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example HD 15337: its kind, from docs/results/showcase.json."
+ },
+ "showcase.tess-hd-15337-s4.outcome": "HD 15337 b: 1 of 5 transits (1 candidate; BLS period not the planet's); HD 15337 c: 2 of 2 transits (1 candidate, 1 flagged; BLS period not the planet's).",
+ "@showcase.tess-hd-15337-s4.outcome": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example HD 15337: its outcome, from docs/results/showcase.json."
+ },
+ "showcase.tess-hd-15337-s4.summary": "A bright K dwarf with two small known planets: b (about 1.6 Earth radii, 4.8 days, roughly 350 ppm deep) and c (17.2 days).",
+ "@showcase.tess-hd-15337-s4.summary": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example HD 15337: its summary, from docs/results/showcase.json."
+ },
+ "showcase.tess-hd-15337-s4.why": "A small planet whose single transits are near the noise of one sector: it shows what the panel and vetting do at the edge of what a 10-minute-binned search can see, and the page says what it missed.",
+ "@showcase.tess-hd-15337-s4.why": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example HD 15337: its why, from docs/results/showcase.json."
+ },
+ "showcase.tess-pi-men-s1.kind": "Reference check",
+ "@showcase.tess-pi-men-s1.kind": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example pi Men: its kind, from docs/results/showcase.json."
+ },
+ "showcase.tess-pi-men-s1.outcome": "Rp/R★ and T14 within 5% of Huang et al. 2018 (docs/results/pi_men_validation.md).",
+ "@showcase.tess-pi-men-s1.outcome": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example pi Men: its outcome, from docs/results/showcase.json."
+ },
+ "showcase.tess-pi-men-s1.summary": "A sun-like star with a super-Earth on a 6.3-day orbit: the run checked in full against Huang et al. 2018.",
+ "@showcase.tess-pi-men-s1.summary": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example pi Men: its summary, from docs/results/showcase.json."
+ },
+ "showcase.tess-pi-men-s1.why": "The reference check: the one run with the Sentinels as well as the Probes, its limb-darkened fit compared with the discovery paper in docs/results/pi_men_validation.md.",
+ "@showcase.tess-pi-men-s1.why": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example pi Men: its why, from docs/results/showcase.json."
+ },
+ "showcase.tess-toi-236-s2.kind": "Known false positive",
+ "@showcase.tess-toi-236-s2.kind": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example TOI-236: its kind, from docs/results/showcase.json."
+ },
+ "showcase.tess-toi-236-s2.outcome": "Caught: all 6 dips on the TOI ephemeris were rejected by vetting (secondary_any_phase, secondary_eclipse), so none is a candidate.",
+ "@showcase.tess-toi-236-s2.outcome": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example TOI-236: its outcome, from docs/results/showcase.json."
+ },
+ "showcase.tess-toi-236-s2.summary": "A TESS Object of Interest the TOI table dispositions as a false positive (FP): a 2.4% dip every 4.5 days.",
+ "@showcase.tess-toi-236-s2.summary": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example TOI-236: its summary, from docs/results/showcase.json."
+ },
+ "showcase.tess-toi-236-s2.why": "A test SetuHQ must fail to pass: TOI-236.01 is in the real-TOI benchmark's false-positive set. The page says what the vetting did with it, whatever it did.",
+ "@showcase.tess-toi-236-s2.why": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example TOI-236: its why, from docs/results/showcase.json."
+ },
+ "showcase.tess-toi-270-s5.caveat": "Found all 5 of c's transits and both of d's; b not found; d seen twice, no period (one transit per 13-day piece of the light curve).",
+ "@showcase.tess-toi-270-s5.caveat": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example TOI-270: its caveat, from docs/results/showcase.json."
+ },
+ "showcase.tess-toi-270-s5.kind": "Multi-planet system",
+ "@showcase.tess-toi-270-s5.kind": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example TOI-270: its kind, from docs/results/showcase.json."
+ },
+ "showcase.tess-toi-270-s5.outcome": "TOI-270 b: none of 6 transits; TOI-270 c: 5 of 5 transits (5 candidates); TOI-270 d: 2 of 2 transits (2 flagged; no period).",
+ "@showcase.tess-toi-270-s5.outcome": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example TOI-270: its outcome, from docs/results/showcase.json."
+ },
+ "showcase.tess-toi-270-s5.summary": "An M dwarf with three known transiting planets at 3.4, 5.7 and 11.4 days: several periods in one star.",
+ "@showcase.tess-toi-270-s5.summary": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example TOI-270: its summary, from docs/results/showcase.json."
+ },
+ "showcase.tess-toi-270-s5.why": "One light curve, three periods. It shows what the search does when a star has more than one planet, and which of them a 13-day subject can hold.",
+ "@showcase.tess-toi-270-s5.why": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example TOI-270: its why, from docs/results/showcase.json."
+ },
+ "showcase.tess-wasp-126-s1.kind": "Hot Jupiter",
+ "@showcase.tess-wasp-126-s1.kind": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example WASP-126: its kind, from docs/results/showcase.json."
+ },
+ "showcase.tess-wasp-126-s1.outcome": "WASP-126 b: 8 of 8 transits (8 candidates).",
+ "@showcase.tess-wasp-126-s1.outcome": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example WASP-126: its outcome, from docs/results/showcase.json."
+ },
+ "showcase.tess-wasp-126-s1.summary": "A Jupiter-sized planet on a 3.3-day orbit: deep, easy transits, in the TESS southern continuous viewing zone.",
+ "@showcase.tess-wasp-126-s1.summary": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example WASP-126: its summary, from docs/results/showcase.json."
+ },
+ "showcase.tess-wasp-126-s1.why": "The easy case: a transit about 0.6% deep that any search should find, so it shows the whole path from light curve to fit with little doubt about the signal.",
+ "@showcase.tess-wasp-126-s1.why": {
+  "x-file": "docs/results/showcase.json",
+  "description": "The worked example WASP-126: its why, from docs/results/showcase.json."
+ },
+ "sky.all": "All",
+ "@sky.all": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "sky.cap": "Each dot is a catalogued planet at its host star's position (RA and Dec, J2000), coloured by the method that found it, appearing in its discovery year.",
+ "@sky.cap": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "sky.col.method": "Method",
+ "@sky.col.method": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "sky.col.planets": "Planets",
+ "@sky.col.planets": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "sky.cov": "Survey coverage: TESS has observed {tess}% of the sky (sectors 1–{last}); {unm}% has never been in a TESS, Kepler or K2 footprint. Shading shows where surveys looked, not where planets are.",
+ "@sky.cov": {
+  "x-file": "src/setuhq/app.py",
+  "placeholders": {
+   "last": {},
+   "tess": {},
+   "unm": {}
+  }
+ },
+ "sky.cov_label": "Survey coverage",
+ "@sky.cov_label": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "sky.cov_more": "Figures and sources in the Galaxy ›",
+ "@sky.cov_more": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "sky.lc": "The run's light curve",
+ "@sky.lc": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "sky.legend": "Discovery method",
+ "@sky.legend": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "sky.nojs": "This still shows {k, number} of them (every {step}th); the full map draws when the page's script runs.",
+ "@sky.nojs": {
+  "x-file": "src/setuhq/viz/skyyears.py",
+  "placeholders": {
+   "k": {},
+   "step": {}
+  }
+ },
+ "sky.note.ecl": "dashed: the ecliptic",
+ "@sky.note.ecl": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "sky.note.feed": "Feed stars not plotted (positions not stored)",
+ "@sky.note.feed": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "sky.note.placed": "{star} placed from SIMBAD (ICRS J2000)",
+ "@sky.note.placed": {
+  "x-file": "src/setuhq/app.py",
+  "placeholders": {
+   "star": {}
+  }
+ },
+ "sky.note.unplaced": "target not plotted (no position stored)",
+ "@sky.note.unplaced": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "sky.open": "Open ›",
+ "@sky.open": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "sky.pause": "Pause",
+ "@sky.pause": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "sky.play": "Play",
+ "@sky.play": {
+  "x-file": "src/setuhq/methods.py"
+ },
+ "sky.shown": "{n, number} planets shown",
+ "@sky.shown": {
+  "x-file": "src/setuhq/viz/skyyears.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "sky.sweep": "The setuhq sweep layer: one green dot per star-sector the sweep searched ({n, number} so far, positions from MAST), amber where it has an entry in a class that exceeds its null in this slice ({found, select, none {none} other {{found}}}).",
+ "@sky.sweep": {
+  "x-file": "src/setuhq/app.py",
+  "placeholders": {
+   "found": {},
+   "n": {}
+  }
+ },
+ "sky.sweep_more": "Everything that dims ›",
+ "@sky.sweep_more": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "sky.table": "Planets by discovery method, as of {y}",
+ "@sky.table": {
+  "x-file": "src/setuhq/viz/skyyears.py",
+  "placeholders": {
+   "y": {}
+  }
+ },
+ "sky.tl": "Planets found each year, by method",
+ "@sky.tl": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "sky.tonly": "Transits only",
+ "@sky.tonly": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "sky.tonly_note": " (transits only)",
+ "@sky.tonly_note": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "sky.valuetext": "{y}: {n, number} planets",
+ "@sky.valuetext": {
+  "x-file": "src/setuhq/viz/skyyears.py",
+  "placeholders": {
+   "n": {},
+   "y": {}
+  }
+ },
+ "sky.year": "Year",
+ "@sky.year": {
+  "x-file": "src/setuhq/viz/skyyears.py"
+ },
+ "sky.zoom": "Zoom into the {planet} system ›",
+ "@sky.zoom": {
+  "x-file": "src/setuhq/app.py",
+  "placeholders": {
+   "planet": {}
+  }
+ },
+ "st.figs": "What the detectors see",
+ "@st.figs": {
+  "x-file": "src/setuhq/stellarpages.py"
+ },
+ "st.h1": "Stars, measured.",
+ "@st.h1": {
+  "x-file": "src/setuhq/stellarpages.py"
+ },
+ "st.intro": "Beyond planets, SetuHQ detects stellar flares, extracts pulsation frequencies, reads public CHEOPS light curves, and finds eclipsing binaries, rotation periods and transients. Each capability was compared with published results under a protocol committed before its run, and each page and tool output says how far its validation went.",
+ "@st.intro": {
+  "x-file": "src/setuhq/stellarpages.py"
+ },
+ "status.known": "{planet} · known planet",
+ "@status.known": {
+  "x-file": "src/setuhq/names.py",
+  "placeholders": {
+   "planet": {}
+  }
+ },
+ "status.open_cand": "Open · candidate, unconfirmed",
+ "@status.open_cand": {
+  "x-file": "src/setuhq/names.py"
+ },
+ "status.open_flagged": "Open · flagged for review",
+ "@status.open_flagged": {
+  "x-file": "src/setuhq/names.py"
+ },
+ "status.rejected": "Rejected by vetting",
+ "@status.rejected": {
+  "x-file": "src/setuhq/names.py"
+ },
+ "story.both_passed": "Both Sentinels passed it by.",
+ "@story.both_passed": {
+  "x-file": "src/setuhq/story.py"
+ },
+ "story.feed": "entries from {stars, plural, one {# more star} other {# more stars}} in the search feed, {new, plural, =0 {matching known TOIs.} one {# at a new period.} other {# at a new period.}} Leads for review, not planets.",
+ "@story.feed": {
+  "x-file": "src/setuhq/story.py",
+  "placeholders": {
+   "new": {},
+   "stars": {}
+  }
+ },
+ "story.no_probe": "No Probe marked it.",
+ "@story.no_probe": {
+  "x-file": "src/setuhq/story.py"
+ },
+ "story.open": "{n, plural, one {dip} other {dips}} still open.",
+ "@story.open": {
+  "x-file": "src/setuhq/story.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "story.panel": "AI Sentinels and Probes read this run's light curve; each vote counts as much as it scored on planted test transits.",
+ "@story.panel": {
+  "x-file": "src/setuhq/story.py"
+ },
+ "story.probes_saw": "The Probes saw it ({k} of {n}).",
+ "@story.probes_saw": {
+  "x-file": "src/setuhq/story.py",
+  "placeholders": {
+   "k": {},
+   "n": {}
+  }
+ },
+ "story.recovered": "transits of {planet} found without being told where to look, each about {min} minutes from its published timing. A known planet, recovered.",
+ "@story.recovered": {
+  "x-file": "src/setuhq/story.py",
+  "placeholders": {
+   "min": {},
+   "planet": {}
+  }
+ },
+ "story.recovered_period": "dips on the period of {planet}, a known planet. Recovered, not discovered.",
+ "@story.recovered_period": {
+  "x-file": "src/setuhq/story.py",
+  "placeholders": {
+   "planet": {}
+  }
+ },
+ "story.sentinels": "{k} of {n} Sentinels marked it.",
+ "@story.sentinels": {
+  "x-file": "src/setuhq/story.py",
+  "placeholders": {
+   "k": {},
+   "n": {}
+  }
+ },
+ "subnav.candidates": "Case files",
+ "@subnav.candidates": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "subnav.catalogue": "Catalogue",
+ "@subnav.catalogue": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "subnav.docs": "Get started",
+ "@subnav.docs": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "subnav.editions": "Editions",
+ "@subnav.editions": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "subnav.explorer": "All candidates",
+ "@subnav.explorer": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "subnav.galaxy": "Galaxy",
+ "@subnav.galaxy": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "subnav.leaderboard": "Leaderboard",
+ "@subnav.leaderboard": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "subnav.mission": "Mission Control",
+ "@subnav.mission": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "subnav.pictures": "How the pictures are drawn",
+ "@subnav.pictures": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "subnav.planets": "Radius ratios",
+ "@subnav.planets": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "subnav.plates": "Plates",
+ "@subnav.plates": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "subnav.propose": "CHEOPS proposals",
+ "@subnav.propose": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "subnav.report": "Run report",
+ "@subnav.report": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "subnav.runs": "Runs",
+ "@subnav.runs": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "subnav.sentinels": "The panel",
+ "@subnav.sentinels": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "subnav.sky": "Sky map",
+ "@subnav.sky": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "subnav.stellar": "Stars",
+ "@subnav.stellar": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "subnav.stellardocs": "Flares and pulsations",
+ "@subnav.stellardocs": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "subnav.tessnow": "Where TESS is now",
+ "@subnav.tessnow": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "subnav.transit": "Dips",
+ "@subnav.transit": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "subnav.variables": "Everything that dims",
+ "@subnav.variables": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "subnav.vetter": "Be the vetter",
+ "@subnav.vetter": {
+  "x-file": "src/setuhq/app.py"
+ },
+ "sweep.evidence": "See the evidence ›",
+ "@sweep.evidence": {
+  "x-file": "src/setuhq/everything.py"
+ },
+ "sweep.line": "We have searched {n, number} stars for anything that dims; {k, plural, =0 {nothing yet stands out above chance} one {{list} stands out above chance so far} other {{list} stand out above chance so far}}.",
+ "@sweep.line": {
+  "x-file": "src/setuhq/everything.py",
+  "placeholders": {
+   "k": {},
+   "list": {},
+   "n": {}
+  }
+ },
+ "tl.cap": "Planets per discovery year, stacked by the method that found them.",
+ "@tl.cap": {
+  "x-file": "src/setuhq/viz/timeline.py"
+ },
+ "tl.hint": "Point at a year, or focus the chart and use the arrow keys.",
+ "@tl.hint": {
+  "x-file": "src/setuhq/viz/timeline.py"
+ },
+ "tl.noyear": "{n, number} records without a year are not drawn.",
+ "@tl.noyear": {
+  "x-file": "src/setuhq/viz/timeline.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "tl.read": "{y}: {n, plural, one {# planet} other {# planets}}",
+ "@tl.read": {
+  "x-file": "src/setuhq/viz/timeline.py",
+  "placeholders": {
+   "n": {},
+   "y": {}
+  }
+ },
+ "tl.table": "Planets by year and method",
+ "@tl.table": {
+  "x-file": "src/setuhq/viz/timeline.py"
+ },
+ "tl.table_link": "The counts by year and method, as a table ›",
+ "@tl.table_link": {
+  "x-file": "src/setuhq/viz/timeline.py"
+ },
+ "tn.h1": "Where TESS is looking.",
+ "@tn.h1": {
+  "x-file": "src/setuhq/tessnow.py"
+ },
+ "tn.intro": "The NASA TESS satellite watches one strip of sky for about four weeks (a sector), with four cameras of 24° by 24° each. This map shows the strips from the published schedule, and the stars with known planets inside them.",
+ "@tn.intro": {
+  "x-file": "src/setuhq/tessnow.py"
+ },
+ "ts.hi": "Hottest star, in kelvin",
+ "@ts.hi": {
+  "x-file": "src/setuhq/viz/tempstrip.py"
+ },
+ "ts.lo": "Coolest star, in kelvin",
+ "@ts.lo": {
+  "x-file": "src/setuhq/viz/tempstrip.py"
+ },
+ "ts.src": "Star colour: a Planck spectrum through the CIE 1931 colour-matching functions, in sRGB, normalised to its brightest channel (a hue, not a brightness). Teff: each run's stellar.json (TESS Input Catalog v8.2, MAST); the Sun 5,772 K (IAU 2015 nominal).",
+ "@ts.src": {
+  "x-file": "src/setuhq/home.py"
+ },
+ "ts.sun": "the Sun",
+ "@ts.sun": {
+  "x-file": "src/setuhq/viz/tempstrip.py"
+ },
+ "ts.title": "Star colour from 2,500 K to 10,000 K, with each star marked at its temperature",
+ "@ts.title": {
+  "x-file": "src/setuhq/viz/tempstrip.py"
+ },
+ "var.h1": "Everything that dims.",
+ "@var.h1": {
+  "x-file": "src/setuhq/everything.py"
+ },
+ "var.h1b": "{n, number} entries, none thrown away.",
+ "@var.h1b": {
+  "x-file": "src/setuhq/everything.py",
+  "placeholders": {
+   "n": {}
+  }
+ },
+ "var.intro": "Every consensus dip of the panel, every brightening and every star's variability from the sweep, each classified by a stated rule, with its confidence, its cues and its provenance: the marks, the weights and the Sentinels' own words.",
+ "@var.intro": {
+  "x-file": "src/setuhq/everything.py"
+ },
+ "vt.h1": "Be the vetter.",
+ "@vt.h1": {
+  "x-file": "src/setuhq/vetter.py"
+ },
+ "vt.intro": "Each card is a real dip that one of SetuHQ's example runs stored. Look at its light curve, its fold, its odd and even depths and its depth half an orbit later, then call it: pass, flag or reject. Then see what the vetting decided, and why.",
+ "@vt.intro": {
+  "x-file": "src/setuhq/vetter.py"
+ }
+}

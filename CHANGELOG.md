@@ -12,6 +12,123 @@ breaking changes are called out explicitly.
 
 ### Added
 
+- **SetuHQ in 17 languages** ([docs/TRANSLATING.md](docs/TRANSLATING.md)). The website and the tool speak English
+  and, machine-assisted and not yet reviewed by native speakers, Dutch, Polish, Portuguese, Finnish, Swedish, Danish,
+  Norwegian Bokmål, Czech, Ukrainian, Russian, German, French, Spanish, Estonian, Japanese and Simplified Chinese;
+  each language's picker and footer say so and link to the translation guide. Messages are ICU MessageFormat with
+  CLDR plural rules, numbers and dates are formatted per language, and one English catalogue
+  (`src/setuhq/locales/en.arb`, generated from the code, with stable ids and translator notes) feeds one ARB file
+  per language that Weblate reads, each string with its review status. Main pages have an address per language
+  (`/de/explore/`, English stays at `/`) with `html lang`, canonical and hreflang links and a sitemap per language;
+  the planet and star pages, dip pages, case files and reports keep one address and are localised in the browser. A
+  language picker in the top bar remembers the choice; a first-visit suggestion from the browser's language is
+  dismissible and never redirects. The CLI's output and help, its reports, dashboard, plates and case files, and the
+  MCP server's tool descriptions and honesty labels follow `--lang`, `SETUHQ_LANG` or the locale, English by
+  default; files, JSON keys and every machine-read field stay English. `tools/i18n.py` (and the tests and
+  `scripts/ci_local.sh`) checks every translation: placeholders, plural forms, markup, brand names, the glossary per
+  language (`docs/i18n/glossary.<lang>.json`), no stronger claim than the English, and every honesty caveat present
+  and complete; a missing string falls back to English, and coverage is reported per language. A translation memory
+  is kept in `docs/i18n/memory.tmx`.
+
+- **Eclipsing binaries, rotation and transients** ([docs/STELLAR.md](docs/STELLAR.md)). `setuhq binaries`,
+  `setuhq rotation` and `setuhq transients`, and the MCP tools `find_eclipsing_binary`, `rotation_period` and
+  `find_transients`. Binaries: period from a box search and a periodogram with odd/even and equal-minima rules,
+  primary and secondary eclipse depths and widths, the secondary phase with an e·cosω hint, a heuristic morphology
+  and a candidate flag with reasons, plus advisory vetting hints that the planet vetting does not use (its results
+  and the frozen benchmark are unchanged). Rotation: Lomb-Scargle and the autocorrelation function, uncertainties,
+  half/double handling, and periods beyond about 13 days reported as beyond one sector's limit. Transients: three
+  time scales, rise and decay times, amplitude, flare-like and supernova-like hints, and screens for momentum dumps,
+  scattered light, asteroid crossings and periodic stars; TESScut difference photometry for any sky position
+  (cutouts not stored). Every eclipsing binary or transient found is a candidate, never new. Validated under
+  protocol v4 (`docs/results/stellar_validation_protocol_v4.json`, committed on its own before any v4 code; seeded
+  target draws with tuning and held-out splits): eclipsing binaries partly validated (5 of 8 checks pass), rotation
+  not validated (3 of 6), transients not validated (1 of 9), and every transient output says the tools are a search aid whose
+  candidates need checking by eye. `scripts/stellar_validation_v4_select.py` reproduces the target draws. Results in
+  `docs/results/stellar_validation_v4.md`;
+  `/evidence/stellar/` gains the three status cards, one "Real data, cited" figure each and every counted check, and
+  `/docs/stellar/` the three commands.
+- **Each dip's journey, step by step.** Every dip page and case file shows six dated steps: found by SetuHQ, vetted
+  (passed, flagged or rejected), panel reviewed (or Probes only), whether it matches a TOI, follow-up ("not
+  announced" unless the TFOP Working Group's disposition is recorded) and whether the literature has a planet at its
+  period (with the reference). The last three are other teams' records from the NASA Exoplanet Archive, stored in
+  `docs/results/showcase_archive.json` by `scripts/fetch_showcase_archive.py`; a step with no record is hollow.
+  Dip and star pages also say how long ago the light left the star, from the catalogue's stored distance.
+- **Where TESS is now** (`/explore/tess-now/`): each sector's four camera fields from the published schedule, saved
+  on 2026-10-24 from the TESS Science Office's sector pages by `scripts/fetch_tess_schedule.py`
+  (`docs/results/tess_schedule.json`), on the sky map, with a sector scrubber and the catalogued stars inside the
+  fields highlighted. Labelled "Pointing from the published schedule, not live telemetry".
+- **Be the vetter** (`/candidates/be-the-vetter/`): eight stored dips from the example runs, each with its light
+  curve, fold, odd and even depths and secondary; the visitor calls pass, flag or reject, then sees the stored
+  vetting decision and its reasons. A learning exercise: answers stay in the browser and are never collected.
+- **Editions** (`/editions/`, linked from the footer and Docs): the open core, SetuHQ Pro (under contract, in
+  development) and a custom study compared row by row, the two licences and the CHEOPS carve-out. No prices; every
+  paid route starts with a message to contact@ashforde.org.
+- **Figures say their source and limits.** Every labelled figure has a "Source / limits" disclosure built from its
+  label and caption, and the orbit views carry a dismissible first-visit hint ("Sizes not to scale · phases
+  illustrative"). The orbit views (V08) gain focus (all, the star, each planet), zoom and reset buttons; the Galaxy
+  gains All, Selected star, zoom and Reset view buttons.
+- **A stable public API** (`setuhq.api`, [docs/API.md](docs/API.md)): the names code outside the repository may rely
+  on, pinned by `tests/test_api.py`. `setuhq.panel.standard_probes()` returns the standard Probe panel as
+  `configs/sweep.toml` lists it; the wheel ships the calibrated reviewer weights
+  (`setuhq/data/reviewer_weights_full_panel.json` and its calibration record), which an installed package uses by
+  default. Sentinels take a provider key per call (`api_key=` on `ClaudeReviewer`, `OpenAIReviewer`,
+  `OpenAICompatibleReviewer`, `GeminiReviewer` and their backends), held as a `Secret` that is never logged, cached,
+  pickled or written to a manifest; the environment variables stay the fallback, a config file still never holds
+  a key, and an endpoint whose URL or query holds the passed key (as a string or a `Secret`) is refused without
+  printing it.
+- **Feed embargo: new signals are held for private review and reporting.** `setuhq discover` no longer
+  publishes a signal that matches no known TOI (`new_candidate`). The public catalogue, the site (the
+  Candidates feed, the overview and Mission Control cards, the runs page), the feed page, the dashboard,
+  the plates and the command's output carry only known-TOI matches and one static line: "Signals that
+  match no known TOI are held for private review; they are published only after review and reporting."
+  A hold leaves no public trace, not even a count or a date: every public output is byte for byte what
+  it would be had the signal not been found (tested by running the same targets with and without a
+  synthetic `new_candidate`). Run logs keep a count of targets (`n_targets`) instead of their TIC list,
+  and an error is recorded the same way whether or not its target gave a held signal. Counts of held
+  signals will live only in the private review pipeline (setuhq-ops, v0.3). A held signal is not stored
+  publicly; the search is deterministic, so that pipeline re-searches those targets. On by default; a private deployment opts out with `--publish-new` or
+  `[discover] embargo = false`, which the public workflow never sets. `discover.yml` checks the
+  catalogue before it commits. Tests: `tests/test_embargo.py`.
+
+- **Beyond planets: stellar flares, pulsations and CHEOPS** ([docs/STELLAR.md](docs/STELLAR.md)).
+  `setuhq flares`, `setuhq pulsations` and `setuhq cheops`, and the MCP tools `find_flares`,
+  `pulsation_spectrum` and `get_cheops_lightcurve` (slash command `/setuhq-stellar`). Flares: a
+  flare-preserving detrend, Chang et al. (2015) candidate criteria, optional stationary-wavelet
+  denoising (Poyatos et al. 2025; extra `[wavelets]`), Mendoza et al. (2022) template fits with
+  multi-component models chosen by BIC, energies for a 9000 K blackbody, the flare frequency
+  distribution (maximum-likelihood power law and a log-normal comparison), injection-recovery
+  completeness and flux-inverted and quiet-star nulls. Pulsations: pre-whitening to S/N 4 with a
+  multi-sine refit, combination flags, Harvey backgrounds, numax and Δν with a bootstrap, a heuristic
+  type, and red-noise surrogates. CHEOPS: public DRP light curves only, through DACE (extra
+  `[cheops]`), roll-angle decorrelation, one timeline with TESS, and ESA's acknowledgement, the
+  programme and visit ids, the credit line and SetuHQ's independence disclaimer on every output.
+  Compared against published results under protocol v3
+  (`docs/results/stellar_validation_protocol_v3.json`, committed before its run): flares partly
+  validated (5 of 8 checks pass), pulsations partly validated (7 of 9), CHEOPS not validated
+  (2 of 5). The results are in `docs/results/stellar_validation.md`, with the CHEOPS-derived results
+  in `docs/results/stellar_validation_cheops.md` under ESA's terms; what is not validated is listed
+  there.
+- **A CHEOPS Guest Observers proposal helper** ([docs/CHEOPS-PROPOSALS.md](docs/CHEOPS-PROPOSALS.md)).
+  `setuhq propose cheops <target>` writes a preparation pack for the Running Call (the rules and cycles checked,
+  the target's coordinates, a Reserved Target List match and its prior public visits, planning estimates from
+  published in-flight performance, anonymised drafts, ESA's seven steps as a checklist, and every source with its
+  sha256); `setuhq propose lint` is an anonymity aid for drafts and PDFs (extra `[propose]`). The MCP tool
+  `cheops_proposal_pack` and `/setuhq-cheops-propose` do the same. It never logs in, submits or automates an ESA
+  system; the RTL is downloaded at run time and never committed; archive answers are filtered in memory, so no
+  proprietary data and no PI name or id reaches the pack or the cache.
+- **The stellar tools on the site, in the visual system.** `/evidence/stellar/` shows each capability's status with
+  its count, read from the stored record (flares partly validated, 5 of 8 checks pass; pulsations partly validated,
+  7 of 9; CHEOPS not validated, 2 of 5), every counted check, and two figures of real TESS data labelled "Real data,
+  cited" with their sources: TIC 150359500's flares in sector 2 against Günther et al. (2020), and beta Pic's
+  amplitude spectrum in sector 5 against Zieba et al. (2019), each star drawn by the renderer at its TIC v8.2
+  Teff. Its CHEOPS part carries ESA's acknowledgement, each programme's credit line, the three papers, DACE's
+  acknowledgement, the disclaimer and the CC BY-NC 3.0 IGO carve-out. `/docs/stellar/` documents the commands and
+  `/docs/cheops-proposals/` the proposal helper. The figures' data are `docs/results/stellar_figures.json`
+  (`scripts/stellar_figures.py`, public SPOC files only). Checked by `tests/test_stellarpages.py` and the e2e module
+  `tests/e2e/checks/stellar.mjs`.
+- **CHEOPS data stay under ESA's terms** (CC BY-NC 3.0 IGO; commercial use needs ESA's prior
+  authorisation): `LICENSING.md`, `NOTICE` and `docs/PRO.md` exclude them from CC BY 4.0, the
+  commercial licence and Pro.
 - **DOI and PyPI.** The Zenodo concept DOI `10.5281/zenodo.23568348` (all versions) is in `CITATION.cff`
   (`doi`, `identifiers`), `codemeta.json` (`identifier`) and `paper/paper.bib`; the README has a PyPI badge
   (static, from `__version__`, so `tools/gen_readme_assets.py --check` stays offline) and a DOI badge, its
@@ -28,6 +145,13 @@ breaking changes are called out explicitly.
 
 ### Changed
 
+- The built script and stylesheet are written without comments (`setuhq.minify`): the app's script from 429,046 to
+  about 378,000 bytes; the dead `_cap` helper is gone.
+- **The stellar commands print their validation status.** `setuhq flares`, `setuhq pulsations` and `setuhq cheops`
+  print the capability's status with its count on every run and write it into the record (`validation_status`), as
+  the MCP tools already did, so no output presents a detector as more validated than it is.
+- **DACE is described as what it is** in the proposal helper's pack and documentation: the University of Geneva's
+  public API in front of the CHEOPS Mission Archive, not designated by ESA.
 - **The CLI's HTML outputs in the site's visual system.** `setuhq report`, the search feed page of `setuhq
   discover` and `setuhq dashboard` read `setuhq.design`'s tokens (the old indigo palette is gone), print in the
   light set, and use Geist and Geist Mono copied beside the page; nothing loads from another site. The report opens
@@ -58,6 +182,11 @@ breaking changes are called out explicitly.
   strict checks; a dispatch on a branch is still a dry run. A second run for a tag that is already released
   waits for the first (concurrency) and skips building and publishing. See
   [docs/RELEASING.md](docs/RELEASING.md).
+
+### Fixed
+
+- The sweep catalogue page's entry list no longer carries an `aria-label` on a role-less `<div>` (axe:
+  `aria-prohibited-attr`).
 
 ## [0.1.0] - 2026-10-22
 

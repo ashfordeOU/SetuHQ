@@ -117,4 +117,4 @@ def test_gallery_captions_are_short_and_the_cards_line_up(data):
     assert all(len(c) < 200 for c in caps), [len(c) for c in caps]
     assert all(c.startswith("Star ") for c in caps)
     assert "grid-template-rows:subgrid" in gallery.CSS
-    assert html_mod.escape(gallery.STAGE_NOTE) in gallery.html(g)
+    assert gallery.STAGE_NOTE in gallery.html(g)  # a keyed message: its text as written

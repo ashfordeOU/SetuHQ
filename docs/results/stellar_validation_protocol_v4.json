@@ -1,0 +1,1613 @@
+{
+ "kind": "setuhq-stellar-validation-protocol/4",
+ "version": 4,
+ "frozen": "2026-10-24",
+ "seed": 20261024,
+ "capabilities": [
+  "binaries",
+  "rotation",
+  "transients"
+ ],
+ "history": "Protocol v4 covers three capabilities that protocols v1-v3 did not: eclipsing binaries, stellar rotation and transients. It is committed on its own, before any v4 code exists and before any light curve of its targets has been analysed. Targets were drawn from the published catalogues by the seeded rules below, using catalogue metadata only. The results files record this file's sha256 and the commit that added it. v3 (flares, pulsations, CHEOPS) is unchanged and its results stay in stellar_validation.json.",
+ "process": [
+  "Each capability has a tuning split and a held-out split, both fixed here. Algorithms are developed on synthetic light curves with known answers and on the tuning split only; no held-out light curve is analysed before the validation run.",
+  "The validation runs once on the held-out split with the code as committed. A miss is reported as a miss. Any change after the held-out run needs a new protocol version; v4's results stay as recorded.",
+  "Counted checks use held-out targets only. Tuning-split numbers are reported and not counted.",
+  "A check whose item fails to run counts as not passing.",
+  "Planet vetting is out of scope: vet.py, the benchmark and every existing vetting result are unchanged. The eclipsing-binary module's vetting hints are advisory, are not used by any vetting decision, and are not evaluated here; using them in vetting would need its own pre-registered evaluation.",
+  "Data: public TESS data from MAST only (SPOC 2-minute light curves, and TESScut cutouts of SPOC full-frame images for supernovae). No CHEOPS data. Cutouts are 11 x 11 pixels, one sector per supernova, deleted after the derived light curves are written; only derived numbers are committed."
+ ],
+ "status_rule": "validated: every counted check passes; partly validated: more than half pass; otherwise not validated. Always shown with 'k of n checks pass'. Tuning-split results and reported-only numbers are not counted.",
+ "binaries": {
+  "reference": "Prša et al. 2022, ApJS 258, 16 (TESS Eclipsing Binary stars I, sectors 1-26), VizieR J/ApJS/258/16; the 2-Gaussian model columns (Dp-2g, Wp-2g, Phip-2g, Ds-2g, Ws-2g, Phis-2g), the period and the morphology coefficient (Matijevič et al. 2012: 0 widest detached, 1 ellipsoidal)",
+  "selection": "From the 4584 catalogue rows: m_TIC = 1, 0.3 <= Per <= 8 d, Tmag <= 12, Dp-2g and Phip-2g present, 0 <= Morph <= 1 (2707 rows). Split into Morph < 0.5 (1158) and Morph >= 0.5 (1549), each sorted by TIC; numpy default_rng(seed) permutation of each, first 15 of each, interleaved (detached first). The first six (three of each) are the tuning split; the other 24 are held out.",
+  "data": "the SPOC 120-s PDCSAP light curve of the first sector the catalogue lists; if it cannot be fetched, the next listed sector; otherwise not run",
+  "targets": [
+   {
+    "tic": 79225651,
+    "sector": 1,
+    "sectors": [
+     1
+    ],
+    "period_d": 1.785578,
+    "bjd0_btjd": 1325.530293,
+    "morph": 0.441,
+    "tmag": 8.004,
+    "depth_p_2g": 0.539,
+    "width_p_2g": 0.08029,
+    "phase_p_2g": 0.9999,
+    "depth_s_2g": 0.528,
+    "width_s_2g": 0.09,
+    "phase_s_2g": 0.5,
+    "split": "tuning"
+   },
+   {
+    "tic": 312286761,
+    "sector": 15,
+    "sectors": [
+     15,
+     16
+    ],
+    "period_d": 0.5099985,
+    "bjd0_btjd": 1711.44826,
+    "morph": 0.802,
+    "tmag": 11.421,
+    "depth_p_2g": 0.298,
+    "width_p_2g": 0.2771,
+    "phase_p_2g": 0.0002933,
+    "depth_s_2g": 0.277,
+    "width_s_2g": 0.342,
+    "phase_s_2g": 0.5001,
+    "split": "tuning"
+   },
+   {
+    "tic": 279871974,
+    "sector": 17,
+    "sectors": [
+     17,
+     18
+    ],
+    "period_d": 6.5619449,
+    "bjd0_btjd": 1765.839631,
+    "morph": 0.438,
+    "tmag": 10.31,
+    "depth_p_2g": 0.528,
+    "width_p_2g": 0.08193,
+    "phase_p_2g": 1.0,
+    "depth_s_2g": 0.366,
+    "width_s_2g": 0.086,
+    "phase_s_2g": 0.4994,
+    "split": "tuning"
+   },
+   {
+    "tic": 381167995,
+    "sector": 4,
+    "sectors": [
+     4
+    ],
+    "period_d": 0.8242596,
+    "bjd0_btjd": 1411.654471,
+    "morph": 0.668,
+    "tmag": 8.21,
+    "depth_p_2g": 0.33,
+    "width_p_2g": 0.3743,
+    "phase_p_2g": 0.9991,
+    "depth_s_2g": null,
+    "width_s_2g": null,
+    "phase_s_2g": null,
+    "split": "tuning"
+   },
+   {
+    "tic": 396713719,
+    "sector": 18,
+    "sectors": [
+     18,
+     19,
+     25,
+     26
+    ],
+    "period_d": 2.0818251,
+    "bjd0_btjd": 1792.123355,
+    "morph": 0.437,
+    "tmag": 8.72,
+    "depth_p_2g": 0.011,
+    "width_p_2g": 0.08213,
+    "phase_p_2g": 7.323e-05,
+    "depth_s_2g": 0.01,
+    "width_s_2g": 0.082,
+    "phase_s_2g": 0.5003,
+    "split": "tuning"
+   },
+   {
+    "tic": 303682287,
+    "sector": 5,
+    "sectors": [
+     5
+    ],
+    "period_d": 2.1084547,
+    "bjd0_btjd": 1440.50034,
+    "morph": 0.764,
+    "tmag": 8.482,
+    "depth_p_2g": 0.112,
+    "width_p_2g": 0.2535,
+    "phase_p_2g": 0.0005164,
+    "depth_s_2g": 0.077,
+    "width_s_2g": 0.251,
+    "phase_s_2g": 0.5,
+    "split": "tuning"
+   },
+   {
+    "tic": 38541473,
+    "sector": 4,
+    "sectors": [
+     4,
+     31
+    ],
+    "period_d": 6.0613451,
+    "bjd0_btjd": 1415.513771,
+    "morph": 0.147,
+    "tmag": 10.771,
+    "depth_p_2g": 0.019,
+    "width_p_2g": 0.02313,
+    "phase_p_2g": 0.9996,
+    "depth_s_2g": null,
+    "width_s_2g": null,
+    "phase_s_2g": null,
+    "split": "held_out"
+   },
+   {
+    "tic": 326630342,
+    "sector": 17,
+    "sectors": [
+     17,
+     18,
+     24
+    ],
+    "period_d": 1.4734376,
+    "bjd0_btjd": 1764.787012,
+    "morph": 0.672,
+    "tmag": 9.984,
+    "depth_p_2g": 0.497,
+    "width_p_2g": 0.2809,
+    "phase_p_2g": 7.251e-05,
+    "depth_s_2g": 0.365,
+    "width_s_2g": 0.257,
+    "phase_s_2g": 0.5002,
+    "split": "held_out"
+   },
+   {
+    "tic": 318067171,
+    "sector": 20,
+    "sectors": [
+     20
+    ],
+    "period_d": 2.1805537,
+    "bjd0_btjd": 1844.534498,
+    "morph": 0.325,
+    "tmag": 11.51,
+    "depth_p_2g": 0.038,
+    "width_p_2g": 0.05765,
+    "phase_p_2g": 0.00023,
+    "depth_s_2g": 0.004,
+    "width_s_2g": 0.042,
+    "phase_s_2g": 0.5021,
+    "split": "held_out"
+   },
+   {
+    "tic": 419635446,
+    "sector": 1,
+    "sectors": [
+     1
+    ],
+    "period_d": 0.3908187,
+    "bjd0_btjd": 1325.55239,
+    "morph": 0.743,
+    "tmag": 11.618,
+    "depth_p_2g": 0.314,
+    "width_p_2g": 0.3215,
+    "phase_p_2g": 0.9972,
+    "depth_s_2g": 0.314,
+    "width_s_2g": 0.306,
+    "phase_s_2g": 0.5025,
+    "split": "held_out"
+   },
+   {
+    "tic": 37606218,
+    "sector": 6,
+    "sectors": [
+     6
+    ],
+    "period_d": 7.8358545,
+    "bjd0_btjd": 1469.612215,
+    "morph": 0.21,
+    "tmag": 9.26,
+    "depth_p_2g": 0.106,
+    "width_p_2g": 0.04236,
+    "phase_p_2g": 2.004e-05,
+    "depth_s_2g": 0.013,
+    "width_s_2g": 0.046,
+    "phase_s_2g": 0.5368,
+    "split": "held_out"
+   },
+   {
+    "tic": 88646716,
+    "sector": 21,
+    "sectors": [
+     21
+    ],
+    "period_d": 0.4149777,
+    "bjd0_btjd": 1871.061958,
+    "morph": 0.793,
+    "tmag": 9.011,
+    "depth_p_2g": 0.221,
+    "width_p_2g": 0.3191,
+    "phase_p_2g": 0.999,
+    "depth_s_2g": 0.198,
+    "width_s_2g": 0.275,
+    "phase_s_2g": 0.5,
+    "split": "held_out"
+   },
+   {
+    "tic": 47402214,
+    "sector": 12,
+    "sectors": [
+     12
+    ],
+    "period_d": 1.293387,
+    "bjd0_btjd": 1628.734574,
+    "morph": 0.389,
+    "tmag": 10.182,
+    "depth_p_2g": 0.002,
+    "width_p_2g": 0.1476,
+    "phase_p_2g": 0.2348,
+    "depth_s_2g": null,
+    "width_s_2g": null,
+    "phase_s_2g": null,
+    "split": "held_out"
+   },
+   {
+    "tic": 424508303,
+    "sector": 26,
+    "sectors": [
+     26
+    ],
+    "period_d": 2.0833359,
+    "bjd0_btjd": 2011.206394,
+    "morph": 0.527,
+    "tmag": 7.037,
+    "depth_p_2g": 0.48,
+    "width_p_2g": 0.117,
+    "phase_p_2g": 1.0,
+    "depth_s_2g": 0.372,
+    "width_s_2g": 0.12,
+    "phase_s_2g": 0.5174,
+    "split": "held_out"
+   },
+   {
+    "tic": 470085533,
+    "sector": 18,
+    "sectors": [
+     18,
+     19,
+     24,
+     26
+    ],
+    "period_d": 4.7201558,
+    "bjd0_btjd": 1793.078208,
+    "morph": 0.158,
+    "tmag": 10.534,
+    "depth_p_2g": 0.06,
+    "width_p_2g": 0.02983,
+    "phase_p_2g": 3.307e-05,
+    "depth_s_2g": 0.014,
+    "width_s_2g": 0.027,
+    "phase_s_2g": 0.5077,
+    "split": "held_out"
+   },
+   {
+    "tic": 123153249,
+    "sector": 7,
+    "sectors": [
+     7,
+     8,
+     34
+    ],
+    "period_d": 5.8784238,
+    "bjd0_btjd": 1495.380939,
+    "morph": 0.674,
+    "tmag": 5.987,
+    "depth_p_2g": 0.054,
+    "width_p_2g": 0.2365,
+    "phase_p_2g": 0.9983,
+    "depth_s_2g": null,
+    "width_s_2g": null,
+    "phase_s_2g": null,
+    "split": "held_out"
+   },
+   {
+    "tic": 326149070,
+    "sector": 17,
+    "sectors": [
+     17,
+     18,
+     24,
+     25
+    ],
+    "period_d": 1.9514945,
+    "bjd0_btjd": 1794.884752,
+    "morph": 0.388,
+    "tmag": 11.309,
+    "depth_p_2g": 0.011,
+    "width_p_2g": 0.07571,
+    "phase_p_2g": 0.0001021,
+    "depth_s_2g": 0.003,
+    "width_s_2g": 0.079,
+    "phase_s_2g": 0.4997,
+    "split": "held_out"
+   },
+   {
+    "tic": 359042174,
+    "sector": 17,
+    "sectors": [
+     17,
+     18
+    ],
+    "period_d": 3.3954348,
+    "bjd0_btjd": 1765.707027,
+    "morph": 0.509,
+    "tmag": 9.523,
+    "depth_p_2g": 0.001,
+    "width_p_2g": 0.1417,
+    "phase_p_2g": 0.9991,
+    "depth_s_2g": null,
+    "width_s_2g": null,
+    "phase_s_2g": null,
+    "split": "held_out"
+   },
+   {
+    "tic": 50191648,
+    "sector": 18,
+    "sectors": [
+     18
+    ],
+    "period_d": 2.1399867,
+    "bjd0_btjd": 1791.50062,
+    "morph": 0.381,
+    "tmag": 9.731,
+    "depth_p_2g": 0.233,
+    "width_p_2g": 0.08387,
+    "phase_p_2g": 9.719e-05,
+    "depth_s_2g": 0.027,
+    "width_s_2g": 0.104,
+    "phase_s_2g": 0.4981,
+    "split": "held_out"
+   },
+   {
+    "tic": 37601240,
+    "sector": 6,
+    "sectors": [
+     6,
+     33
+    ],
+    "period_d": 0.7313791,
+    "bjd0_btjd": 1468.824829,
+    "morph": 0.623,
+    "tmag": 8.964,
+    "depth_p_2g": 0.3,
+    "width_p_2g": 0.2589,
+    "phase_p_2g": 6.864e-05,
+    "depth_s_2g": 0.077,
+    "width_s_2g": 0.22,
+    "phase_s_2g": 0.4999,
+    "split": "held_out"
+   },
+   {
+    "tic": 1220444,
+    "sector": 5,
+    "sectors": [
+     5
+    ],
+    "period_d": 7.1620656,
+    "bjd0_btjd": 1440.634408,
+    "morph": 0.173,
+    "tmag": 8.973,
+    "depth_p_2g": 0.046,
+    "width_p_2g": 0.02841,
+    "phase_p_2g": 0.9999,
+    "depth_s_2g": null,
+    "width_s_2g": null,
+    "phase_s_2g": null,
+    "split": "held_out"
+   },
+   {
+    "tic": 164776925,
+    "sector": 3,
+    "sectors": [
+     3
+    ],
+    "period_d": 0.3407947,
+    "bjd0_btjd": 1386.156315,
+    "morph": 0.716,
+    "tmag": 10.582,
+    "depth_p_2g": 0.372,
+    "width_p_2g": 0.2641,
+    "phase_p_2g": 0.001081,
+    "depth_s_2g": 0.344,
+    "width_s_2g": 0.248,
+    "phase_s_2g": 0.5,
+    "split": "held_out"
+   },
+   {
+    "tic": 150101472,
+    "sector": 1,
+    "sectors": [
+     1,
+     2,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     11,
+     12,
+     27,
+     28,
+     29,
+     31,
+     32,
+     33,
+     34,
+     35,
+     36,
+     37,
+     38,
+     39
+    ],
+    "period_d": 3.2785242,
+    "bjd0_btjd": 1547.331721,
+    "morph": 0.352,
+    "tmag": 9.877,
+    "depth_p_2g": 0.003,
+    "width_p_2g": 0.06455,
+    "phase_p_2g": 0.004479,
+    "depth_s_2g": 0.001,
+    "width_s_2g": 0.063,
+    "phase_s_2g": 0.4985,
+    "split": "held_out"
+   },
+   {
+    "tic": 352012002,
+    "sector": 14,
+    "sectors": [
+     14,
+     26
+    ],
+    "period_d": 0.6671181,
+    "bjd0_btjd": 1684.936797,
+    "morph": 0.869,
+    "tmag": 11.795,
+    "depth_p_2g": 0.024,
+    "width_p_2g": 0.2795,
+    "phase_p_2g": 0.8607,
+    "depth_s_2g": null,
+    "width_s_2g": null,
+    "phase_s_2g": null,
+    "split": "held_out"
+   },
+   {
+    "tic": 193994472,
+    "sector": 24,
+    "sectors": [
+     24
+    ],
+    "period_d": 6.35215,
+    "bjd0_btjd": 1960.87501,
+    "morph": 0.246,
+    "tmag": 11.697,
+    "depth_p_2g": 0.225,
+    "width_p_2g": 0.04359,
+    "phase_p_2g": 1.0,
+    "depth_s_2g": 0.059,
+    "width_s_2g": 0.05,
+    "phase_s_2g": 0.5004,
+    "split": "held_out"
+   },
+   {
+    "tic": 181226974,
+    "sector": 10,
+    "sectors": [
+     10
+    ],
+    "period_d": 1.9353781,
+    "bjd0_btjd": 1572.39012,
+    "morph": 0.538,
+    "tmag": 11.035,
+    "depth_p_2g": 0.041,
+    "width_p_2g": 0.09384,
+    "phase_p_2g": 0.0001117,
+    "depth_s_2g": null,
+    "width_s_2g": null,
+    "phase_s_2g": null,
+    "split": "held_out"
+   },
+   {
+    "tic": 20299889,
+    "sector": 23,
+    "sectors": [
+     23,
+     24
+    ],
+    "period_d": 7.6062167,
+    "bjd0_btjd": 1951.041183,
+    "morph": 0.496,
+    "tmag": 9.497,
+    "depth_p_2g": 0.413,
+    "width_p_2g": 0.1093,
+    "phase_p_2g": 0.1985,
+    "depth_s_2g": 0.124,
+    "width_s_2g": 0.085,
+    "phase_s_2g": 0.7013,
+    "split": "held_out"
+   },
+   {
+    "tic": 121108244,
+    "sector": 14,
+    "sectors": [
+     14
+    ],
+    "period_d": 0.3951054,
+    "bjd0_btjd": 1683.569751,
+    "morph": 0.703,
+    "tmag": 11.705,
+    "depth_p_2g": 0.089,
+    "width_p_2g": 0.2586,
+    "phase_p_2g": 0.9993,
+    "depth_s_2g": 0.077,
+    "width_s_2g": 0.231,
+    "phase_s_2g": 0.5009,
+    "split": "held_out"
+   },
+   {
+    "tic": 261656371,
+    "sector": 1,
+    "sectors": [
+     1
+    ],
+    "period_d": 7.1953094,
+    "bjd0_btjd": 1337.235014,
+    "morph": 0.143,
+    "tmag": 10.566,
+    "depth_p_2g": 0.436,
+    "width_p_2g": 0.04463,
+    "phase_p_2g": 1.0,
+    "depth_s_2g": 0.402,
+    "width_s_2g": 0.058,
+    "phase_s_2g": 0.6086,
+    "split": "held_out"
+   },
+   {
+    "tic": 358232450,
+    "sector": 2,
+    "sectors": [
+     2,
+     29
+    ],
+    "period_d": 1.6697714,
+    "bjd0_btjd": 1354.783099,
+    "morph": 0.574,
+    "tmag": 4.497,
+    "depth_p_2g": 0.377,
+    "width_p_2g": 0.1701,
+    "phase_p_2g": 0.0004646,
+    "depth_s_2g": 0.259,
+    "width_s_2g": 0.167,
+    "phase_s_2g": 0.5049,
+    "split": "held_out"
+   }
+  ],
+  "contrast_set": {
+   "note": "planet hosts and quiet stars that are not eclipsing binaries (the same sectors as the stored runs)",
+   "stars": [
+    {
+     "name": "pi Men",
+     "tic": 261136679,
+     "sector": 1,
+     "kind": "planet host (pi Men c, a shallow transit of about 300 ppm)"
+    },
+    {
+     "name": "WASP-126",
+     "tic": 25155310,
+     "sector": 1,
+     "kind": "planet host (hot Jupiter)"
+    },
+    {
+     "name": "HD 15337",
+     "tic": 120896927,
+     "sector": 4,
+     "kind": "planet host (two small planets)"
+    },
+    {
+     "name": "TOI-270",
+     "tic": 259377017,
+     "sector": 5,
+     "kind": "planet host (M dwarf, three small planets)"
+    },
+    {
+     "name": "TOI-236",
+     "tic": 9727392,
+     "sector": 2,
+     "kind": "planet host"
+    },
+    {
+     "name": "zeta Tuc",
+     "tic": 425935521,
+     "sector": 1,
+     "kind": "quiet solar-type star"
+    },
+    {
+     "name": "beta Hyi",
+     "tic": 267211065,
+     "sector": 1,
+     "kind": "quiet subgiant"
+    }
+   ]
+  },
+  "definitions": {
+   "eb_candidate": "the module's eb_candidate flag",
+   "period_match": "|P_ours / P_cat - 1| <= 0.005",
+   "alias": "P_ours / P_cat within 0.5% of 0.5 or 2 (reported, not a match)",
+   "depth": "primary eclipse depth, 1 - (eclipse minimum of the binned phase curve) / (out-of-eclipse level), compared with Dp-2g",
+   "secondary_phase": "(phase of the secondary - phase of the primary) mod 1, compared with (Phis-2g - Phip-2g) mod 1 by the circular difference",
+   "width": "primary eclipse width in phase units (the module's definition), compared with Wp-2g by rank correlation because the definitions differ",
+   "morphology": "the module's class 'detached' against Morph < 0.5; any other class against Morph >= 0.5"
+  },
+  "injection": {
+   "stars": "the seven contrast-set light curves",
+   "per_star": 10,
+   "period_d": [
+    0.5,
+    8.0
+   ],
+   "period_draw": "log-uniform",
+   "primary_depth": [
+    0.01,
+    0.2
+   ],
+   "secondary_ratio": [
+    0.0,
+    0.8
+   ],
+   "secondary_phase": [
+    0.45,
+    0.55
+   ],
+   "width_phase": [
+    0.02,
+    0.08
+   ],
+   "match": "period within 0.5%"
+  }
+ },
+ "rotation": {
+  "reference": "Canto Martins et al. 2020, ApJS 250, 20 (rotation periods of TESS objects of interest), VizieR J/ApJS/250/20, table 1 (unambiguous rotation periods)",
+  "selection": "From table 1 (131 rows): 0.5 <= Prot <= 12 d and a listed sector (128 rows), sorted by TIC; numpy default_rng(seed + 1) permutation, first 30. The first six are the tuning split; the other 24 are held out.",
+  "data": "the SPOC 120-s PDCSAP light curve of the first sector listed, one sector only (no stitching); if it cannot be fetched, not run",
+  "limit": "A single TESS sector is about 27 days with a gap in the middle, and SPOC PDC removes some long-term variability, so periods longer than about 13 days are not measured from one sector; the module reports them as beyond its limit. Stitching sectors needs care with sector-to-sector offsets and is not validated here.",
+  "targets": [
+   {
+    "tic": 258777137,
+    "sector": 14,
+    "prot_d": 6.364,
+    "e_prot_d": 0.159,
+    "teff": 5096.0,
+    "toi_period_d": 5.929,
+    "split": "tuning"
+   },
+   {
+    "tic": 219229644,
+    "sector": 3,
+    "prot_d": 9.706,
+    "e_prot_d": 0.748,
+    "teff": 3927.0,
+    "toi_period_d": 22.041,
+    "split": "tuning"
+   },
+   {
+    "tic": 229951289,
+    "sector": 14,
+    "prot_d": 5.288,
+    "e_prot_d": 0.129,
+    "teff": 5729.0,
+    "toi_period_d": 13.312,
+    "split": "tuning"
+   },
+   {
+    "tic": 279425357,
+    "sector": 9,
+    "prot_d": 3.802,
+    "e_prot_d": 0.168,
+    "teff": 6084.0,
+    "toi_period_d": 9.014,
+    "split": "tuning"
+   },
+   {
+    "tic": 148914726,
+    "sector": 14,
+    "prot_d": 7.391,
+    "e_prot_d": 0.594,
+    "teff": 4928.0,
+    "toi_period_d": 1.262,
+    "split": "tuning"
+   },
+   {
+    "tic": 44797824,
+    "sector": 4,
+    "prot_d": 1.414,
+    "e_prot_d": 0.022,
+    "teff": 5181.0,
+    "toi_period_d": 0.746,
+    "split": "tuning"
+   },
+   {
+    "tic": 142276270,
+    "sector": 14,
+    "prot_d": 8.189,
+    "e_prot_d": 0.699,
+    "teff": 5729.0,
+    "toi_period_d": 6.257,
+    "split": "held_out"
+   },
+   {
+    "tic": 249945230,
+    "sector": 18,
+    "prot_d": 5.749,
+    "e_prot_d": 0.87,
+    "teff": 4677.0,
+    "toi_period_d": null,
+    "split": "held_out"
+   },
+   {
+    "tic": 281979481,
+    "sector": 3,
+    "prot_d": 4.385,
+    "e_prot_d": 0.084,
+    "teff": 5181.0,
+    "toi_period_d": 0.542,
+    "split": "held_out"
+   },
+   {
+    "tic": 178284730,
+    "sector": 4,
+    "prot_d": 10.229,
+    "e_prot_d": 1.217,
+    "teff": 5260.0,
+    "toi_period_d": 2.236,
+    "split": "held_out"
+   },
+   {
+    "tic": 380783252,
+    "sector": 13,
+    "prot_d": 9.147,
+    "e_prot_d": 1.609,
+    "teff": 5509.0,
+    "toi_period_d": 9.45,
+    "split": "held_out"
+   },
+   {
+    "tic": 460205581,
+    "sector": 11,
+    "prot_d": 2.957,
+    "e_prot_d": 0.093,
+    "teff": 6513.0,
+    "toi_period_d": 8.325,
+    "split": "held_out"
+   },
+   {
+    "tic": 207141131,
+    "sector": 2,
+    "prot_d": 8.489,
+    "e_prot_d": 0.858,
+    "teff": 5058.0,
+    "toi_period_d": 4.137,
+    "split": "held_out"
+   },
+   {
+    "tic": 142090065,
+    "sector": 20,
+    "prot_d": 2.376,
+    "e_prot_d": 0.123,
+    "teff": 7072.0,
+    "toi_period_d": 2.828,
+    "split": "held_out"
+   },
+   {
+    "tic": 309257814,
+    "sector": 10,
+    "prot_d": 3.948,
+    "e_prot_d": 0.39,
+    "teff": 5237.0,
+    "toi_period_d": 1.239,
+    "split": "held_out"
+   },
+   {
+    "tic": 310009611,
+    "sector": 9,
+    "prot_d": 5.091,
+    "e_prot_d": 0.288,
+    "teff": 5776.0,
+    "toi_period_d": 2.13,
+    "split": "held_out"
+   },
+   {
+    "tic": 33153766,
+    "sector": 9,
+    "prot_d": 2.863,
+    "e_prot_d": 0.186,
+    "teff": 6054.0,
+    "toi_period_d": 0.688,
+    "split": "held_out"
+   },
+   {
+    "tic": 13499636,
+    "sector": 15,
+    "prot_d": 5.595,
+    "e_prot_d": 0.921,
+    "teff": 5518.0,
+    "toi_period_d": 11.325,
+    "split": "held_out"
+   },
+   {
+    "tic": 77951245,
+    "sector": 5,
+    "prot_d": 5.388,
+    "e_prot_d": 0.338,
+    "teff": 3054.0,
+    "toi_period_d": 10.715,
+    "split": "held_out"
+   },
+   {
+    "tic": 451645081,
+    "sector": 10,
+    "prot_d": 5.569,
+    "e_prot_d": 0.705,
+    "teff": 4499.0,
+    "toi_period_d": 16.234,
+    "split": "held_out"
+   },
+   {
+    "tic": 67646988,
+    "sector": 21,
+    "prot_d": 1.105,
+    "e_prot_d": 0.027,
+    "teff": 3138.0,
+    "toi_period_d": 1.882,
+    "split": "held_out"
+   },
+   {
+    "tic": 238086647,
+    "sector": 7,
+    "prot_d": 2.567,
+    "e_prot_d": 0.055,
+    "teff": 5915.0,
+    "toi_period_d": 1.352,
+    "split": "held_out"
+   },
+   {
+    "tic": 410214986,
+    "sector": 1,
+    "prot_d": 2.798,
+    "e_prot_d": 0.163,
+    "teff": 5414.0,
+    "toi_period_d": 8.138,
+    "split": "held_out"
+   },
+   {
+    "tic": 309402106,
+    "sector": 1,
+    "prot_d": 5.393,
+    "e_prot_d": 0.109,
+    "teff": 7053.0,
+    "toi_period_d": 216.245,
+    "split": "held_out"
+   },
+   {
+    "tic": 138017750,
+    "sector": 18,
+    "prot_d": 2.623,
+    "e_prot_d": 0.181,
+    "teff": 6058.0,
+    "toi_period_d": 2.473,
+    "split": "held_out"
+   },
+   {
+    "tic": 117979694,
+    "sector": 5,
+    "prot_d": 8.521,
+    "e_prot_d": 1.513,
+    "teff": 5103.0,
+    "toi_period_d": 0.991,
+    "split": "held_out"
+   },
+   {
+    "tic": 179034327,
+    "sector": 4,
+    "prot_d": 7.573,
+    "e_prot_d": 0.637,
+    "teff": 5229.0,
+    "toi_period_d": 17.963,
+    "split": "held_out"
+   },
+   {
+    "tic": 339961200,
+    "sector": 6,
+    "prot_d": 9.67,
+    "e_prot_d": 0.277,
+    "teff": 5321.0,
+    "toi_period_d": 3.213,
+    "split": "held_out"
+   },
+   {
+    "tic": 220435095,
+    "sector": 1,
+    "prot_d": 3.538,
+    "e_prot_d": 0.25,
+    "teff": 5808.0,
+    "toi_period_d": 3.423,
+    "split": "held_out"
+   },
+   {
+    "tic": 102195674,
+    "sector": 9,
+    "prot_d": 4.908,
+    "e_prot_d": 0.574,
+    "teff": 6159.0,
+    "toi_period_d": 4.379,
+    "split": "held_out"
+   }
+  ],
+  "definitions": {
+   "detected": "the module's detected flag (a period it reports as measured)",
+   "match": "|P_ours / P_pub - 1| <= 0.10",
+   "alias_match": "within 10% of P_pub, P_pub / 2 or 2 P_pub",
+   "uncertainty_coverage": "among matches, |P_ours - P_pub| <= 2 sqrt(sigma_ours^2 + sigma_pub^2)"
+  },
+  "null": {
+   "stars": [
+    {
+     "name": "pi Men",
+     "tic": 261136679,
+     "sector": 1,
+     "kind": "planet host (pi Men c, a shallow transit of about 300 ppm)"
+    },
+    {
+     "name": "zeta Tuc",
+     "tic": 425935521,
+     "sector": 1,
+     "kind": "quiet solar-type star"
+    },
+    {
+     "name": "beta Hyi",
+     "tic": 267211065,
+     "sector": 1,
+     "kind": "quiet subgiant"
+    }
+   ],
+   "note": "quiet stars with no published rotation period below 13 d; any detected period counts as a false positive"
+  },
+  "injection": {
+   "stars": "the three null stars",
+   "per_star": 20,
+   "period_d": [
+    1.0,
+    12.0
+   ],
+   "period_draw": "log-uniform",
+   "semi_amplitude_ppt": [
+    1.0,
+    20.0
+   ],
+   "model": "two to four evolving Gaussian spots (lifetimes 2 to 6 periods)",
+   "match": "within 10%",
+   "long_period_report": {
+    "per_star": 5,
+    "period_d": [
+     13.0,
+     30.0
+    ],
+    "note": "reported, not counted: how often a period beyond the limit is reported as beyond the limit"
+   }
+  }
+ },
+ "transients": {
+  "reference": "Fausnaugh et al. 2023, ApJ 956, 108 (four years of type Ia supernovae observed by TESS), VizieR J/ApJ/956/108, table 1 (peak TESS magnitude, time of peak) and table 3 (time of first light, rise time). Table 3's BJD column is BJD - 2457000 (the ReadMe says 2470000; the values are in the TESS range).",
+  "selection": "From table 1 (307 rows): the peak observed and first light measured (quality bits 1000 and 0100 unset), TmagP <= 17.0, no asteroid flag (reduction bit 001 unset), a rise time in table 3 (20 rows), sorted by name; numpy default_rng(seed + 2) permutation, all 20. The first five are the tuning split; the other 15 are held out.",
+  "data": "A TESScut 11 x 11 pixel cutout of the SPOC full-frame images of the sector whose time range contains tPeak (else the last sector ending before tPeak); not run if none. Photometry: a 3 x 3 pixel aperture at the supernova's position on difference images against a per-pixel reference, with two control apertures of the same size about 4 pixels away (the first two positions that stay inside the cutout of: east, west, north, south).",
+  "targets": [
+   {
+    "name": "SN2018hkx",
+    "other": "ASASSN-18yc",
+    "ra": 60.22437,
+    "dec": -66.67525,
+    "tmag_peak": 16.19,
+    "e_tmag_peak": 0.06,
+    "t_peak_btjd": 1418.35,
+    "t_first_light_btjd": 1399.98,
+    "e_t_first_light": 0.1,
+    "t_rise_d": 17.92,
+    "z": 0.025,
+    "qual": "0001",
+    "split": "tuning"
+   },
+   {
+    "name": "SN2018hss",
+    "other": "ASASSN-18yv",
+    "ra": 63.25104,
+    "dec": -53.99202,
+    "tmag_peak": 16.59,
+    "e_tmag_peak": 0.06,
+    "t_peak_btjd": 1433.91,
+    "t_first_light_btjd": 1414.19,
+    "e_t_first_light": 0.34,
+    "t_rise_d": 18.91,
+    "z": 0.043,
+    "qual": "0000",
+    "split": "tuning"
+   },
+   {
+    "name": "SN2020csx",
+    "other": "ZTF20aaodkvl",
+    "ra": 250.42108,
+    "dec": 68.51552,
+    "tmag_peak": 16.43,
+    "e_tmag_peak": 0.06,
+    "t_peak_btjd": 1906.59,
+    "t_first_light_btjd": 1889.84,
+    "e_t_first_light": 0.15,
+    "t_rise_d": 16.33,
+    "z": 0.026,
+    "qual": "0001",
+    "split": "tuning"
+   },
+   {
+    "name": "SN2021zny",
+    "other": "ZTF21acdmwae",
+    "ra": 30.89917,
+    "dec": 15.7426,
+    "tmag_peak": 15.81,
+    "e_tmag_peak": 0.05,
+    "t_peak_btjd": 2498.55,
+    "t_first_light_btjd": 2477.37,
+    "e_t_first_light": 0.14,
+    "t_rise_d": 20.63,
+    "z": 0.0266,
+    "qual": "0001",
+    "split": "tuning"
+   },
+   {
+    "name": "SN2021soe",
+    "other": "ZTF21abkdpnw",
+    "ra": 286.25083,
+    "dec": 34.3923,
+    "tmag_peak": 15.96,
+    "e_tmag_peak": 0.05,
+    "t_peak_btjd": 2422.51,
+    "t_first_light_btjd": 2405.33,
+    "e_t_first_light": 0.04,
+    "t_rise_d": 16.98,
+    "z": 0.012,
+    "qual": "0000",
+    "split": "tuning"
+   },
+   {
+    "name": "SN2018fhw",
+    "other": "ASASSN-18tb",
+    "ra": 64.52583,
+    "dec": -63.61567,
+    "tmag_peak": 16.1,
+    "e_tmag_peak": 0.05,
+    "t_peak_btjd": 1360.41,
+    "t_first_light_btjd": 1343.08,
+    "e_t_first_light": 0.04,
+    "t_rise_d": 17.04,
+    "z": 0.017,
+    "qual": "0001",
+    "split": "held_out"
+   },
+   {
+    "name": "SN2021rgm",
+    "other": "ZTF21abilrxd",
+    "ra": 279.26696,
+    "dec": 33.82055,
+    "tmag_peak": 16.45,
+    "e_tmag_peak": 0.05,
+    "t_peak_btjd": 2408.26,
+    "t_first_light_btjd": 2393.35,
+    "e_t_first_light": 0.09,
+    "t_rise_d": 14.66,
+    "z": 0.017,
+    "qual": "0000",
+    "split": "held_out"
+   },
+   {
+    "name": "SN2021aesq",
+    "other": "ZTF21acpmcgo",
+    "ra": 85.16667,
+    "dec": 16.46009,
+    "tmag_peak": 16.43,
+    "e_tmag_peak": 0.05,
+    "t_peak_btjd": 2545.74,
+    "t_first_light_btjd": 2529.5,
+    "e_t_first_light": 0.14,
+    "t_rise_d": 15.99,
+    "z": 0.0162,
+    "qual": "0001",
+    "split": "held_out"
+   },
+   {
+    "name": "SN2021iff",
+    "other": "ASASSN-21ex",
+    "ra": 130.2413,
+    "dec": -67.02903,
+    "tmag_peak": 16.01,
+    "e_tmag_peak": 0.05,
+    "t_peak_btjd": 2319.03,
+    "t_first_light_btjd": 2300.35,
+    "e_t_first_light": 0.07,
+    "t_rise_d": 18.13,
+    "z": 0.03,
+    "qual": "0001",
+    "split": "held_out"
+   },
+   {
+    "name": "SN2020swy",
+    "other": "ATLAS20zid",
+    "ra": 20.9815,
+    "dec": -38.01376,
+    "tmag_peak": 16.84,
+    "e_tmag_peak": 0.05,
+    "t_peak_btjd": 2111.84,
+    "t_first_light_btjd": 2094.84,
+    "e_t_first_light": 0.31,
+    "t_rise_d": 16.47,
+    "z": 0.032,
+    "qual": "0001",
+    "split": "held_out"
+   },
+   {
+    "name": "SN2020aoi",
+    "other": "ZTF20aahfobk",
+    "ra": 181.39492,
+    "dec": 61.92354,
+    "tmag_peak": 16.73,
+    "e_tmag_peak": 0.06,
+    "t_peak_btjd": 1887.53,
+    "t_first_light_btjd": 1871.03,
+    "e_t_first_light": 0.15,
+    "t_rise_d": 15.98,
+    "z": 0.033,
+    "qual": "0011",
+    "split": "held_out"
+   },
+   {
+    "name": "SN2022re",
+    "other": "ATLAS22bpp",
+    "ra": 127.40746,
+    "dec": 70.83376,
+    "tmag_peak": 17.0,
+    "e_tmag_peak": 0.05,
+    "t_peak_btjd": 2605.08,
+    "t_first_light_btjd": 2586.0,
+    "e_t_first_light": 0.32,
+    "t_rise_d": 18.35,
+    "z": 0.04,
+    "qual": "0010",
+    "split": "held_out"
+   },
+   {
+    "name": "SN2019gqv",
+    "other": "ASASSN-19ny",
+    "ra": 117.57942,
+    "dec": -72.87646,
+    "tmag_peak": 16.55,
+    "e_tmag_peak": 0.06,
+    "t_peak_btjd": 1638.95,
+    "t_first_light_btjd": 1630.38,
+    "e_t_first_light": 0.09,
+    "t_rise_d": 8.43,
+    "z": 0.017,
+    "qual": "0010",
+    "split": "held_out"
+   },
+   {
+    "name": "SN2018exc",
+    "other": "ATLAS18tne",
+    "ra": 315.03341,
+    "dec": -40.35859,
+    "tmag_peak": 16.21,
+    "e_tmag_peak": 0.05,
+    "t_peak_btjd": 1352.91,
+    "t_first_light_btjd": 1336.02,
+    "e_t_first_light": 0.1,
+    "t_rise_d": 15.98,
+    "z": 0.057,
+    "qual": "0001",
+    "split": "held_out"
+   },
+   {
+    "name": "SN2018jwi",
+    "other": "ASASSN-18abr",
+    "ra": 94.66368,
+    "dec": -54.47079,
+    "tmag_peak": 14.89,
+    "e_tmag_peak": 0.06,
+    "t_peak_btjd": 1478.53,
+    "t_first_light_btjd": 1461.07,
+    "e_t_first_light": 0.04,
+    "t_rise_d": 17.17,
+    "z": 0.017,
+    "qual": "0001",
+    "split": "held_out"
+   },
+   {
+    "name": "SN2018fub",
+    "other": "ASASSN-18ty",
+    "ra": 10.12817,
+    "dec": -50.6876,
+    "tmag_peak": 16.21,
+    "e_tmag_peak": 0.05,
+    "t_peak_btjd": 1378.24,
+    "t_first_light_btjd": 1360.42,
+    "e_t_first_light": 0.2,
+    "t_rise_d": 17.32,
+    "z": 0.0288,
+    "qual": "0001",
+    "split": "held_out"
+   },
+   {
+    "name": "SN2018hib",
+    "other": "Gaia18czg",
+    "ra": 44.08862,
+    "dec": -32.18577,
+    "tmag_peak": 15.43,
+    "e_tmag_peak": 0.06,
+    "t_peak_btjd": 1415.02,
+    "t_first_light_btjd": 1397.71,
+    "e_t_first_light": 0.06,
+    "t_rise_d": 17.03,
+    "z": 0.0163,
+    "qual": "0001",
+    "split": "held_out"
+   },
+   {
+    "name": "SN2020hyh",
+    "other": "ZTF20aavnnat",
+    "ra": 247.97896,
+    "dec": 42.71036,
+    "tmag_peak": 16.86,
+    "e_tmag_peak": 0.05,
+    "t_peak_btjd": 1974.16,
+    "t_first_light_btjd": 1961.4,
+    "e_t_first_light": 0.21,
+    "t_rise_d": 12.36,
+    "z": 0.0322,
+    "qual": "0000",
+    "split": "held_out"
+   },
+   {
+    "name": "SN2020fcw",
+    "other": "ZTF20aattotq",
+    "ra": 217.13336,
+    "dec": 27.4083,
+    "tmag_peak": 16.35,
+    "e_tmag_peak": 0.06,
+    "t_peak_btjd": 1940.83,
+    "t_first_light_btjd": 1931.03,
+    "e_t_first_light": 0.1,
+    "t_rise_d": 9.66,
+    "z": 0.0144,
+    "qual": "0001",
+    "split": "held_out"
+   },
+   {
+    "name": "SN2021ahmz",
+    "other": "ASASSN-21wl",
+    "ra": 158.71119,
+    "dec": 0.67586,
+    "tmag_peak": 16.89,
+    "e_tmag_peak": 0.05,
+    "t_peak_btjd": 2574.89,
+    "t_first_light_btjd": 2556.99,
+    "e_t_first_light": 0.19,
+    "t_rise_d": 17.34,
+    "z": 0.032,
+    "qual": "0001",
+    "split": "held_out"
+   }
+  ],
+  "flare_contrast": {
+   "star": "Proxima Cen",
+   "tic": 388857263,
+   "sectors": [
+    11,
+    12
+   ],
+   "reference": "Medina et al. 2020, J/ApJ/905/107",
+   "match_window_days": 0.01,
+   "tuning_star": {
+    "star": "AU Mic",
+    "tic": 441420236,
+    "sectors": [
+     1
+    ],
+    "note": "tuning only, not counted"
+   }
+  },
+  "null": {
+   "stars": [
+    {
+     "name": "pi Men",
+     "tic": 261136679,
+     "sector": 1,
+     "kind": "planet host (pi Men c, a shallow transit of about 300 ppm)"
+    },
+    {
+     "name": "zeta Tuc",
+     "tic": 425935521,
+     "sector": 1,
+     "kind": "quiet solar-type star"
+    },
+    {
+     "name": "beta Hyi",
+     "tic": 267211065,
+     "sector": 1,
+     "kind": "quiet subgiant"
+    }
+   ],
+   "note": "SPOC 120-s light curves; a candidate not marked as a likely false alarm counts as a false positive"
+  },
+  "definitions": {
+   "detected": "a transient candidate whose peak is within 10 days of tPeak",
+   "peak_time": "|t_peak_ours - tPeak| <= 2 d",
+   "rise_time": "t_peak_ours - t_first_light_ours, compared with tRise as a ratio",
+   "peak_mag": "the module's peak TESS magnitude (zero point 20.44 mag for 1 e-/s), compared with TmagP",
+   "sn_like": "the module's class hint 'extragalactic-transient-like'",
+   "flare_like": "the module's class hint 'flare-like'"
+  },
+  "screen_injection": {
+   "stars": "the three null stars",
+   "per_star": 20,
+   "kinds": {
+    "momentum_dump": "a spike of 1-3 cadences at a real momentum-dump time (quality bit 32), 1-10 ppt",
+    "asteroid": "a symmetric Gaussian bump, FWHM 0.1-1 d, 1-10 ppt, at a random time"
+   },
+   "match": "the candidate is marked as a likely false alarm (momentum dump or asteroid-like)"
+  }
+ },
+ "checks": [
+  {
+   "id": "eb_detection",
+   "capability": "binaries",
+   "item": "eb_catalogue",
+   "metric": "detect_ci_low",
+   "op": ">=",
+   "threshold": 0.8,
+   "text": "Held-out Prša et al. (2022) EBs: flagged as eclipsing-binary candidates, 95% interval lower bound >= 0.80"
+  },
+  {
+   "id": "eb_period",
+   "capability": "binaries",
+   "item": "eb_catalogue",
+   "metric": "period_ci_low",
+   "op": ">=",
+   "threshold": 0.7,
+   "text": "Held-out EBs: period within 0.5% of the catalogue's (an EB not flagged is a miss), 95% interval lower bound >= 0.70"
+  },
+  {
+   "id": "eb_depth",
+   "capability": "binaries",
+   "item": "eb_catalogue",
+   "metric": "depth_ratio_ci",
+   "op": "within",
+   "threshold": [
+    0.67,
+    1.5
+   ],
+   "text": "Held-out EBs with a period match: primary depth ours/catalogue (2-Gaussian), bootstrap 95% interval of the median inside [0.67, 1.5]"
+  },
+  {
+   "id": "eb_secondary_phase",
+   "capability": "binaries",
+   "item": "eb_catalogue",
+   "metric": "secphase_ci_low",
+   "op": ">=",
+   "threshold": 0.7,
+   "text": "Held-out EBs with a catalogue secondary and a period match: secondary phase within 0.01 of the catalogue's, 95% interval lower bound >= 0.70 (a secondary we do not find is a miss)"
+  },
+  {
+   "id": "eb_width_rank",
+   "capability": "binaries",
+   "item": "eb_catalogue",
+   "metric": "width_spearman",
+   "op": ">=",
+   "threshold": 0.6,
+   "text": "Held-out EBs with a period match: Spearman rank correlation of our primary width with Wp-2g >= 0.6"
+  },
+  {
+   "id": "eb_morphology",
+   "capability": "binaries",
+   "item": "eb_catalogue",
+   "metric": "morph_ci_low",
+   "op": ">=",
+   "threshold": 0.6,
+   "text": "Held-out EBs flagged as candidates: detached or not agrees with Morph < 0.5, 95% interval lower bound >= 0.60"
+  },
+  {
+   "id": "eb_null",
+   "capability": "binaries",
+   "item": "eb_contrast",
+   "metric": "false_eb",
+   "op": "<=",
+   "threshold": 1,
+   "text": "Seven planet hosts and quiet stars: at most one flagged as an eclipsing-binary candidate"
+  },
+  {
+   "id": "eb_injection",
+   "capability": "binaries",
+   "item": "eb_injection",
+   "metric": "recovery_ci_low",
+   "op": ">=",
+   "threshold": 0.85,
+   "text": "Synthetic detached EBs injected into the seven contrast light curves: period within 0.5%, 95% interval lower bound >= 0.85"
+  },
+  {
+   "id": "rot_detect",
+   "capability": "rotation",
+   "item": "rot_catalogue",
+   "metric": "detect_ci_low",
+   "op": ">=",
+   "threshold": 0.7,
+   "text": "Held-out Canto Martins et al. (2020) stars: a rotation period detected, 95% interval lower bound >= 0.70"
+  },
+  {
+   "id": "rot_period",
+   "capability": "rotation",
+   "item": "rot_catalogue",
+   "metric": "match_ci_low",
+   "op": ">=",
+   "threshold": 0.6,
+   "text": "Held-out stars: period within 10% of the published one (an undetected star is a miss), 95% interval lower bound >= 0.60"
+  },
+  {
+   "id": "rot_alias",
+   "capability": "rotation",
+   "item": "rot_catalogue",
+   "metric": "alias_ci_low",
+   "op": ">=",
+   "threshold": 0.75,
+   "text": "Held-out stars: within 10% of the published period, half or double it, 95% interval lower bound >= 0.75"
+  },
+  {
+   "id": "rot_uncertainty",
+   "capability": "rotation",
+   "item": "rot_catalogue",
+   "metric": "coverage",
+   "op": ">=",
+   "threshold": 0.68,
+   "text": "Held-out matches: |ours - published| within twice the combined uncertainty for at least 68%"
+  },
+  {
+   "id": "rot_null",
+   "capability": "rotation",
+   "item": "rot_null",
+   "metric": "false_detections",
+   "op": "==",
+   "threshold": 0,
+   "text": "Three quiet stars (pi Men, zeta Tuc, beta Hyi, sector 1): no rotation period detected"
+  },
+  {
+   "id": "rot_injection",
+   "capability": "rotation",
+   "item": "rot_injection",
+   "metric": "recovery_ci_low",
+   "op": ">=",
+   "threshold": 0.85,
+   "text": "Synthetic spot modulation (1-12 d, 1-20 ppt) injected into the three quiet stars: period within 10%, 95% interval lower bound >= 0.85"
+  },
+  {
+   "id": "tr_sn_detect",
+   "capability": "transients",
+   "item": "tr_supernovae",
+   "metric": "detect_ci_low",
+   "op": ">=",
+   "threshold": 0.6,
+   "text": "Held-out Fausnaugh et al. (2023) type Ia supernovae: a transient candidate within 10 d of their peak, 95% interval lower bound >= 0.60"
+  },
+  {
+   "id": "tr_sn_peak_time",
+   "capability": "transients",
+   "item": "tr_supernovae",
+   "metric": "peak_time_ci_low",
+   "op": ">=",
+   "threshold": 0.6,
+   "text": "Held-out supernovae: peak time within 2 d of theirs (an undetected one is a miss), 95% interval lower bound >= 0.60"
+  },
+  {
+   "id": "tr_sn_rise",
+   "capability": "transients",
+   "item": "tr_supernovae",
+   "metric": "rise_ratio_ci",
+   "op": "within",
+   "threshold": [
+    0.67,
+    1.5
+   ],
+   "text": "Detected held-out supernovae: rise time ours/theirs, bootstrap 95% interval of the median inside [0.67, 1.5]"
+  },
+  {
+   "id": "tr_sn_peak_mag",
+   "capability": "transients",
+   "item": "tr_supernovae",
+   "metric": "peak_mag_diff_ci",
+   "op": "within",
+   "threshold": [
+    -0.5,
+    0.5
+   ],
+   "text": "Detected held-out supernovae: peak TESS magnitude ours minus theirs, bootstrap 95% interval of the median inside [-0.5, +0.5] mag"
+  },
+  {
+   "id": "tr_sn_class",
+   "capability": "transients",
+   "item": "tr_supernovae",
+   "metric": "sn_like_ci_low",
+   "op": ">=",
+   "threshold": 0.6,
+   "text": "Detected held-out supernovae: class hint extragalactic-transient-like, 95% interval lower bound >= 0.60"
+  },
+  {
+   "id": "tr_flare_class",
+   "capability": "transients",
+   "item": "tr_flares",
+   "metric": "flare_like_ci_low",
+   "op": ">=",
+   "threshold": 0.8,
+   "text": "Proxima Cen S11-12: transient candidates matching a Medina et al. (2020) flare, class hint flare-like, 95% interval lower bound >= 0.80"
+  },
+  {
+   "id": "tr_null_quiet",
+   "capability": "transients",
+   "item": "tr_null",
+   "metric": "fp_per_day",
+   "op": "<",
+   "threshold": 0.05,
+   "text": "Three quiet stars, sector 1: fewer than 0.05 transient candidates per day not marked as likely false alarms"
+  },
+  {
+   "id": "tr_null_control",
+   "capability": "transients",
+   "item": "tr_supernovae",
+   "metric": "control_sn_like_rate",
+   "op": "<=",
+   "threshold": 0.1,
+   "text": "Control apertures beside the held-out supernovae: at most 10% carry an extragalactic-transient-like candidate"
+  },
+  {
+   "id": "tr_screen",
+   "capability": "transients",
+   "item": "tr_screen",
+   "metric": "screened_ci_low",
+   "op": ">=",
+   "threshold": 0.8,
+   "text": "Synthetic momentum-dump spikes and asteroid-like bumps injected into the quiet stars: marked as likely false alarms, 95% interval lower bound >= 0.80"
+  }
+ ],
+ "reported_not_counted": [
+  "Tuning-split results of every capability",
+  "EB: period aliases (half or double), secondary detection rate, e cos(omega) hints",
+  "Rotation: injections beyond the 13-day limit, and whether they are reported as beyond it",
+  "Transients: AU Mic S1 flare classes (tuning star), control-aperture candidates of any class, the supernovae's rise-time and peak differences on the tuning split",
+  "Scattered light: no labelled real sample was found; the screen is described, not validated"
+ ],
+ "intervals": "Wilson 95% intervals for fractions; bootstrap (2000 resamples, seed) 95% intervals of medians; Spearman rank correlation for widths."
+}

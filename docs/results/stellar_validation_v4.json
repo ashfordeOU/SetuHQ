@@ -1,0 +1,6705 @@
+{
+ "kind": "setuhq-stellar-validation-v4/1",
+ "generated_at": "2026-10-24T19:47:29+00:00",
+ "protocol_file": "docs/results/stellar_validation_protocol_v4.json",
+ "protocol_sha256": "968ffab34db25d50125a57b45d35276749d5ab8f79ffce14e11c243af2d9c85f",
+ "protocol_commit": "b6f22ebeb1af2318a792d2d423a77faa35cb08f3",
+ "protocol_version": 4,
+ "protocol_frozen": "2026-10-24",
+ "seed": 20261024,
+ "status_rule": "validated: every counted check passes; partly validated: more than half pass; otherwise not validated. Always shown with 'k of n checks pass'. Tuning-split results and reported-only numbers are not counted.",
+ "code_fingerprint": "3d3165511099d5579e08f3e8704d745b0afb0b4657caae7e4b0d20c28fe8e6bf",
+ "capabilities": {
+  "binaries": {
+   "status": "partly validated",
+   "label": "partly validated (5 of 8 checks pass)",
+   "passed": 5,
+   "of": 8,
+   "inconclusive": 0,
+   "tuning_set": 0
+  },
+  "rotation": {
+   "status": "not validated",
+   "label": "not validated (3 of 6 checks pass)",
+   "passed": 3,
+   "of": 6,
+   "inconclusive": 0,
+   "tuning_set": 0
+  },
+  "transients": {
+   "status": "not validated",
+   "label": "not validated (1 of 9 checks pass)",
+   "passed": 1,
+   "of": 9,
+   "inconclusive": 0,
+   "tuning_set": 0
+  }
+ },
+ "checks": [
+  {
+   "capability": "binaries",
+   "check": "eb_detection",
+   "item": "eb_catalogue",
+   "text": "Held-out Prša et al. (2022) EBs: flagged as eclipsing-binary candidates, 95% interval lower bound >= 0.80",
+   "value": 0.508319363412903,
+   "result": "fail"
+  },
+  {
+   "capability": "binaries",
+   "check": "eb_period",
+   "item": "eb_catalogue",
+   "text": "Held-out EBs: period within 0.5% of the catalogue's (an EB not flagged is a miss), 95% interval lower bound >= 0.70",
+   "value": 0.508319363412903,
+   "result": "fail"
+  },
+  {
+   "capability": "binaries",
+   "check": "eb_depth",
+   "item": "eb_catalogue",
+   "text": "Held-out EBs with a period match: primary depth ours/catalogue (2-Gaussian), bootstrap 95% interval of the median inside [0.67, 1.5]",
+   "value": [
+    0.9484283828984773,
+    1.0954867850187426
+   ],
+   "result": "pass"
+  },
+  {
+   "capability": "binaries",
+   "check": "eb_secondary_phase",
+   "item": "eb_catalogue",
+   "text": "Held-out EBs with a catalogue secondary and a period match: secondary phase within 0.01 of the catalogue's, 95% interval lower bound >= 0.70 (a secondary we do not find is a miss)",
+   "value": 0.7018292244757601,
+   "result": "pass"
+  },
+  {
+   "capability": "binaries",
+   "check": "eb_width_rank",
+   "item": "eb_catalogue",
+   "text": "Held-out EBs with a period match: Spearman rank correlation of our primary width with Wp-2g >= 0.6",
+   "value": 0.9583333333333335,
+   "result": "pass"
+  },
+  {
+   "capability": "binaries",
+   "check": "eb_morphology",
+   "item": "eb_catalogue",
+   "text": "Held-out EBs flagged as candidates: detached or not agrees with Morph < 0.5, 95% interval lower bound >= 0.60",
+   "value": 0.6566315750229009,
+   "result": "pass"
+  },
+  {
+   "capability": "binaries",
+   "check": "eb_null",
+   "item": "eb_contrast",
+   "text": "Seven planet hosts and quiet stars: at most one flagged as an eclipsing-binary candidate",
+   "value": 1,
+   "result": "pass"
+  },
+  {
+   "capability": "binaries",
+   "check": "eb_injection",
+   "item": "eb_injection",
+   "text": "Synthetic detached EBs injected into the seven contrast light curves: period within 0.5%, 95% interval lower bound >= 0.85",
+   "value": 0.7566136529849488,
+   "result": "fail"
+  },
+  {
+   "capability": "rotation",
+   "check": "rot_detect",
+   "item": "rot_catalogue",
+   "text": "Held-out Canto Martins et al. (2020) stars: a rotation period detected, 95% interval lower bound >= 0.70",
+   "value": 0.6414652961213058,
+   "result": "fail"
+  },
+  {
+   "capability": "rotation",
+   "check": "rot_period",
+   "item": "rot_catalogue",
+   "text": "Held-out stars: period within 10% of the published one (an undetected star is a miss), 95% interval lower bound >= 0.60",
+   "value": 0.3883433764938864,
+   "result": "fail"
+  },
+  {
+   "capability": "rotation",
+   "check": "rot_alias",
+   "item": "rot_catalogue",
+   "text": "Held-out stars: within 10% of the published period, half or double it, 95% interval lower bound >= 0.75",
+   "value": 0.508319363412903,
+   "result": "fail"
+  },
+  {
+   "capability": "rotation",
+   "check": "rot_uncertainty",
+   "item": "rot_catalogue",
+   "text": "Held-out matches: |ours - published| within twice the combined uncertainty for at least 68%",
+   "value": 1.0,
+   "result": "pass"
+  },
+  {
+   "capability": "rotation",
+   "check": "rot_null",
+   "item": "rot_null",
+   "text": "Three quiet stars (pi Men, zeta Tuc, beta Hyi, sector 1): no rotation period detected",
+   "value": 0,
+   "result": "pass"
+  },
+  {
+   "capability": "rotation",
+   "check": "rot_injection",
+   "item": "rot_injection",
+   "text": "Synthetic spot modulation (1-12 d, 1-20 ppt) injected into the three quiet stars: period within 10%, 95% interval lower bound >= 0.85",
+   "value": 0.8863601247107462,
+   "result": "pass"
+  },
+  {
+   "capability": "transients",
+   "check": "tr_sn_detect",
+   "item": "tr_supernovae",
+   "text": "Held-out Fausnaugh et al. (2023) type Ia supernovae: a transient candidate within 10 d of their peak, 95% interval lower bound >= 0.60",
+   "value": 0.7018292244757601,
+   "result": "pass"
+  },
+  {
+   "capability": "transients",
+   "check": "tr_sn_peak_time",
+   "item": "tr_supernovae",
+   "text": "Held-out supernovae: peak time within 2 d of theirs (an undetected one is a miss), 95% interval lower bound >= 0.60",
+   "value": 0.357464427565077,
+   "result": "fail"
+  },
+  {
+   "capability": "transients",
+   "check": "tr_sn_rise",
+   "item": "tr_supernovae",
+   "text": "Detected held-out supernovae: rise time ours/theirs, bootstrap 95% interval of the median inside [0.67, 1.5]",
+   "value": [
+    0.5471506788731596,
+    1.0573570458757429
+   ],
+   "result": "fail"
+  },
+  {
+   "capability": "transients",
+   "check": "tr_sn_peak_mag",
+   "item": "tr_supernovae",
+   "text": "Detected held-out supernovae: peak TESS magnitude ours minus theirs, bootstrap 95% interval of the median inside [-0.5, +0.5] mag",
+   "value": [
+    -0.1953125899888839,
+    0.8518370747793824
+   ],
+   "result": "fail"
+  },
+  {
+   "capability": "transients",
+   "check": "tr_sn_class",
+   "item": "tr_supernovae",
+   "text": "Detected held-out supernovae: class hint extragalactic-transient-like, 95% interval lower bound >= 0.60",
+   "value": 0.2679886791947528,
+   "result": "fail"
+  },
+  {
+   "capability": "transients",
+   "check": "tr_flare_class",
+   "item": "tr_flares",
+   "text": "Proxima Cen S11-12: transient candidates matching a Medina et al. (2020) flare, class hint flare-like, 95% interval lower bound >= 0.80",
+   "value": 0.5967537243906448,
+   "result": "fail"
+  },
+  {
+   "capability": "transients",
+   "check": "tr_null_quiet",
+   "item": "tr_null",
+   "text": "Three quiet stars, sector 1: fewer than 0.05 transient candidates per day not marked as likely false alarms",
+   "value": 0.5499875137297543,
+   "result": "fail"
+  },
+  {
+   "capability": "transients",
+   "check": "tr_null_control",
+   "item": "tr_supernovae",
+   "text": "Control apertures beside the held-out supernovae: at most 10% carry an extragalactic-transient-like candidate",
+   "value": 0.23333333333333334,
+   "result": "fail"
+  },
+  {
+   "capability": "transients",
+   "check": "tr_screen",
+   "item": "tr_screen",
+   "text": "Synthetic momentum-dump spikes and asteroid-like bumps injected into the quiet stars: marked as likely false alarms, 95% interval lower bound >= 0.80",
+   "value": 0.6276768905451521,
+   "result": "fail"
+  }
+ ],
+ "unvalidated": [
+  "Planet vetting: unchanged. The eclipsing-binary module's vetting hints are advisory, no vetting decision uses them, and they were not evaluated; using them in vetting needs its own pre-registered evaluation.",
+  "Eclipse widths: Prša et al. (2022) give 2-Gaussian widths, SetuHQ a full width at half depth, so only their rank order is compared. The e·cosω values are first-order hints from the secondary's phase, not compared with radial-velocity orbits.",
+  "Rotation: one sector per star, as the protocol fixes; periods longer than about 13 days are not measured, and stitching sectors (with care for sector-to-sector offsets) is not done and not validated. Canto Martins et al. (2020) used every sector available to them.",
+  "Transients: one TESScut sector per supernova, as the protocol fixes. When first light falls before that sector begins, the reference image already holds supernova light, so the rise time and the peak brightness are measured from a non-zero floor; the supernovae compared are all type Ia, so the extragalactic class hint is not tested on tidal disruption events or other transients.",
+  "Scattered light: no labelled real sample was found; the screen (quality flags and control apertures) is described and exercised on synthetic events and the supernova cutouts' control apertures, not validated against a catalogue of scattered-light events.",
+  "Asteroid crossings: screened by shape and, in cutouts, by a moving centroid; no catalogue of TESS asteroid crossings was compared (Fausnaugh et al. 2023's asteroid flags excluded those supernovae from the sample)."
+ ],
+ "items": {
+  "eb_catalogue": {
+   "status": "ok",
+   "code_fingerprint": "2dc00604554ea86168457d378d2d1d098f22f81324a45e304b43bec6fc207ed3",
+   "code_files": [
+    "src/setuhq/binaries.py",
+    "src/setuhq/preprocess.py",
+    "src/setuhq/stellar_io.py",
+    "src/setuhq/loaders.py",
+    "scripts/stellar_validation_v4.py"
+   ],
+   "protocol_sha256": "968ffab34db25d50125a57b45d35276749d5ab8f79ffce14e11c243af2d9c85f",
+   "finished_at": "2026-10-24T19:29:58+00:00",
+   "seconds": 294.7,
+   "error": null
+  },
+  "eb_contrast": {
+   "status": "ok",
+   "code_fingerprint": "2dc00604554ea86168457d378d2d1d098f22f81324a45e304b43bec6fc207ed3",
+   "code_files": [
+    "src/setuhq/binaries.py",
+    "src/setuhq/preprocess.py",
+    "src/setuhq/stellar_io.py",
+    "src/setuhq/loaders.py",
+    "scripts/stellar_validation_v4.py"
+   ],
+   "protocol_sha256": "968ffab34db25d50125a57b45d35276749d5ab8f79ffce14e11c243af2d9c85f",
+   "finished_at": "2026-10-24T19:31:09+00:00",
+   "seconds": 71.4,
+   "error": null
+  },
+  "eb_injection": {
+   "status": "ok",
+   "code_fingerprint": "2dc00604554ea86168457d378d2d1d098f22f81324a45e304b43bec6fc207ed3",
+   "code_files": [
+    "src/setuhq/binaries.py",
+    "src/setuhq/preprocess.py",
+    "src/setuhq/stellar_io.py",
+    "src/setuhq/loaders.py",
+    "scripts/stellar_validation_v4.py"
+   ],
+   "protocol_sha256": "968ffab34db25d50125a57b45d35276749d5ab8f79ffce14e11c243af2d9c85f",
+   "finished_at": "2026-10-24T19:40:26+00:00",
+   "seconds": 556.2,
+   "error": null
+  },
+  "rot_catalogue": {
+   "status": "ok",
+   "code_fingerprint": "af40aa32ea150023313959d34616e5d63befba74a61ff2945fc13a809740e636",
+   "code_files": [
+    "src/setuhq/rotation.py",
+    "src/setuhq/binaries.py",
+    "src/setuhq/preprocess.py",
+    "src/setuhq/stellar_io.py",
+    "src/setuhq/loaders.py",
+    "scripts/stellar_validation_v4.py"
+   ],
+   "protocol_sha256": "968ffab34db25d50125a57b45d35276749d5ab8f79ffce14e11c243af2d9c85f",
+   "finished_at": "2026-10-24T19:41:13+00:00",
+   "seconds": 47.6,
+   "error": null
+  },
+  "rot_injection": {
+   "status": "ok",
+   "code_fingerprint": "af40aa32ea150023313959d34616e5d63befba74a61ff2945fc13a809740e636",
+   "code_files": [
+    "src/setuhq/rotation.py",
+    "src/setuhq/binaries.py",
+    "src/setuhq/preprocess.py",
+    "src/setuhq/stellar_io.py",
+    "src/setuhq/loaders.py",
+    "scripts/stellar_validation_v4.py"
+   ],
+   "protocol_sha256": "968ffab34db25d50125a57b45d35276749d5ab8f79ffce14e11c243af2d9c85f",
+   "finished_at": "2026-10-24T19:41:39+00:00",
+   "seconds": 25.0,
+   "error": null
+  },
+  "rot_null": {
+   "status": "ok",
+   "code_fingerprint": "af40aa32ea150023313959d34616e5d63befba74a61ff2945fc13a809740e636",
+   "code_files": [
+    "src/setuhq/rotation.py",
+    "src/setuhq/binaries.py",
+    "src/setuhq/preprocess.py",
+    "src/setuhq/stellar_io.py",
+    "src/setuhq/loaders.py",
+    "scripts/stellar_validation_v4.py"
+   ],
+   "protocol_sha256": "968ffab34db25d50125a57b45d35276749d5ab8f79ffce14e11c243af2d9c85f",
+   "finished_at": "2026-10-24T19:41:14+00:00",
+   "seconds": 0.7,
+   "error": null
+  },
+  "tr_flares": {
+   "status": "ok",
+   "code_fingerprint": "c2751be2e1a9bce32568e633d6af678709ab1104edb40a6048c7c4c562a435a4",
+   "code_files": [
+    "src/setuhq/transients.py",
+    "src/setuhq/ffi.py",
+    "src/setuhq/binaries.py",
+    "src/setuhq/preprocess.py",
+    "src/setuhq/stellar_io.py",
+    "src/setuhq/loaders.py",
+    "scripts/stellar_validation_v4.py"
+   ],
+   "protocol_sha256": "968ffab34db25d50125a57b45d35276749d5ab8f79ffce14e11c243af2d9c85f",
+   "finished_at": "2026-10-24T19:44:18+00:00",
+   "seconds": 6.7,
+   "error": null
+  },
+  "tr_null": {
+   "status": "ok",
+   "code_fingerprint": "c2751be2e1a9bce32568e633d6af678709ab1104edb40a6048c7c4c562a435a4",
+   "code_files": [
+    "src/setuhq/transients.py",
+    "src/setuhq/ffi.py",
+    "src/setuhq/binaries.py",
+    "src/setuhq/preprocess.py",
+    "src/setuhq/stellar_io.py",
+    "src/setuhq/loaders.py",
+    "scripts/stellar_validation_v4.py"
+   ],
+   "protocol_sha256": "968ffab34db25d50125a57b45d35276749d5ab8f79ffce14e11c243af2d9c85f",
+   "finished_at": "2026-10-24T19:44:19+00:00",
+   "seconds": 1.5,
+   "error": null
+  },
+  "tr_screen": {
+   "status": "ok",
+   "code_fingerprint": "c2751be2e1a9bce32568e633d6af678709ab1104edb40a6048c7c4c562a435a4",
+   "code_files": [
+    "src/setuhq/transients.py",
+    "src/setuhq/ffi.py",
+    "src/setuhq/binaries.py",
+    "src/setuhq/preprocess.py",
+    "src/setuhq/stellar_io.py",
+    "src/setuhq/loaders.py",
+    "scripts/stellar_validation_v4.py"
+   ],
+   "protocol_sha256": "968ffab34db25d50125a57b45d35276749d5ab8f79ffce14e11c243af2d9c85f",
+   "finished_at": "2026-10-24T19:44:48+00:00",
+   "seconds": 28.6,
+   "error": null
+  },
+  "tr_supernovae": {
+   "status": "ok",
+   "code_fingerprint": "c2751be2e1a9bce32568e633d6af678709ab1104edb40a6048c7c4c562a435a4",
+   "code_files": [
+    "src/setuhq/transients.py",
+    "src/setuhq/ffi.py",
+    "src/setuhq/binaries.py",
+    "src/setuhq/preprocess.py",
+    "src/setuhq/stellar_io.py",
+    "src/setuhq/loaders.py",
+    "scripts/stellar_validation_v4.py"
+   ],
+   "protocol_sha256": "968ffab34db25d50125a57b45d35276749d5ab8f79ffce14e11c243af2d9c85f",
+   "finished_at": "2026-10-24T19:44:11+00:00",
+   "seconds": 152.3,
+   "error": null
+  }
+ },
+ "results": {
+  "eb_catalogue": {
+   "held_out": {
+    "n": 24,
+    "detected": {
+     "k": 17,
+     "of": 24,
+     "fraction": 0.7083333333333334,
+     "ci95": [
+      0.508319363412903,
+      0.8508553966583573
+     ]
+    },
+    "period": {
+     "k": 17,
+     "of": 24,
+     "fraction": 0.7083333333333334,
+     "ci95": [
+      0.508319363412903,
+      0.8508553966583573
+     ]
+    },
+    "aliases": {
+     "half": 0,
+     "double": 0
+    },
+    "depth_ratio": {
+     "median": 0.9737801746852637,
+     "ci95": [
+      0.9484283828984773,
+      1.0954867850187426
+     ],
+     "n": 17
+    },
+    "secondary_phase": {
+     "k": 14,
+     "of": 15,
+     "fraction": 0.9333333333333333,
+     "ci95": [
+      0.7018292244757601,
+      0.9881334113938051
+     ]
+    },
+    "secondary_found": {
+     "k": 15,
+     "of": 15,
+     "fraction": 1.0,
+     "ci95": [
+      0.7961107336956521,
+      1.0
+     ]
+    },
+    "width_spearman": 0.9583333333333335,
+    "width_pairs": 17,
+    "morphology": {
+     "k": 15,
+     "of": 17,
+     "fraction": 0.8823529411764706,
+     "ci95": [
+      0.6566315750229009,
+      0.967120919987079
+     ]
+    },
+    "e_cos_omega_hints": [
+     {
+      "tic": 37606218,
+      "e_cos_omega": 0.057069305993018245
+     },
+     {
+      "tic": 470085533,
+      "e_cos_omega": 0.012683200489959055
+     },
+     {
+      "tic": 181226974,
+      "e_cos_omega": 0.024436289726499964
+     },
+     {
+      "tic": 20299889,
+      "e_cos_omega": 0.036370862397992455
+     },
+     {
+      "tic": 261656371,
+      "e_cos_omega": 0.17061314146863715
+     }
+    ]
+   },
+   "tuning": {
+    "n": 6,
+    "detected": {
+     "k": 5,
+     "of": 6,
+     "fraction": 0.8333333333333334,
+     "ci95": [
+      0.43649056343635395,
+      0.9699474141282697
+     ]
+    },
+    "period": {
+     "k": 5,
+     "of": 6,
+     "fraction": 0.8333333333333334,
+     "ci95": [
+      0.43649056343635395,
+      0.9699474141282697
+     ]
+    },
+    "aliases": {
+     "half": 1,
+     "double": 0
+    },
+    "depth_ratio": {
+     "median": 0.9937960112970086,
+     "ci95": [
+      0.8740752634954161,
+      1.3037193063364292
+     ],
+     "n": 5
+    },
+    "secondary_phase": {
+     "k": 4,
+     "of": 4,
+     "fraction": 1.0,
+     "ci95": [
+      0.5100999795960008,
+      1.0
+     ]
+    },
+    "secondary_found": {
+     "k": 4,
+     "of": 4,
+     "fraction": 1.0,
+     "ci95": [
+      0.5100999795960008,
+      1.0
+     ]
+    },
+    "width_spearman": 0.7,
+    "width_pairs": 5,
+    "morphology": {
+     "k": 5,
+     "of": 5,
+     "fraction": 1.0,
+     "ci95": [
+      0.5655085052479191,
+      1.0
+     ]
+    },
+    "e_cos_omega_hints": [
+     {
+      "tic": 381167995,
+      "e_cos_omega": 0.01144606137048958
+     }
+    ]
+   },
+   "rows": [
+    {
+     "tic": 79225651,
+     "split": "tuning",
+     "sector": 1,
+     "file_sha256": "8c1d761ebd0c44405ad5dc77e81b5d66714dd41e8012ab2c7a3d268695c575cd",
+     "catalogue": {
+      "period_d": 1.785578,
+      "morph": 0.441,
+      "depth_p_2g": 0.539,
+      "width_p_2g": 0.08029,
+      "phase_p_2g": 0.9999,
+      "depth_s_2g": 0.528,
+      "phase_s_2g": 0.5
+     },
+     "eb_candidate": true,
+     "reasons": [
+      "secondary minimum at phase 0.500 (368 sigma, depth 0.5357)",
+      "primary depth 0.536, deeper than a planet's transit is likely to be"
+     ],
+     "period": 1.785557636868597,
+     "period_err": 0.00022422733455451687,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 0.9999885957760439,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.5356560500890877,
+      "width_phase": 0.03759802568261505,
+      "snr": 367.7097064487664
+     },
+     "secondary": {
+      "phase": 0.500236015683857,
+      "depth": 0.5357268318728453,
+      "width_phase": 0.03551967224720429,
+      "snr": 367.75829574206966,
+      "e_cos_omega_hint": 0.00037073256926856884
+     },
+     "morphology": "detached",
+     "depth_ratio": 0.9937960112970086,
+     "catalogue_secondary_phase": 0.5001,
+     "secondary_phase_diff": 0.0001360156838570159
+    },
+    {
+     "tic": 312286761,
+     "split": "tuning",
+     "sector": 15,
+     "file_sha256": "70cdf2ad082290544c67c4bd74c32609592d721a2650f50f09215c759aeb9b6d",
+     "catalogue": {
+      "period_d": 0.5099985,
+      "morph": 0.802,
+      "depth_p_2g": 0.298,
+      "width_p_2g": 0.2771,
+      "phase_p_2g": 0.0002933,
+      "depth_s_2g": 0.277,
+      "phase_s_2g": 0.5001
+     },
+     "eb_candidate": true,
+     "reasons": [
+      "secondary minimum at phase 0.501 (373 sigma, depth 0.3226)",
+      "primary depth 0.339, deeper than a planet's transit is likely to be"
+     ],
+     "period": 0.5100046629846583,
+     "period_err": 9.14689089119057e-05,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 1.0000120843191858,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.3387876860941723,
+      "width_phase": 0.18135759921600603,
+      "snr": 392.1327268729522
+     },
+     "secondary": {
+      "phase": 0.5008460221953321,
+      "depth": 0.3226263642260344,
+      "width_phase": 0.1977217172647251,
+      "snr": 373.42666560169687,
+      "e_cos_omega_hint": 0.0013289285568146819
+     },
+     "morphology": "contact",
+     "depth_ratio": 1.136871429846216,
+     "catalogue_secondary_phase": 0.4998067,
+     "secondary_phase_diff": 0.0010393221953321485
+    },
+    {
+     "tic": 279871974,
+     "split": "tuning",
+     "sector": 17,
+     "file_sha256": "af249119cd506f4f78dac645f25e66ba13aa60401848e36e356aa83b3ea8fd0d",
+     "catalogue": {
+      "period_d": 6.5619449,
+      "morph": 0.438,
+      "depth_p_2g": 0.528,
+      "width_p_2g": 0.08193,
+      "phase_p_2g": 1.0,
+      "depth_s_2g": 0.366,
+      "phase_s_2g": 0.4994
+     },
+     "eb_candidate": true,
+     "reasons": [
+      "secondary minimum at phase 0.495 (209 sigma, depth 0.3441)",
+      "primary depth 0.474, deeper than a planet's transit is likely to be"
+     ],
+     "period": 6.561786822616516,
+     "period_err": 0.004179502449586442,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 0.9999759099800603,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.47390315762856905,
+      "width_phase": 0.03787476069831346,
+      "snr": 287.6844810627126
+     },
+     "secondary": {
+      "phase": 0.4954088181704299,
+      "depth": 0.34406692738264844,
+      "width_phase": 0.038866267305934926,
+      "snr": 208.86696756829565,
+      "e_cos_omega_hint": -0.007211811553536153
+     },
+     "morphology": "detached",
+     "depth_ratio": 0.8975438591450171,
+     "catalogue_secondary_phase": 0.49940000000000007,
+     "secondary_phase_diff": 0.003991181829570145
+    },
+    {
+     "tic": 381167995,
+     "split": "tuning",
+     "sector": 4,
+     "file_sha256": "b7311fd20d79e89fc45281b8d293afe36bd04593c7c319bb0fd5c44d5ec86dad",
+     "catalogue": {
+      "period_d": 0.8242596,
+      "morph": 0.668,
+      "depth_p_2g": 0.33,
+      "width_p_2g": 0.3743,
+      "phase_p_2g": 0.9991,
+      "depth_s_2g": null,
+      "phase_s_2g": null
+     },
+     "eb_candidate": true,
+     "reasons": [
+      "secondary minimum at phase 0.507 (171 sigma, depth 0.1065)",
+      "primary depth 0.288, deeper than a planet's transit is likely to be"
+     ],
+     "period": 0.8242417629485123,
+     "period_err": 0.00019763979663143234,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 0.9999783599105334,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.2884448369534873,
+      "width_phase": 0.16062217703464804,
+      "snr": 463.48298635186376
+     },
+     "secondary": {
+      "phase": 0.5072867889841864,
+      "depth": 0.1064968845470613,
+      "width_phase": 0.1913703632199183,
+      "snr": 171.12282060018637,
+      "e_cos_omega_hint": 0.01144606137048958
+     },
+     "morphology": "semi-detached",
+     "depth_ratio": 0.8740752634954161
+    },
+    {
+     "tic": 396713719,
+     "split": "tuning",
+     "sector": 18,
+     "file_sha256": "92b2a18f2120b1bf50fe5044236137838bc3e7ae4e723f0c1e1872c1d75d7a6d",
+     "catalogue": {
+      "period_d": 2.0818251,
+      "morph": 0.437,
+      "depth_p_2g": 0.011,
+      "width_p_2g": 0.08213,
+      "phase_p_2g": 7.323e-05,
+      "depth_s_2g": 0.01,
+      "phase_s_2g": 0.5003
+     },
+     "eb_candidate": false,
+     "reasons": [
+      "one eclipse-like dip per cycle, no secondary, shallower than 5%: transit-like, not flagged"
+     ],
+     "period": 1.0409327836312188,
+     "period_err": 0.0002865491728207232,
+     "period_ambiguous": true,
+     "period_rule": "one shallow, narrow minimum per cycle (transit-like): the period is the photometric one (it may be twice this if the minima are equal)",
+     "period_ratio": 0.5000097191792042,
+     "period_match": false,
+     "alias": "half",
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.010779234129860815,
+      "width_phase": 0.07517404232687212,
+      "snr": 144.76645229783088
+     },
+     "secondary": null,
+     "morphology": "detached",
+     "depth_ratio": 0.9799303754418923,
+     "catalogue_secondary_phase": 0.5002267699999999
+    },
+    {
+     "tic": 303682287,
+     "split": "tuning",
+     "sector": 5,
+     "file_sha256": "0e6841980a7c381d3f645c6eb0f33a7122d6bd2dda834c1ee6f1617c84211dc6",
+     "catalogue": {
+      "period_d": 2.1084547,
+      "morph": 0.764,
+      "depth_p_2g": 0.112,
+      "width_p_2g": 0.2535,
+      "phase_p_2g": 0.0005164,
+      "depth_s_2g": 0.077,
+      "phase_s_2g": 0.5
+     },
+     "eb_candidate": true,
+     "reasons": [
+      "secondary minimum at phase 0.502 (230 sigma, depth 0.1155)",
+      "primary depth 0.146, deeper than a planet's transit is likely to be"
+     ],
+     "period": 2.108977507610094,
+     "period_err": 0.0017240389038294362,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 1.0002479577152377,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.14601656230968008,
+      "width_phase": 0.17022641988607992,
+      "snr": 291.0136247022034
+     },
+     "secondary": {
+      "phase": 0.5021467783737719,
+      "depth": 0.1155385631545941,
+      "width_phase": 0.2228545879080972,
+      "snr": 230.27042634514785,
+      "e_cos_omega_hint": 0.003372151583963563
+     },
+     "morphology": "semi-detached",
+     "depth_ratio": 1.3037193063364292,
+     "catalogue_secondary_phase": 0.4994836,
+     "secondary_phase_diff": 0.002663178373771835
+    },
+    {
+     "tic": 38541473,
+     "split": "held_out",
+     "sector": 4,
+     "file_sha256": "0ababab220e84f8afee53f210398ec7d61e7772fe748c0fcc691f548410f4b29",
+     "catalogue": {
+      "period_d": 6.0613451,
+      "morph": 0.147,
+      "depth_p_2g": 0.019,
+      "width_p_2g": 0.02313,
+      "phase_p_2g": 0.9996,
+      "depth_s_2g": null,
+      "phase_s_2g": null
+     },
+     "eb_candidate": false,
+     "reasons": [
+      "the phase curve changes between the halves of the data (correlation -0.09, amplitude ratio 0.71); spots, not a binary, are likely"
+     ],
+     "period": 6.06170372448262,
+     "period_err": 0.0028102112286850717,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 1.000059165824863,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.015926396348879934,
+      "width_phase": 0.011027453440507788,
+      "snr": 31.773415967176334
+     },
+     "secondary": {
+      "phase": 0.8392385402504322,
+      "depth": 0.0028424979122455563,
+      "width_phase": 0.17282939270369457,
+      "snr": 5.670828891430976,
+      "e_cos_omega_hint": 0.5328746529326416
+     },
+     "morphology": "detached",
+     "depth_ratio": 0.8382313867831545
+    },
+    {
+     "tic": 326630342,
+     "split": "held_out",
+     "sector": 17,
+     "file_sha256": "8a6e082ada367b84fe9c25cc0f4defb15ccbad25e15b357abb2a8190e20a281d",
+     "catalogue": {
+      "period_d": 1.4734376,
+      "morph": 0.672,
+      "depth_p_2g": 0.497,
+      "width_p_2g": 0.2809,
+      "phase_p_2g": 7.251e-05,
+      "depth_s_2g": 0.365,
+      "phase_s_2g": 0.5002
+     },
+     "eb_candidate": true,
+     "reasons": [
+      "secondary minimum at phase 0.502 (405 sigma, depth 0.3649)",
+      "primary depth 0.484, deeper than a planet's transit is likely to be"
+     ],
+     "period": 1.4736384349423923,
+     "period_err": 0.0005404997867062819,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 1.0001363036632107,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.48396874681857605,
+      "width_phase": 0.1347853998361445,
+      "snr": 537.1015397178254
+     },
+     "secondary": {
+      "phase": 0.502267486391178,
+      "depth": 0.3649078050473574,
+      "width_phase": 0.14005418744166268,
+      "snr": 404.96942258021227,
+      "e_cos_omega_hint": 0.003561759294319849
+     },
+     "morphology": "semi-detached",
+     "depth_ratio": 0.9737801746852637,
+     "catalogue_secondary_phase": 0.50012749,
+     "secondary_phase_diff": 0.0021399963911780118
+    },
+    {
+     "tic": 318067171,
+     "split": "held_out",
+     "sector": 20,
+     "file_sha256": "fe3801727d3817ed1814d5d67cf031f3b424d3fd5e78f7351166c718a8f342b5",
+     "catalogue": {
+      "period_d": 2.1805537,
+      "morph": 0.325,
+      "depth_p_2g": 0.038,
+      "width_p_2g": 0.05765,
+      "phase_p_2g": 0.00023,
+      "depth_s_2g": 0.004,
+      "phase_s_2g": 0.5021
+     },
+     "eb_candidate": true,
+     "reasons": [
+      "secondary minimum at phase 0.497 (9 sigma, depth 0.0040)"
+     ],
+     "period": 2.1805085738430656,
+     "period_err": 0.0005503053608265836,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 0.9999793051843051,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.036040278550142135,
+      "width_phase": 0.027744541297037743,
+      "snr": 82.96116290041049
+     },
+     "secondary": {
+      "phase": 0.49695985231565315,
+      "depth": 0.004009492507860535,
+      "width_phase": 0.043739898864738926,
+      "snr": 9.229455888633163,
+      "e_cos_omega_hint": -0.004775452815486043
+     },
+     "morphology": "detached",
+     "depth_ratio": 0.9484283828984773,
+     "catalogue_secondary_phase": 0.50187,
+     "secondary_phase_diff": 0.004910147684346944
+    },
+    {
+     "tic": 419635446,
+     "split": "held_out",
+     "sector": 1,
+     "file_sha256": "24872d95f05ada8da971ad762eced4df02135851f08335bb60f18bb0fcfeeaca",
+     "catalogue": {
+      "period_d": 0.3908187,
+      "morph": 0.743,
+      "depth_p_2g": 0.314,
+      "width_p_2g": 0.3215,
+      "phase_p_2g": 0.9972,
+      "depth_s_2g": 0.314,
+      "phase_s_2g": 0.5025
+     },
+     "eb_candidate": true,
+     "reasons": [
+      "secondary minimum at phase 0.498 (516 sigma, depth 0.3433)",
+      "primary depth 0.344, deeper than a planet's transit is likely to be"
+     ],
+     "period": 0.3908192987312701,
+     "period_err": 4.038414043508604e-05,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 1.0000015319923792,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.3439828504958852,
+      "width_phase": 0.16767822294228332,
+      "snr": 517.4801991195912
+     },
+     "secondary": {
+      "phase": 0.49760339100400036,
+      "depth": 0.3432541660168399,
+      "width_phase": 0.1731401523475079,
+      "snr": 516.3839822914321,
+      "e_cos_omega_hint": -0.003764584607679837
+     },
+     "morphology": "semi-detached",
+     "depth_ratio": 1.0954867850187426,
+     "catalogue_secondary_phase": 0.5053,
+     "secondary_phase_diff": 0.007696608995999554
+    },
+    {
+     "tic": 37606218,
+     "split": "held_out",
+     "sector": 6,
+     "file_sha256": "37616d4b856a74426cc13225b8d0f42990def87228a2525dfddb75a8202d9ed6",
+     "catalogue": {
+      "period_d": 7.8358545,
+      "morph": 0.21,
+      "depth_p_2g": 0.106,
+      "width_p_2g": 0.04236,
+      "phase_p_2g": 2.004e-05,
+      "depth_s_2g": 0.013,
+      "phase_s_2g": 0.5368
+     },
+     "eb_candidate": true,
+     "reasons": [
+      "secondary minimum at phase 0.536 (62 sigma, depth 0.0123)",
+      "primary depth 0.101, deeper than a planet's transit is likely to be"
+     ],
+     "period": 7.834996701530181,
+     "period_err": 0.0024583495279319723,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 0.9998905290457066,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.10091418973406496,
+      "width_phase": 0.01972207556375414,
+      "snr": 511.64474290403444
+     },
+     "secondary": {
+      "phase": 0.5363314485904511,
+      "depth": 0.012323448261245429,
+      "width_phase": 0.022531872987833674,
+      "snr": 62.481079558107396,
+      "e_cos_omega_hint": 0.057069305993018245
+     },
+     "morphology": "detached",
+     "depth_ratio": 0.9520206578685374,
+     "catalogue_secondary_phase": 0.5367799600000001,
+     "secondary_phase_diff": 0.0004485114095489351
+    },
+    {
+     "tic": 88646716,
+     "split": "held_out",
+     "sector": 21,
+     "file_sha256": "ad23541375678cb74a783ee973a861ae5aeb10584b4c3fcc93936a6385d0db29",
+     "catalogue": {
+      "period_d": 0.4149777,
+      "morph": 0.793,
+      "depth_p_2g": 0.221,
+      "width_p_2g": 0.3191,
+      "phase_p_2g": 0.999,
+      "depth_s_2g": 0.198,
+      "phase_s_2g": 0.5
+     },
+     "eb_candidate": true,
+     "reasons": [
+      "secondary minimum at phase 0.500 (477 sigma, depth 0.2524)",
+      "primary depth 0.273, deeper than a planet's transit is likely to be",
+      "found by the box search on the flattened light curve, beside a stronger periodic signal at P = 0.4150 d (secondary minimum at phase 0.500 (495 sigma, depth 0.2578); primary depth 0.280, deeper than a planet's transit is likely to be)"
+     ],
+     "period": 0.4149725352838643,
+     "period_err": 5.17799608283043e-05,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 0.9999875542321052,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.2733494579894835,
+      "width_phase": 0.1861536726176764,
+      "snr": 516.8336016103702
+     },
+     "secondary": {
+      "phase": 0.5000113847409918,
+      "depth": 0.25244754479681164,
+      "width_phase": 0.18591097119610386,
+      "snr": 477.31345346238476,
+      "e_cos_omega_hint": 1.788310933147255e-05
+     },
+     "morphology": "contact",
+     "depth_ratio": 1.2368753755180248,
+     "catalogue_secondary_phase": 0.501,
+     "secondary_phase_diff": 0.0009886152590081743
+    },
+    {
+     "tic": 47402214,
+     "split": "held_out",
+     "sector": 12,
+     "file_sha256": "33684cdf62ade024a5a8eb3e4ce5ceb591bb57b76166ce8a2b4d9f5c8033cdc2",
+     "catalogue": {
+      "period_d": 1.293387,
+      "morph": 0.389,
+      "depth_p_2g": 0.002,
+      "width_p_2g": 0.1476,
+      "phase_p_2g": 0.2348,
+      "depth_s_2g": null,
+      "phase_s_2g": null
+     },
+     "eb_candidate": false,
+     "reasons": [
+      "no coherent periodic signal (primary S/N 5.9, explained variance 0.11)"
+     ],
+     "period": 8.706732151834373,
+     "period_err": 0.03126127178457966,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 6.731730063650224,
+     "period_match": false,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.002369178255440363,
+      "width_phase": 0.023607703570792296,
+      "snr": 5.942827289360422
+     },
+     "secondary": {
+      "phase": 0.10709536708602624,
+      "depth": 0.0020245226723560883,
+      "width_phase": 0.021075170608840548,
+      "snr": 5.078296053738801,
+      "e_cos_omega_hint": -0.6171731541619672
+     },
+     "morphology": "semi-detached",
+     "depth_ratio": 1.1845891277201814
+    },
+    {
+     "tic": 424508303,
+     "split": "held_out",
+     "sector": 26,
+     "file_sha256": "115980c70143db24ffe0084a0695337e33bac428271fbf31ac36d7af16eccf51",
+     "catalogue": {
+      "period_d": 2.0833359,
+      "morph": 0.527,
+      "depth_p_2g": 0.48,
+      "width_p_2g": 0.117,
+      "phase_p_2g": 1.0,
+      "depth_s_2g": 0.372,
+      "phase_s_2g": 0.5174
+     },
+     "eb_candidate": false,
+     "reasons": [
+      "the phase curve changes between the halves of the data (correlation 0.88, amplitude ratio 0.98); spots, not a binary, are likely"
+     ],
+     "period": 2.083670787456054,
+     "period_err": 0.0014740383783290907,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 1.0001607457808672,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.2697422701427573,
+      "width_phase": 0.05256830003520936,
+      "snr": 38.77067151663607
+     },
+     "secondary": {
+      "phase": 0.5160067835733831,
+      "depth": 0.21040774737665335,
+      "width_phase": 0.05510224617345777,
+      "snr": 30.242385273091426,
+      "e_cos_omega_hint": 0.02514339684087113
+     },
+     "morphology": "detached",
+     "depth_ratio": 0.561963062797411,
+     "catalogue_secondary_phase": 0.5174,
+     "secondary_phase_diff": 0.0013932164266168279
+    },
+    {
+     "tic": 470085533,
+     "split": "held_out",
+     "sector": 18,
+     "file_sha256": "b21cdad4690233ffd1f280b916afc8e8b8a15571ac47b1002d2ae0275e29f48b",
+     "catalogue": {
+      "period_d": 4.7201558,
+      "morph": 0.158,
+      "depth_p_2g": 0.06,
+      "width_p_2g": 0.02983,
+      "phase_p_2g": 3.307e-05,
+      "depth_s_2g": 0.014,
+      "phase_s_2g": 0.5077
+     },
+     "eb_candidate": true,
+     "reasons": [
+      "secondary minimum at phase 0.508 (40 sigma, depth 0.0209)",
+      "primary depth 0.058, deeper than a planet's transit is likely to be"
+     ],
+     "period": 4.719950349997032,
+     "period_err": 0.0013141583528506122,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 0.9999564738937288,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.05762039864449797,
+      "width_phase": 0.014417787312777909,
+      "snr": 110.31182906931284
+     },
+     "secondary": {
+      "phase": 0.5080743762088101,
+      "depth": 0.020901251419838007,
+      "width_phase": 0.017437067956064044,
+      "snr": 40.01456651116143,
+      "e_cos_omega_hint": 0.012683200489959055
+     },
+     "morphology": "detached",
+     "depth_ratio": 0.9603399774082996,
+     "catalogue_secondary_phase": 0.5076669300000001,
+     "secondary_phase_diff": 0.00040744620881005833
+    },
+    {
+     "tic": 123153249,
+     "split": "held_out",
+     "sector": 7,
+     "file_sha256": "363ea8368def0414a2372273d9258c61a27dbad820b0d8e1e07d9c730cf7b3bb",
+     "catalogue": {
+      "period_d": 5.8784238,
+      "morph": 0.674,
+      "depth_p_2g": 0.054,
+      "width_p_2g": 0.2365,
+      "phase_p_2g": 0.9983,
+      "depth_s_2g": null,
+      "phase_s_2g": null
+     },
+     "eb_candidate": false,
+     "reasons": [
+      "a continuous variation whose shape or amplitude changes between the halves of the data (correlation None, amplitude ratio None): spot modulation is as likely as a binary; not flagged"
+     ],
+     "period": 11.949399671648646,
+     "period_err": 0.18148970779889492,
+     "period_ambiguous": true,
+     "period_rule": "one minimum per photometric cycle, deep or continuous: equal minima assumed (the period may be half this)",
+     "period_ratio": 2.0327557315021494,
+     "period_match": false,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.046939265925232565,
+      "width_phase": 0.2582983136001036,
+      "snr": 69.0651146447593
+     },
+     "secondary": {
+      "phase": 0.4870624047340296,
+      "depth": 0.042511447601903285,
+      "width_phase": 0.20845317987995363,
+      "snr": 62.55014739720989,
+      "e_cos_omega_hint": -0.020322327121345317,
+      "equal_minima_assumed": true,
+      "note": "the period was doubled on the equal-minima assumption, so this minimum is not independent evidence"
+     },
+     "morphology": "ellipsoidal",
+     "depth_ratio": 0.8692456652820846
+    },
+    {
+     "tic": 326149070,
+     "split": "held_out",
+     "sector": 17,
+     "file_sha256": "bb9465b5a640d6d1d5a415bdbad6b8105348755282627e769db9f68ec8a3ed5c",
+     "catalogue": {
+      "period_d": 1.9514945,
+      "morph": 0.388,
+      "depth_p_2g": 0.011,
+      "width_p_2g": 0.07571,
+      "phase_p_2g": 0.0001021,
+      "depth_s_2g": 0.003,
+      "phase_s_2g": 0.4997
+     },
+     "eb_candidate": true,
+     "reasons": [
+      "secondary minimum at phase 0.497 (7 sigma, depth 0.0029)"
+     ],
+     "period": 1.9513849489678419,
+     "period_err": 0.001219392810722669,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 0.9999438630074755,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.010896544743896897,
+      "width_phase": 0.03478694165734927,
+      "snr": 24.68583362988206
+     },
+     "secondary": {
+      "phase": 0.4970725009356446,
+      "depth": 0.0028969977382736767,
+      "width_phase": 0.033891076679476655,
+      "snr": 6.563071677673198,
+      "e_cos_omega_hint": -0.004598504776984974
+     },
+     "morphology": "detached",
+     "depth_ratio": 0.9905949767178998,
+     "catalogue_secondary_phase": 0.4995979,
+     "secondary_phase_diff": 0.002525399064355449
+    },
+    {
+     "tic": 359042174,
+     "split": "held_out",
+     "sector": 17,
+     "file_sha256": "8c35832a25367fa95db965387acc0f88abb0a25d10b32987f26f843638c897be",
+     "catalogue": {
+      "period_d": 3.3954348,
+      "morph": 0.509,
+      "depth_p_2g": 0.001,
+      "width_p_2g": 0.1417,
+      "phase_p_2g": 0.9991,
+      "depth_s_2g": null,
+      "phase_s_2g": null
+     },
+     "eb_candidate": false,
+     "reasons": [
+      "no coherent periodic signal (primary S/N 7.7, explained variance 0.09)"
+     ],
+     "period": 3.392139261367093,
+     "period_err": 0.010017270453000762,
+     "period_ambiguous": true,
+     "period_rule": "one shallow, narrow minimum per cycle (transit-like): the period is the photometric one (it may be twice this if the minima are equal)",
+     "period_ratio": 0.9990294207290016,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.0015431109155878975,
+      "width_phase": 0.05648904945318872,
+      "snr": 7.711175982070493
+     },
+     "secondary": null,
+     "morphology": "semi-detached",
+     "depth_ratio": 1.5431109155878975
+    },
+    {
+     "tic": 50191648,
+     "split": "held_out",
+     "sector": 18,
+     "file_sha256": "21bebd066a9881aa92473a7446ec1d3464028f4423aa697963f204eaf8d388c7",
+     "catalogue": {
+      "period_d": 2.1399867,
+      "morph": 0.381,
+      "depth_p_2g": 0.233,
+      "width_p_2g": 0.08387,
+      "phase_p_2g": 9.719e-05,
+      "depth_s_2g": 0.027,
+      "phase_s_2g": 0.4981
+     },
+     "eb_candidate": true,
+     "reasons": [
+      "secondary minimum at phase 0.495 (40 sigma, depth 0.0369)",
+      "primary depth 0.211, deeper than a planet's transit is likely to be"
+     ],
+     "period": 2.1400008550480107,
+     "period_err": 0.0005493910878892239,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 1.0000066145495252,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.21120694861585165,
+      "width_phase": 0.042134165759803825,
+      "snr": 227.43444710476663
+     },
+     "secondary": {
+      "phase": 0.4950350406769595,
+      "depth": 0.036878701467394914,
+      "width_phase": 0.055255452049986026,
+      "snr": 39.71217392773413,
+      "e_cos_omega_hint": -0.007798939867318053
+     },
+     "morphology": "detached",
+     "depth_ratio": 0.9064675906259727,
+     "catalogue_secondary_phase": 0.49800280999999996,
+     "secondary_phase_diff": 0.0029677693230404367
+    },
+    {
+     "tic": 37601240,
+     "split": "held_out",
+     "sector": 6,
+     "file_sha256": "d5e8d8de9b768d2548a7a62b9273861cb162f872637a5149a255e5c136b6fbd7",
+     "catalogue": {
+      "period_d": 0.7313791,
+      "morph": 0.623,
+      "depth_p_2g": 0.3,
+      "width_p_2g": 0.2589,
+      "phase_p_2g": 6.864e-05,
+      "depth_s_2g": 0.077,
+      "phase_s_2g": 0.4999
+     },
+     "eb_candidate": true,
+     "reasons": [
+      "secondary minimum at phase 0.505 (268 sigma, depth 0.0892)",
+      "primary depth 0.300, deeper than a planet's transit is likely to be"
+     ],
+     "period": 0.7313924889743277,
+     "period_err": 9.606196129333961e-05,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 1.0000183064765287,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.29996942575462404,
+      "width_phase": 0.11728342691769676,
+      "snr": 899.9603099412598
+     },
+     "secondary": {
+      "phase": 0.5045483306784156,
+      "depth": 0.08924881654082928,
+      "width_phase": 0.1343067838684064,
+      "snr": 267.7619307164914,
+      "e_cos_omega_hint": 0.007144501122703837
+     },
+     "morphology": "semi-detached",
+     "depth_ratio": 0.9998980858487468,
+     "catalogue_secondary_phase": 0.49983136,
+     "secondary_phase_diff": 0.004716970678415644
+    },
+    {
+     "tic": 1220444,
+     "split": "held_out",
+     "sector": 5,
+     "file_sha256": "42f3ff9ce0937ed6778fb6f8e1f74de3e404af24ddc9811d1a7171b54b9537f0",
+     "catalogue": {
+      "period_d": 7.1620656,
+      "morph": 0.173,
+      "depth_p_2g": 0.046,
+      "width_p_2g": 0.02841,
+      "phase_p_2g": 0.9999,
+      "depth_s_2g": null,
+      "phase_s_2g": null
+     },
+     "eb_candidate": false,
+     "reasons": [
+      "the phase curve changes between the halves of the data (correlation 0.61, amplitude ratio 1.0); spots, not a binary, are likely"
+     ],
+     "period": 7.162941135597529,
+     "period_err": 0.003179548356190047,
+     "period_ambiguous": true,
+     "period_rule": "one shallow, narrow minimum per cycle (transit-like): the period is the photometric one (it may be twice this if the minima are equal)",
+     "period_ratio": 1.0001222462410186,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.04219570222187441,
+      "width_phase": 0.01385639291591215,
+      "snr": 76.09830410079263
+     },
+     "secondary": {
+      "phase": 0.051684256233036095,
+      "depth": 0.0034526852820550014,
+      "width_phase": 0.17116935696977514,
+      "snr": 6.226783314959179,
+      "e_cos_omega_hint": -0.704212723553469
+     },
+     "morphology": "detached",
+     "depth_ratio": 0.9172978743885741
+    },
+    {
+     "tic": 164776925,
+     "split": "held_out",
+     "sector": 3,
+     "file_sha256": "62f13f66d6f64b604e0d3c4859456ceb661fec003d736ac58ff9ba03c5358873",
+     "catalogue": {
+      "period_d": 0.3407947,
+      "morph": 0.716,
+      "depth_p_2g": 0.372,
+      "width_p_2g": 0.2641,
+      "phase_p_2g": 0.001081,
+      "depth_s_2g": 0.344,
+      "phase_s_2g": 0.5
+     },
+     "eb_candidate": true,
+     "reasons": [
+      "secondary minimum at phase 0.500 (586 sigma, depth 0.3861)",
+      "primary depth 0.409, deeper than a planet's transit is likely to be"
+     ],
+     "period": 0.3407980733978158,
+     "period_err": 3.48612304706056e-05,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 1.0000098986217092,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.4086236359524458,
+      "width_phase": 0.15145441563861792,
+      "snr": 619.9480928296772
+     },
+     "secondary": {
+      "phase": 0.5001546068255716,
+      "depth": 0.3861212411175793,
+      "width_phase": 0.14903670818403844,
+      "snr": 585.8083232848745,
+      "e_cos_omega_hint": 0.00024285583370522122
+     },
+     "morphology": "semi-detached",
+     "depth_ratio": 1.0984506342807683,
+     "catalogue_secondary_phase": 0.498919,
+     "secondary_phase_diff": 0.0012356068255715558
+    },
+    {
+     "tic": 150101472,
+     "split": "held_out",
+     "sector": 1,
+     "file_sha256": "dc159a3ee0d0c57b1f0d7e92a8641e9e52f242e79e24db92ecf1af0bee8b3c23",
+     "catalogue": {
+      "period_d": 3.2785242,
+      "morph": 0.352,
+      "depth_p_2g": 0.003,
+      "width_p_2g": 0.06455,
+      "phase_p_2g": 0.004479,
+      "depth_s_2g": 0.001,
+      "phase_s_2g": 0.4985
+     },
+     "eb_candidate": false,
+     "reasons": [
+      "no coherent periodic signal (primary S/N 9.6, explained variance 0.09)"
+     ],
+     "period": 3.2768608591802546,
+     "period_err": 0.00396740734882139,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 0.9994926556223848,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.0020585272595782245,
+      "width_phase": 0.03187164524400421,
+      "snr": 9.572431640899524
+     },
+     "secondary": null,
+     "morphology": "semi-detached",
+     "depth_ratio": 0.6861757531927415,
+     "catalogue_secondary_phase": 0.494021
+    },
+    {
+     "tic": 352012002,
+     "split": "held_out",
+     "sector": 14,
+     "file_sha256": "655998c547755f6012b97e8687c3cc3245f884adce25d375f86e13f893e2049a",
+     "catalogue": {
+      "period_d": 0.6671181,
+      "morph": 0.869,
+      "depth_p_2g": 0.024,
+      "width_p_2g": 0.2795,
+      "phase_p_2g": 0.8607,
+      "depth_s_2g": null,
+      "phase_s_2g": null
+     },
+     "eb_candidate": true,
+     "reasons": [
+      "secondary minimum at phase 0.501 (111 sigma, depth 0.0415)",
+      "primary depth 0.072, deeper than a planet's transit is likely to be"
+     ],
+     "period": 0.667291313708343,
+     "period_err": 0.0003184689321920294,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 1.0002596447440761,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.07238989490371417,
+      "width_phase": 0.2666133890344969,
+      "snr": 192.75678799379764
+     },
+     "secondary": {
+      "phase": 0.5010313707791624,
+      "depth": 0.04150769266455112,
+      "width_phase": 0.2282952026665657,
+      "snr": 110.52495000434219,
+      "e_cos_omega_hint": 0.0016200734314718525
+     },
+     "morphology": "contact",
+     "depth_ratio": 3.0162456209880903
+    },
+    {
+     "tic": 193994472,
+     "split": "held_out",
+     "sector": 24,
+     "file_sha256": "d39abaa59e8424bf177c0224e1e926b05e8aedf476524fd8fafd77cfc0276d8c",
+     "catalogue": {
+      "period_d": 6.35215,
+      "morph": 0.246,
+      "depth_p_2g": 0.225,
+      "width_p_2g": 0.04359,
+      "phase_p_2g": 1.0,
+      "depth_s_2g": 0.059,
+      "phase_s_2g": 0.5004
+     },
+     "eb_candidate": true,
+     "reasons": [
+      "secondary minimum at phase 0.504 (46 sigma, depth 0.0534)",
+      "primary depth 0.207, deeper than a planet's transit is likely to be"
+     ],
+     "period": 6.352868967647659,
+     "period_err": 0.002373139588758091,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 1.0001131849291436,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.20687000781023002,
+      "width_phase": 0.020818110008930524,
+      "snr": 178.70432139659874
+     },
+     "secondary": {
+      "phase": 0.5036695872739173,
+      "depth": 0.05339850715540362,
+      "width_phase": 0.023059719459687034,
+      "snr": 46.12821397266819,
+      "e_cos_omega_hint": 0.005764174210722605
+     },
+     "morphology": "detached",
+     "depth_ratio": 0.9194222569343556,
+     "catalogue_secondary_phase": 0.5004,
+     "secondary_phase_diff": 0.0032695872739173515
+    },
+    {
+     "tic": 181226974,
+     "split": "held_out",
+     "sector": 10,
+     "file_sha256": "73f1b179bae272c24b1a9ff6689e537e11a3fb43cee4d53ebdfcebb478542f49",
+     "catalogue": {
+      "period_d": 1.9353781,
+      "morph": 0.538,
+      "depth_p_2g": 0.041,
+      "width_p_2g": 0.09384,
+      "phase_p_2g": 0.0001117,
+      "depth_s_2g": null,
+      "phase_s_2g": null
+     },
+     "eb_candidate": true,
+     "reasons": [
+      "secondary minimum at phase 0.516 (29 sigma, depth 0.0111)"
+     ],
+     "period": 1.9353592807150708,
+     "period_err": 0.0007297144848955521,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 0.9999902761713955,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.03955879546890706,
+      "width_phase": 0.04835510617719703,
+      "snr": 104.43944481842756
+     },
+     "secondary": {
+      "phase": 0.5155566252031927,
+      "depth": 0.011105694797833632,
+      "width_phase": 0.23704828008831852,
+      "snr": 29.320220326736113,
+      "e_cos_omega_hint": 0.024436289726499964
+     },
+     "morphology": "semi-detached",
+     "depth_ratio": 0.9648486699733428
+    },
+    {
+     "tic": 20299889,
+     "split": "held_out",
+     "sector": 23,
+     "file_sha256": "4b1814e91d8f427ffc4cc02dc11e47950a64a1a27128230048a336156a097f9c",
+     "catalogue": {
+      "period_d": 7.6062167,
+      "morph": 0.496,
+      "depth_p_2g": 0.413,
+      "width_p_2g": 0.1093,
+      "phase_p_2g": 0.1985,
+      "depth_s_2g": 0.124,
+      "phase_s_2g": 0.7013
+     },
+     "eb_candidate": true,
+     "reasons": [
+      "secondary minimum at phase 0.523 (84 sigma, depth 0.1270)",
+      "primary depth 0.383, deeper than a planet's transit is likely to be"
+     ],
+     "period": 7.604016576625745,
+     "period_err": 0.007222746802016128,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 0.9997107466877383,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.38330564233898834,
+      "width_phase": 0.05072527607592701,
+      "snr": 253.7493800079036
+     },
+     "secondary": {
+      "phase": 0.5231544101406226,
+      "depth": 0.12695323758103183,
+      "width_phase": 0.046305278210494336,
+      "snr": 84.04338931617706,
+      "e_cos_omega_hint": 0.036370862397992455
+     },
+     "morphology": "semi-detached",
+     "depth_ratio": 0.9281008289079621,
+     "catalogue_secondary_phase": 0.5028,
+     "secondary_phase_diff": 0.02035441014062256
+    },
+    {
+     "tic": 121108244,
+     "split": "held_out",
+     "sector": 14,
+     "file_sha256": "f65b0b86f3b4c3e4099a3c13e9be021c56f453709b42f8bde7166edcdb762e67",
+     "catalogue": {
+      "period_d": 0.3951054,
+      "morph": 0.703,
+      "depth_p_2g": 0.089,
+      "width_p_2g": 0.2586,
+      "phase_p_2g": 0.9993,
+      "depth_s_2g": 0.077,
+      "phase_s_2g": 0.5009
+     },
+     "eb_candidate": true,
+     "reasons": [
+      "secondary minimum at phase 0.500 (293 sigma, depth 0.0934)",
+      "primary depth 0.105, deeper than a planet's transit is likely to be"
+     ],
+     "period": 0.3951105309208823,
+     "period_err": 4.572759675185712e-05,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 1.0000129862079392,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.10476948099097338,
+      "width_phase": 0.14269073423766768,
+      "snr": 329.176101222368
+     },
+     "secondary": {
+      "phase": 0.4998990687637922,
+      "depth": 0.09338586826805095,
+      "width_phase": 0.13934816905437536,
+      "snr": 293.4098339991889,
+      "e_cos_omega_hint": -0.00015854241509408323
+     },
+     "morphology": "semi-detached",
+     "depth_ratio": 1.1771851796738584,
+     "catalogue_secondary_phase": 0.5016,
+     "secondary_phase_diff": 0.0017009312362078477
+    },
+    {
+     "tic": 261656371,
+     "split": "held_out",
+     "sector": 1,
+     "file_sha256": "6d46f76f5e773ae485416c38a68caa85ba2fb54a2de90121e68c424487eb7aaf",
+     "catalogue": {
+      "period_d": 7.1953094,
+      "morph": 0.143,
+      "depth_p_2g": 0.436,
+      "width_p_2g": 0.04463,
+      "phase_p_2g": 1.0,
+      "depth_s_2g": 0.402,
+      "phase_s_2g": 0.6086
+     },
+     "eb_candidate": true,
+     "reasons": [
+      "secondary minimum at phase 0.609 (1128 sigma, depth 0.3973)",
+      "primary depth 0.432, deeper than a planet's transit is likely to be"
+     ],
+     "period": 7.194891330560483,
+     "period_err": 0.0010025561672867413,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 0.9999418969475423,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.4318363751525902,
+      "width_phase": 0.01890581084564896,
+      "snr": 1225.967887196258
+     },
+     "secondary": {
+      "phase": 0.6086156992846817,
+      "depth": 0.3973194892365193,
+      "width_phase": 0.02473452486600359,
+      "snr": 1127.975693546135,
+      "e_cos_omega_hint": 0.17061314146863715
+     },
+     "morphology": "detached",
+     "depth_ratio": 0.9904504017261243,
+     "catalogue_secondary_phase": 0.6086,
+     "secondary_phase_diff": 1.5699284681702785e-05
+    },
+    {
+     "tic": 358232450,
+     "split": "held_out",
+     "sector": 2,
+     "file_sha256": "bd94575c5eb245247513e4932a554bcc39a62910761f660ec5b61e7345fef357",
+     "catalogue": {
+      "period_d": 1.6697714,
+      "morph": 0.574,
+      "depth_p_2g": 0.377,
+      "width_p_2g": 0.1701,
+      "phase_p_2g": 0.0004646,
+      "depth_s_2g": 0.259,
+      "phase_s_2g": 0.5049
+     },
+     "eb_candidate": true,
+     "reasons": [
+      "secondary minimum at phase 0.502 (86 sigma, depth 0.2338)",
+      "primary depth 0.341, deeper than a planet's transit is likely to be"
+     ],
+     "period": 1.6697090727903878,
+     "period_err": 0.0006910007212202257,
+     "period_ambiguous": false,
+     "period_rule": "two minima per photometric cycle",
+     "period_ratio": 0.9999626732080739,
+     "period_match": true,
+     "alias": null,
+     "primary": {
+      "phase": 0.0,
+      "depth": 0.3413053488959159,
+      "width_phase": 0.07603798835475932,
+      "snr": 125.31187568430578
+     },
+     "secondary": {
+      "phase": 0.5021625813849949,
+      "depth": 0.23378940692534755,
+      "width_phase": 0.07771538118304214,
+      "snr": 85.8368882635677,
+      "e_cos_omega_hint": 0.003396974895945043
+     },
+     "morphology": "detached",
+     "depth_ratio": 0.9053192278406257,
+     "catalogue_secondary_phase": 0.5044354,
+     "secondary_phase_diff": 0.0022728186150050567
+    }
+   ]
+  },
+  "eb_contrast": {
+   "false_eb": 1,
+   "n": 7,
+   "rows": [
+    {
+     "star": "pi Men",
+     "tic": 261136679,
+     "sector": 1,
+     "kind": "planet host (pi Men c, a shallow transit of about 300 ppm)",
+     "eb_candidate": false,
+     "period": 6.273648978565462,
+     "reasons": [
+      "no coherent periodic signal (primary S/N 11.9, explained variance 0.11)"
+     ],
+     "file_sha256": "1eecffff3afa7e8c4ad763b6907e62447bacf339968292d86be45acd9bf1d609"
+    },
+    {
+     "star": "WASP-126",
+     "tic": 25155310,
+     "sector": 1,
+     "kind": "planet host (hot Jupiter)",
+     "eb_candidate": false,
+     "period": 3.2894105996313967,
+     "reasons": [
+      "one eclipse-like dip per cycle, no secondary, shallower than 5%: transit-like, not flagged"
+     ],
+     "file_sha256": "12ddd623b04bdd354f27b5c89287b3a25a800d65cdf2733a1d0d04ab98e2d790"
+    },
+    {
+     "star": "HD 15337",
+     "tic": 120896927,
+     "sector": 4,
+     "kind": "planet host (two small planets)",
+     "eb_candidate": false,
+     "period": 9.819636447999999,
+     "reasons": [
+      "no coherent periodic signal (primary S/N 5.6, explained variance 0.05)"
+     ],
+     "file_sha256": "a0d03d3e07a18ab133fe1fe31b9f3d45870a8c0f7a00d8dd2e5759bfd2e70f5e"
+    },
+    {
+     "star": "TOI-270",
+     "tic": 259377017,
+     "sector": 5,
+     "kind": "planet host (M dwarf, three small planets)",
+     "eb_candidate": false,
+     "period": 5.661715224880571,
+     "reasons": [
+      "no coherent periodic signal (primary S/N 12.7, explained variance 0.09)"
+     ],
+     "file_sha256": "739250df0d1ccda4304e01213f1f0f53c24603e3e223ff646157b6721665a9d5"
+    },
+    {
+     "star": "TOI-236",
+     "tic": 9727392,
+     "sector": 2,
+     "kind": "planet host",
+     "eb_candidate": true,
+     "period": 4.535158893120008,
+     "reasons": [
+      "secondary minimum at phase 0.497 (6 sigma, depth 0.0030)"
+     ],
+     "file_sha256": "35374d1f753db7ea8f977c38e000b5eb14c370d6811350001d02daa69e569315"
+    },
+    {
+     "star": "zeta Tuc",
+     "tic": 425935521,
+     "sector": 1,
+     "kind": "quiet solar-type star",
+     "eb_candidate": false,
+     "period": 7.657683033565166,
+     "reasons": [
+      "no coherent periodic signal (primary S/N 8.9, explained variance 0.07)"
+     ],
+     "file_sha256": "56e04a372ae3c89136dfd193a13adcb9f2da12f35363c0c4dc2a1208921d2de7"
+    },
+    {
+     "star": "beta Hyi",
+     "tic": 267211065,
+     "sector": 1,
+     "kind": "quiet subgiant",
+     "eb_candidate": false,
+     "period": 8.864553009135577,
+     "reasons": [
+      "no coherent periodic signal (primary S/N 17.9, explained variance 0.13)"
+     ],
+     "file_sha256": "67bad520dc56b9c0a0a3e3ea6c3acf7a5b3a91de88adf0cd2d42f0679ba89db4"
+    }
+   ]
+  },
+  "eb_injection": {
+   "recovery": {
+    "k": 60,
+    "of": 70,
+    "fraction": 0.8571428571428571,
+    "ci95": [
+     0.7566136529849488,
+     0.9205114363955629
+    ]
+   },
+   "flagged": {
+    "k": 70,
+    "of": 70,
+    "fraction": 1.0,
+    "ci95": [
+     0.9479751251327163,
+     0.9999999999999999
+    ]
+   },
+   "rows": [
+    {
+     "star": "pi Men",
+     "period": 3.665166842791455,
+     "depth_p": 0.03354210550671012,
+     "depth_s": 0.013892137645723808,
+     "phase_s": 0.4710027925064266,
+     "width": 0.05538216740479693,
+     "found_period": 3.6651509105990465,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "pi Men",
+     "period": 1.3875908910801784,
+     "depth_p": 0.12183312811127546,
+     "depth_s": 0.00013616055049345157,
+     "phase_s": 0.5196096106054289,
+     "width": 0.043736657998741775,
+     "found_period": 2.775151260495706,
+     "eb_candidate": true,
+     "recovered": false
+    },
+    {
+     "star": "pi Men",
+     "period": 2.9909654605216067,
+     "depth_p": 0.07462308420380245,
+     "depth_s": 0.01082903506792475,
+     "phase_s": 0.49375243356022136,
+     "width": 0.022696288560247187,
+     "found_period": 2.9909670160351505,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "pi Men",
+     "period": 2.3872294093842954,
+     "depth_p": 0.12325682353532207,
+     "depth_s": 0.09840936751328891,
+     "phase_s": 0.530096442077354,
+     "width": 0.07723682490625243,
+     "found_period": 2.3872898522128834,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "pi Men",
+     "period": 0.5819213725631472,
+     "depth_p": 0.19793413901300747,
+     "depth_s": 0.10001082113468962,
+     "phase_s": 0.548802976711748,
+     "width": 0.05521537269561058,
+     "found_period": 1.745759987114185,
+     "eb_candidate": true,
+     "recovered": false
+    },
+    {
+     "star": "pi Men",
+     "period": 0.534057277245338,
+     "depth_p": 0.0857180959252439,
+     "depth_s": 0.013835750390818687,
+     "phase_s": 0.5308859087788778,
+     "width": 0.060432349879024336,
+     "found_period": 0.5340561787152821,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "pi Men",
+     "period": 2.3427552036945722,
+     "depth_p": 0.18305982918282984,
+     "depth_s": 0.12221821857059327,
+     "phase_s": 0.5481692591975198,
+     "width": 0.05785926398176319,
+     "found_period": 2.342759012608011,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "pi Men",
+     "period": 2.541616958395247,
+     "depth_p": 0.15766869487837387,
+     "depth_s": 0.035646995109288704,
+     "phase_s": 0.4808864738120093,
+     "width": 0.04162122201744556,
+     "found_period": 2.5416096137119104,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "pi Men",
+     "period": 3.048360089567805,
+     "depth_p": 0.1500381625150563,
+     "depth_s": 0.1077203038489596,
+     "phase_s": 0.531439956697227,
+     "width": 0.032373211116121785,
+     "found_period": 3.0484002598074693,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "pi Men",
+     "period": 7.055652620902737,
+     "depth_p": 0.030348636229750404,
+     "depth_s": 0.0005521229469530651,
+     "phase_s": 0.547151136642067,
+     "width": 0.05471611475493601,
+     "found_period": 7.055531223596198,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "WASP-126",
+     "period": 3.3776245286052293,
+     "depth_p": 0.13270393748052425,
+     "depth_s": 0.02741222070938834,
+     "phase_s": 0.5071038597096056,
+     "width": 0.030287395416862005,
+     "found_period": 3.3777535203686075,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "WASP-126",
+     "period": 5.186643203495374,
+     "depth_p": 0.022681750195619733,
+     "depth_s": 0.0049666584569974396,
+     "phase_s": 0.5331196305022378,
+     "width": 0.06763414655416182,
+     "found_period": 5.186623452798826,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "WASP-126",
+     "period": 1.1547008936197622,
+     "depth_p": 0.02970509272943441,
+     "depth_s": 0.014328080266465027,
+     "phase_s": 0.5443739263985554,
+     "width": 0.040349559918592355,
+     "found_period": 1.154689678664087,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "WASP-126",
+     "period": 3.769196657138493,
+     "depth_p": 0.08941742117680884,
+     "depth_s": 0.004824414788368372,
+     "phase_s": 0.45621581038658526,
+     "width": 0.06963203716733089,
+     "found_period": 7.5385864660903845,
+     "eb_candidate": true,
+     "recovered": false
+    },
+    {
+     "star": "WASP-126",
+     "period": 1.978871960171641,
+     "depth_p": 0.07811434082274535,
+     "depth_s": 0.04197101798037141,
+     "phase_s": 0.5105225529995726,
+     "width": 0.07205864573720797,
+     "found_period": 1.9787838566974507,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "WASP-126",
+     "period": 1.5547905470365293,
+     "depth_p": 0.12261146693965652,
+     "depth_s": 0.013916092023361661,
+     "phase_s": 0.46030484757460083,
+     "width": 0.06811255401027752,
+     "found_period": 1.5547932151538673,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "WASP-126",
+     "period": 0.9194351477690603,
+     "depth_p": 0.12546996838940314,
+     "depth_s": 0.010104043429041889,
+     "phase_s": 0.5056600521301892,
+     "width": 0.06842044605538117,
+     "found_period": 1.838886594406549,
+     "eb_candidate": true,
+     "recovered": false
+    },
+    {
+     "star": "WASP-126",
+     "period": 2.408500194237466,
+     "depth_p": 0.0337192552600553,
+     "depth_s": 0.026659392931210026,
+     "phase_s": 0.4597595460517652,
+     "width": 0.036578637466407576,
+     "found_period": 2.4084500794757018,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "WASP-126",
+     "period": 1.496293074833623,
+     "depth_p": 0.15455145684020255,
+     "depth_s": 0.0603178887255902,
+     "phase_s": 0.4914357133951886,
+     "width": 0.029859705928430652,
+     "found_period": 1.4962948066800814,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "WASP-126",
+     "period": 4.922242281545387,
+     "depth_p": 0.1607521770995968,
+     "depth_s": 0.038406192603282895,
+     "phase_s": 0.5168549864872187,
+     "width": 0.032440711514182076,
+     "found_period": 4.922268755682342,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "HD 15337",
+     "period": 1.1569021730195759,
+     "depth_p": 0.07176536177958717,
+     "depth_s": 0.039938896897158314,
+     "phase_s": 0.5212686032327831,
+     "width": 0.03126133813936156,
+     "found_period": 1.156903619120553,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "HD 15337",
+     "period": 1.1583359970815381,
+     "depth_p": 0.15943812772716293,
+     "depth_s": 0.008030827751730425,
+     "phase_s": 0.45899934930008796,
+     "width": 0.03455030383707509,
+     "found_period": 2.316628978341901,
+     "eb_candidate": true,
+     "recovered": false
+    },
+    {
+     "star": "HD 15337",
+     "period": 0.8164306430128958,
+     "depth_p": 0.17646520146426753,
+     "depth_s": 0.07057158069871672,
+     "phase_s": 0.5278661745134658,
+     "width": 0.05967029360116992,
+     "found_period": 0.8164332129863463,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "HD 15337",
+     "period": 1.1025030969255243,
+     "depth_p": 0.13971092083222073,
+     "depth_s": 0.10910509234130944,
+     "phase_s": 0.48652611881778063,
+     "width": 0.052913135090031635,
+     "found_period": 1.102498006259008,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "HD 15337",
+     "period": 1.1109759399129457,
+     "depth_p": 0.07548183066009459,
+     "depth_s": 0.029541341617158778,
+     "phase_s": 0.5451829674819672,
+     "width": 0.0434010922546518,
+     "found_period": 1.1109518622840004,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "HD 15337",
+     "period": 6.499117288321122,
+     "depth_p": 0.05503524444850996,
+     "depth_s": 0.03980256529731501,
+     "phase_s": 0.49536626031376235,
+     "width": 0.07405343710427248,
+     "found_period": 6.499409256652015,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "HD 15337",
+     "period": 1.9173081802133816,
+     "depth_p": 0.035139933210468044,
+     "depth_s": 0.0018327542420576409,
+     "phase_s": 0.4713350215235643,
+     "width": 0.0783350719573781,
+     "found_period": 1.9173282567881451,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "HD 15337",
+     "period": 2.970916559758428,
+     "depth_p": 0.11169972861845003,
+     "depth_s": 0.05134792136478472,
+     "phase_s": 0.46553975765711275,
+     "width": 0.04855013929483365,
+     "found_period": 2.970945845368626,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "HD 15337",
+     "period": 0.6158372860136349,
+     "depth_p": 0.04322113678795519,
+     "depth_s": 0.0028486867983745535,
+     "phase_s": 0.5041225862990766,
+     "width": 0.029703193235308234,
+     "found_period": 1.847517118715951,
+     "eb_candidate": true,
+     "recovered": false
+    },
+    {
+     "star": "HD 15337",
+     "period": 1.3717254357792803,
+     "depth_p": 0.05233830345890735,
+     "depth_s": 0.00023408747903289545,
+     "phase_s": 0.4726057260317428,
+     "width": 0.04698214367244454,
+     "found_period": 2.743449670006244,
+     "eb_candidate": true,
+     "recovered": false
+    },
+    {
+     "star": "TOI-270",
+     "period": 1.9748627293464829,
+     "depth_p": 0.04288096794573441,
+     "depth_s": 0.029265913368295964,
+     "phase_s": 0.47124035582611584,
+     "width": 0.07127444068707747,
+     "found_period": 1.9748776483158685,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "TOI-270",
+     "period": 0.8966274646041444,
+     "depth_p": 0.08300773889432238,
+     "depth_s": 0.026288125370776128,
+     "phase_s": 0.465561013246396,
+     "width": 0.040737465556580144,
+     "found_period": 0.8966275479758364,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "TOI-270",
+     "period": 2.8519848562597097,
+     "depth_p": 0.14650631453155188,
+     "depth_s": 0.10357542774093054,
+     "phase_s": 0.4829064444086813,
+     "width": 0.020028280360097288,
+     "found_period": 2.8519441094403093,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "TOI-270",
+     "period": 1.715408713015165,
+     "depth_p": 0.13209376851861646,
+     "depth_s": 0.0592491471254681,
+     "phase_s": 0.5432149217990809,
+     "width": 0.03331598226191093,
+     "found_period": 1.7154144873298067,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "TOI-270",
+     "period": 2.012526246451215,
+     "depth_p": 0.15506210300253065,
+     "depth_s": 0.019496334212260373,
+     "phase_s": 0.463312822486263,
+     "width": 0.05392913238558354,
+     "found_period": 2.012571179964297,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "TOI-270",
+     "period": 0.7355589650670763,
+     "depth_p": 0.06306323561809972,
+     "depth_s": 0.03709677681345354,
+     "phase_s": 0.49247434624156283,
+     "width": 0.050822816849616606,
+     "found_period": 0.7355625119584146,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "TOI-270",
+     "period": 1.6990983916431437,
+     "depth_p": 0.08025777575062745,
+     "depth_s": 0.0420258418194668,
+     "phase_s": 0.5397901063598534,
+     "width": 0.06955575201807415,
+     "found_period": 1.699106615165925,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "TOI-270",
+     "period": 0.8735384089884793,
+     "depth_p": 0.017053839846343954,
+     "depth_s": 0.012581198208393306,
+     "phase_s": 0.4568916303394918,
+     "width": 0.04759279413638193,
+     "found_period": 0.8734927118912482,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "TOI-270",
+     "period": 2.406687985280316,
+     "depth_p": 0.05156435302062994,
+     "depth_s": 0.02739521511403853,
+     "phase_s": 0.5103716283831079,
+     "width": 0.0598343305498039,
+     "found_period": 2.4066671159929607,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "TOI-270",
+     "period": 0.9030813326661591,
+     "depth_p": 0.053849031819978584,
+     "depth_s": 0.02800970389517626,
+     "phase_s": 0.45560250776024536,
+     "width": 0.062465317442156804,
+     "found_period": 0.9030705548401894,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "TOI-236",
+     "period": 2.5643092898569635,
+     "depth_p": 0.11953165103247387,
+     "depth_s": 0.04846000373485561,
+     "phase_s": 0.4891036071723084,
+     "width": 0.04144858015344471,
+     "found_period": 2.5642209551296484,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "TOI-236",
+     "period": 0.5718171341105943,
+     "depth_p": 0.1178330103051547,
+     "depth_s": 0.051283162156627954,
+     "phase_s": 0.4751113577251341,
+     "width": 0.05582340891279475,
+     "found_period": 1.7154526279185789,
+     "eb_candidate": true,
+     "recovered": false
+    },
+    {
+     "star": "TOI-236",
+     "period": 0.7119640586103216,
+     "depth_p": 0.12059057106291231,
+     "depth_s": 0.02673810016681237,
+     "phase_s": 0.49183998665028794,
+     "width": 0.035380701163848643,
+     "found_period": 0.711962901653969,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "TOI-236",
+     "period": 5.461367286127766,
+     "depth_p": 0.1339481938957291,
+     "depth_s": 0.08889987557129427,
+     "phase_s": 0.5477315080238251,
+     "width": 0.04242098138357918,
+     "found_period": 5.461292101447604,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "TOI-236",
+     "period": 0.5707443298284844,
+     "depth_p": 0.07990926402245234,
+     "depth_s": 0.026863444556654355,
+     "phase_s": 0.5048288732652618,
+     "width": 0.026208790876249825,
+     "found_period": 0.570747070670759,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "TOI-236",
+     "period": 2.3548944605323032,
+     "depth_p": 0.16853911643562577,
+     "depth_s": 0.08995669414582351,
+     "phase_s": 0.4713537752950805,
+     "width": 0.0364272102646207,
+     "found_period": 2.354848233984002,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "TOI-236",
+     "period": 2.6190583817631476,
+     "depth_p": 0.12952551991340716,
+     "depth_s": 0.019664485247909785,
+     "phase_s": 0.5246795562047043,
+     "width": 0.07617822931529569,
+     "found_period": 2.6191245677848967,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "TOI-236",
+     "period": 0.798494061698911,
+     "depth_p": 0.09148578081771555,
+     "depth_s": 0.06243049248214487,
+     "phase_s": 0.5447611487293127,
+     "width": 0.04021260459875567,
+     "found_period": 0.7984906428425326,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "TOI-236",
+     "period": 1.794328499684146,
+     "depth_p": 0.034163373408877214,
+     "depth_s": 0.0057409644245875234,
+     "phase_s": 0.47582921851538873,
+     "width": 0.06014812527025647,
+     "found_period": 1.7941864127805704,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "TOI-236",
+     "period": 0.7789835536716517,
+     "depth_p": 0.06354272642699543,
+     "depth_s": 0.03183764381498699,
+     "phase_s": 0.5228916870366018,
+     "width": 0.022483798846804025,
+     "found_period": 0.7789863555602078,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 3.3365502707213035,
+     "depth_p": 0.05966873475720483,
+     "depth_s": 0.016296261426840153,
+     "phase_s": 0.4920630334922185,
+     "width": 0.07278410966972984,
+     "found_period": 3.3365609450560116,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 4.521772403068407,
+     "depth_p": 0.14522534299432982,
+     "depth_s": 0.07809169870851372,
+     "phase_s": 0.5007376239292106,
+     "width": 0.03197131063155827,
+     "found_period": 4.521722869721951,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 0.5390152052902125,
+     "depth_p": 0.12591415490330235,
+     "depth_s": 0.08542346353772524,
+     "phase_s": 0.4943833492630795,
+     "width": 0.047077908620495545,
+     "found_period": 0.5390149435517232,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 0.794241174283183,
+     "depth_p": 0.14557817595169506,
+     "depth_s": 0.030386390671480287,
+     "phase_s": 0.5446651128287511,
+     "width": 0.07729757157242109,
+     "found_period": 2.382726565128514,
+     "eb_candidate": true,
+     "recovered": false
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 6.109212433082434,
+     "depth_p": 0.10066516052004051,
+     "depth_s": 0.07207330694461712,
+     "phase_s": 0.5049939144783299,
+     "width": 0.04615992470802496,
+     "found_period": 6.109111744811316,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 0.8685596480123918,
+     "depth_p": 0.035376607956714365,
+     "depth_s": 0.004154924456064303,
+     "phase_s": 0.49757217248419805,
+     "width": 0.050789315814106714,
+     "found_period": 0.868559167155281,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 0.5356727234279561,
+     "depth_p": 0.08360849452591464,
+     "depth_s": 0.06023933767783608,
+     "phase_s": 0.5046465086615102,
+     "width": 0.050826748977550476,
+     "found_period": 0.5356720947348453,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 1.3382321362640077,
+     "depth_p": 0.15970149805104275,
+     "depth_s": 0.0788893939580457,
+     "phase_s": 0.457395770658116,
+     "width": 0.042305528944116905,
+     "found_period": 1.3382320034611346,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 4.938315346306471,
+     "depth_p": 0.07665361076075179,
+     "depth_s": 0.005153957714980103,
+     "phase_s": 0.4550148719757944,
+     "width": 0.03671341572926849,
+     "found_period": 9.875709275290605,
+     "eb_candidate": true,
+     "recovered": false
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 1.489724127341741,
+     "depth_p": 0.08357574266064773,
+     "depth_s": 0.022131313654860863,
+     "phase_s": 0.5391237671637443,
+     "width": 0.03374659110986543,
+     "found_period": 1.4897249592444006,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "beta Hyi",
+     "period": 3.677425849362492,
+     "depth_p": 0.150682452681016,
+     "depth_s": 0.07077322511250507,
+     "phase_s": 0.542985433422592,
+     "width": 0.04506460898138011,
+     "found_period": 3.6774456100267705,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "beta Hyi",
+     "period": 1.2425795179131027,
+     "depth_p": 0.04676570099336954,
+     "depth_s": 0.02494263621890901,
+     "phase_s": 0.5018136365205357,
+     "width": 0.03454163671443768,
+     "found_period": 1.2425805078266317,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "beta Hyi",
+     "period": 1.403412401908065,
+     "depth_p": 0.19474562865841616,
+     "depth_s": 0.02839614952208199,
+     "phase_s": 0.4558427464446834,
+     "width": 0.05686468192154459,
+     "found_period": 1.4034130199755555,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "beta Hyi",
+     "period": 1.5087753818484162,
+     "depth_p": 0.11919269253371201,
+     "depth_s": 0.017394223227109304,
+     "phase_s": 0.5373317017496775,
+     "width": 0.06440755610191877,
+     "found_period": 1.5087710823224112,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "beta Hyi",
+     "period": 0.8084179589747035,
+     "depth_p": 0.0968067026062222,
+     "depth_s": 0.018447599514634472,
+     "phase_s": 0.4530148076249133,
+     "width": 0.05332770793821441,
+     "found_period": 0.808413241424745,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "beta Hyi",
+     "period": 1.5919875635219547,
+     "depth_p": 0.1657908418182281,
+     "depth_s": 0.035747714166631375,
+     "phase_s": 0.5322788710381983,
+     "width": 0.07198632906631071,
+     "found_period": 1.5919873632815813,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "beta Hyi",
+     "period": 0.7189720495794714,
+     "depth_p": 0.06047353205476173,
+     "depth_s": 0.025446941218055952,
+     "phase_s": 0.5103444177064735,
+     "width": 0.029586395760730556,
+     "found_period": 0.7189728412185193,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "beta Hyi",
+     "period": 1.956108158708714,
+     "depth_p": 0.13398598580419965,
+     "depth_s": 0.057373484933580625,
+     "phase_s": 0.5274208987616167,
+     "width": 0.0205445799657207,
+     "found_period": 1.95609633201917,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "beta Hyi",
+     "period": 1.8282555525665645,
+     "depth_p": 0.13791823523110255,
+     "depth_s": 0.06987302725553615,
+     "phase_s": 0.47777048938107824,
+     "width": 0.04643022583633682,
+     "found_period": 1.828260673304902,
+     "eb_candidate": true,
+     "recovered": true
+    },
+    {
+     "star": "beta Hyi",
+     "period": 0.7907391475288509,
+     "depth_p": 0.11839509209918903,
+     "depth_s": 0.023715114773543364,
+     "phase_s": 0.4772582010572301,
+     "width": 0.03287598391375595,
+     "found_period": 0.7907366218090145,
+     "eb_candidate": true,
+     "recovered": true
+    }
+   ]
+  },
+  "rot_catalogue": {
+   "held_out": {
+    "n": 24,
+    "detected": {
+     "k": 20,
+     "of": 24,
+     "fraction": 0.8333333333333334,
+     "ci95": [
+      0.6414652961213058,
+      0.9332143199927109
+     ]
+    },
+    "match": {
+     "k": 14,
+     "of": 24,
+     "fraction": 0.5833333333333334,
+     "ci95": [
+      0.3883433764938864,
+      0.7553265275346177
+     ]
+    },
+    "alias": {
+     "k": 17,
+     "of": 24,
+     "fraction": 0.7083333333333334,
+     "ci95": [
+      0.508319363412903,
+      0.8508553966583573
+     ]
+    },
+    "coverage": {
+     "k": 14,
+     "of": 14,
+     "fraction": 1.0,
+     "ci95": [
+      0.7846829880728186,
+      1.0
+     ]
+    },
+    "ratio": {
+     "median": 1.05129192055302,
+     "ci95": [
+      1.0247538258398659,
+      1.0746571049292184
+     ],
+     "n": 20
+    }
+   },
+   "tuning": {
+    "n": 6,
+    "detected": {
+     "k": 6,
+     "of": 6,
+     "fraction": 1.0,
+     "ci95": [
+      0.6096569663469354,
+      0.9999999999999999
+     ]
+    },
+    "match": {
+     "k": 4,
+     "of": 6,
+     "fraction": 0.6666666666666666,
+     "ci95": [
+      0.29998832134152864,
+      0.9032306674407831
+     ]
+    },
+    "alias": {
+     "k": 4,
+     "of": 6,
+     "fraction": 0.6666666666666666,
+     "ci95": [
+      0.29998832134152864,
+      0.9032306674407831
+     ]
+    },
+    "coverage": {
+     "k": 4,
+     "of": 4,
+     "fraction": 1.0,
+     "ci95": [
+      0.5100999795960008,
+      1.0
+     ]
+    },
+    "ratio": {
+     "median": 1.0616372983350029,
+     "ci95": [
+      1.043577077867952,
+      1.331208596288028
+     ],
+     "n": 6
+    }
+   },
+   "rows": [
+    {
+     "tic": 258777137,
+     "split": "tuning",
+     "sector": 14,
+     "published": 6.364,
+     "published_err": 0.159,
+     "teff": 5096.0,
+     "detected": true,
+     "period": 6.641666666666666,
+     "period_err": 0.7010496963686332,
+     "candidate_period": 6.641666666666666,
+     "alias": 3.4259759271943073,
+     "rule": "the ACF peaks higher at twice the periodogram period than at it (two spot groups): doubled",
+     "reasons": [
+      "the ACF peaks higher at twice the periodogram period than at it (two spot groups): doubled"
+     ],
+     "beyond_limit": false,
+     "ls_period": 3.4259759271943073,
+     "acf_period": 6.641666666666666,
+     "semi_amplitude": 0.004001617961315207,
+     "file_sha256": "9371281ccc5f5e65cb1420143b3882daacc3b6c1ba57fcbb36164e2d98d16d68"
+    },
+    {
+     "tic": 219229644,
+     "split": "tuning",
+     "sector": 3,
+     "published": 9.706,
+     "published_err": 0.748,
+     "teff": 3927.0,
+     "detected": true,
+     "period": 10.128437301149892,
+     "period_err": 2.533194410295689,
+     "candidate_period": 10.128437301149892,
+     "alias": null,
+     "rule": "an ACF peak lies within 15% of the periodogram period",
+     "reasons": [
+      "an ACF peak lies within 15% of the periodogram period"
+     ],
+     "beyond_limit": false,
+     "ls_period": 10.128437301149892,
+     "acf_period": 6.4375,
+     "semi_amplitude": 0.00123246481962902,
+     "file_sha256": "7512dfe26f8a31ea8ac816e0ec24219db9aa186253f348dc2e4263b5cab4e471"
+    },
+    {
+     "tic": 229951289,
+     "split": "tuning",
+     "sector": 14,
+     "published": 5.288,
+     "published_err": 0.129,
+     "teff": 5729.0,
+     "detected": true,
+     "period": 7.625,
+     "period_err": 1.3542683809471494,
+     "candidate_period": 7.625,
+     "alias": 3.81571412195085,
+     "rule": "the ACF peaks higher at twice the periodogram period than at it (two spot groups): doubled",
+     "reasons": [
+      "the ACF peaks higher at twice the periodogram period than at it (two spot groups): doubled"
+     ],
+     "beyond_limit": false,
+     "ls_period": 3.81571412195085,
+     "acf_period": 7.625,
+     "semi_amplitude": 0.0014422310457291032,
+     "file_sha256": "f7c2a9c8fdbac8d019c16f4c68e79dfdc327ad6b01a52b2086bf401c192f7ae5"
+    },
+    {
+     "tic": 279425357,
+     "split": "tuning",
+     "sector": 9,
+     "published": 3.802,
+     "published_err": 0.168,
+     "teff": 6084.0,
+     "detected": true,
+     "period": 4.0394807054612345,
+     "period_err": 0.3157805766543614,
+     "candidate_period": 4.0394807054612345,
+     "alias": 8.078961410922469,
+     "rule": "an ACF peak lies within 15% of the periodogram period",
+     "reasons": [
+      "an ACF peak lies within 15% of the periodogram period"
+     ],
+     "beyond_limit": false,
+     "ls_period": 4.0394807054612345,
+     "acf_period": 4.029166666666667,
+     "semi_amplitude": 0.0021835480743821467,
+     "file_sha256": "7557ee8a0192b474b662b1efb279ee5046198aba07c53499a8a44fe9fec662ab"
+    },
+    {
+     "tic": 148914726,
+     "split": "tuning",
+     "sector": 14,
+     "published": 7.391,
+     "published_err": 0.594,
+     "teff": 4928.0,
+     "detected": true,
+     "period": 9.020517187424941,
+     "period_err": 1.5873114643131623,
+     "candidate_period": 9.020517187424941,
+     "alias": null,
+     "rule": "an ACF peak lies within 15% of the periodogram period",
+     "reasons": [
+      "an ACF peak lies within 15% of the periodogram period"
+     ],
+     "beyond_limit": false,
+     "ls_period": 9.020517187424941,
+     "acf_period": 5.895833333333333,
+     "semi_amplitude": 0.003381897458201555,
+     "file_sha256": "6f82e25a00a5b26b23f103a94663797dc62372a3b9ff0d6ae6e7e811d977cd04"
+    },
+    {
+     "tic": 44797824,
+     "split": "tuning",
+     "sector": 4,
+     "published": 1.414,
+     "published_err": 0.022,
+     "teff": 5181.0,
+     "detected": true,
+     "period": 1.4999889442042271,
+     "period_err": 0.03756381366027635,
+     "candidate_period": 1.4999889442042271,
+     "alias": 2.9999778884084543,
+     "rule": "an ACF peak lies within 15% of the periodogram period",
+     "reasons": [
+      "an ACF peak lies within 15% of the periodogram period"
+     ],
+     "beyond_limit": false,
+     "ls_period": 1.4999889442042271,
+     "acf_period": 1.4991830065359477,
+     "semi_amplitude": 0.020267529071191503,
+     "file_sha256": "77567eaa784fd4ef095075a40a1d0eafcf5dff031601dcf53a370fbe9bfac0c2"
+    },
+    {
+     "tic": 142276270,
+     "split": "held_out",
+     "sector": 14,
+     "published": 8.189,
+     "published_err": 0.699,
+     "teff": 5729.0,
+     "detected": true,
+     "period": 8.574099175228877,
+     "period_err": 1.4016885218406907,
+     "candidate_period": 8.574099175228877,
+     "alias": null,
+     "rule": "an ACF peak lies within 15% of the periodogram period",
+     "reasons": [
+      "an ACF peak lies within 15% of the periodogram period"
+     ],
+     "beyond_limit": false,
+     "ls_period": 8.574099175228877,
+     "acf_period": 8.604166666666666,
+     "semi_amplitude": 0.012379938006903346,
+     "file_sha256": "f7807177bd7275b427949f3cb91d6fefec5ed1b39d644e6caec94fdba0517e62"
+    },
+    {
+     "tic": 249945230,
+     "split": "held_out",
+     "sector": 18,
+     "published": 5.749,
+     "published_err": 0.87,
+     "teff": 4677.0,
+     "detected": true,
+     "period": 5.922826098761222,
+     "period_err": 0.766628574516643,
+     "candidate_period": 5.922826098761222,
+     "alias": 11.845652197522444,
+     "rule": "an ACF peak lies within 15% of the periodogram period",
+     "reasons": [
+      "an ACF peak lies within 15% of the periodogram period"
+     ],
+     "beyond_limit": false,
+     "ls_period": 5.922826098761222,
+     "acf_period": 5.775,
+     "semi_amplitude": 0.0030576029145276684,
+     "file_sha256": "f23aa7dbb6b0edb1075a68406a262fab8f869bc7b5f506249aa0f15d8ce7dea5"
+    },
+    {
+     "tic": 281979481,
+     "split": "held_out",
+     "sector": 3,
+     "published": 4.385,
+     "published_err": 0.084,
+     "teff": 5181.0,
+     "detected": true,
+     "period": 4.450851735178197,
+     "period_err": 0.42544751949003945,
+     "candidate_period": 4.450851735178197,
+     "alias": 8.901703470356393,
+     "rule": "an ACF peak lies within 15% of the periodogram period",
+     "reasons": [
+      "an ACF peak lies within 15% of the periodogram period"
+     ],
+     "beyond_limit": false,
+     "ls_period": 4.450851735178197,
+     "acf_period": 4.270833333333333,
+     "semi_amplitude": 0.001143504478063051,
+     "file_sha256": "a889f373d3366fd258e0cf3b9916729dacfcadc8327948195fe5ed3edb8882ca"
+    },
+    {
+     "tic": 178284730,
+     "split": "held_out",
+     "sector": 4,
+     "published": 10.229,
+     "published_err": 1.217,
+     "teff": 5260.0,
+     "detected": false,
+     "period": null,
+     "period_err": null,
+     "candidate_period": null,
+     "alias": null,
+     "rule": null,
+     "reasons": [
+      "the periodogram (6.720 d) and the ACF (9.146 d) disagree"
+     ],
+     "beyond_limit": false,
+     "ls_period": 6.719951568920012,
+     "acf_period": 9.145833333333332,
+     "semi_amplitude": 0.003766565318858217,
+     "file_sha256": "f95f54db46591494c9fd8fda920f6fc6e05f6ae649a96e383ef5c8a9ef3e0f7c"
+    },
+    {
+     "tic": 380783252,
+     "split": "held_out",
+     "sector": 13,
+     "published": 9.147,
+     "published_err": 1.609,
+     "teff": 5509.0,
+     "detected": true,
+     "period": 9.932531928203083,
+     "period_err": 1.656431708933854,
+     "candidate_period": 9.932531928203083,
+     "alias": null,
+     "rule": "an ACF peak lies within 15% of the periodogram period",
+     "reasons": [
+      "an ACF peak lies within 15% of the periodogram period"
+     ],
+     "beyond_limit": false,
+     "ls_period": 9.932531928203083,
+     "acf_period": 9.833333333333332,
+     "semi_amplitude": 0.02370614264639259,
+     "file_sha256": "3f782ee268dc0aedf1271cf949d7d773db017c98856b4c4aef195fef6b7482ef"
+    },
+    {
+     "tic": 460205581,
+     "split": "held_out",
+     "sector": 11,
+     "published": 2.957,
+     "published_err": 0.093,
+     "teff": 6513.0,
+     "detected": true,
+     "period": 2.9849057106309407,
+     "period_err": 0.1689985518152873,
+     "candidate_period": 2.9849057106309407,
+     "alias": 5.969811421261881,
+     "rule": "an ACF peak lies within 15% of the periodogram period",
+     "reasons": [
+      "an ACF peak lies within 15% of the periodogram period"
+     ],
+     "beyond_limit": false,
+     "ls_period": 2.9849057106309407,
+     "acf_period": 2.95,
+     "semi_amplitude": 0.007665899225878459,
+     "file_sha256": "d838a57ebaa250b18472e541f906242903c26a8207d43b4113712aa78ce5a8ab"
+    },
+    {
+     "tic": 207141131,
+     "split": "held_out",
+     "sector": 2,
+     "published": 8.489,
+     "published_err": 0.858,
+     "teff": 5058.0,
+     "detected": true,
+     "period": 4.34292538172173,
+     "period_err": 0.32971523605648856,
+     "candidate_period": 4.34292538172173,
+     "alias": 8.68585076344346,
+     "rule": "an ACF peak lies within 15% of the periodogram period",
+     "reasons": [
+      "an ACF peak lies within 15% of the periodogram period"
+     ],
+     "beyond_limit": false,
+     "ls_period": 4.34292538172173,
+     "acf_period": 4.336309523809524,
+     "semi_amplitude": 0.0027556493590782383,
+     "file_sha256": "0d470922045cbda53224ff999d11f60ab653d0cb9553020ae82ca2be30d293f5"
+    },
+    {
+     "tic": 142090065,
+     "split": "held_out",
+     "sector": 20,
+     "published": 2.376,
+     "published_err": 0.123,
+     "teff": 7072.0,
+     "detected": true,
+     "period": 2.5267229118736148,
+     "period_err": 0.12168289365007381,
+     "candidate_period": 2.5267229118736148,
+     "alias": 5.0534458237472295,
+     "rule": "an ACF peak lies within 15% of the periodogram period",
+     "reasons": [
+      "an ACF peak lies within 15% of the periodogram period"
+     ],
+     "beyond_limit": false,
+     "ls_period": 2.5267229118736148,
+     "acf_period": 1.59375,
+     "semi_amplitude": 0.003082527595264506,
+     "file_sha256": "4a53983480d1040d3163e36890955c5dfda6e394328d73e5d9cbc80fe7e77618"
+    },
+    {
+     "tic": 309257814,
+     "split": "held_out",
+     "sector": 10,
+     "published": 3.948,
+     "published_err": 0.39,
+     "teff": 5237.0,
+     "detected": false,
+     "period": null,
+     "period_err": null,
+     "candidate_period": 3.669642857142857,
+     "alias": 1.8109823802589184,
+     "rule": "the ACF peaks higher at twice the periodogram period than at it (two spot groups): doubled",
+     "reasons": [
+      "the two halves of the light curve do not give the same period within 20%"
+     ],
+     "beyond_limit": false,
+     "ls_period": 1.8109823802589184,
+     "acf_period": 3.669642857142857,
+     "semi_amplitude": 0.017455243433896706,
+     "file_sha256": "14341e7ec9334036325aeb683e2857e4ebebef5b97bc0be9c29d127ec005c822"
+    },
+    {
+     "tic": 310009611,
+     "split": "held_out",
+     "sector": 9,
+     "published": 5.091,
+     "published_err": 0.288,
+     "teff": 5776.0,
+     "detected": true,
+     "period": 5.258455224886111,
+     "period_err": 0.5227438244822609,
+     "candidate_period": 5.258455224886111,
+     "alias": 10.516910449772222,
+     "rule": "an ACF peak lies within 15% of the periodogram period",
+     "reasons": [
+      "an ACF peak lies within 15% of the periodogram period"
+     ],
+     "beyond_limit": false,
+     "ls_period": 5.258455224886111,
+     "acf_period": 5.033333333333333,
+     "semi_amplitude": 0.004091780482587237,
+     "file_sha256": "9171bb1ac282bda7ceb2dcf9bfbc5ba94d0ff20c7b5cde6470fdd41a1c95ec83"
+    },
+    {
+     "tic": 33153766,
+     "split": "held_out",
+     "sector": 9,
+     "published": 2.863,
+     "published_err": 0.186,
+     "teff": 6054.0,
+     "detected": true,
+     "period": 3.1589008201040025,
+     "period_err": 0.25120027982080617,
+     "candidate_period": 3.1589008201040025,
+     "alias": 6.317801640208005,
+     "rule": "an ACF peak lies within 15% of the periodogram period",
+     "reasons": [
+      "an ACF peak lies within 15% of the periodogram period"
+     ],
+     "beyond_limit": false,
+     "ls_period": 3.1589008201040025,
+     "acf_period": 2.895833333333333,
+     "semi_amplitude": 0.0005028468351785387,
+     "file_sha256": "be4cbe12d1d47bde38b0ef760cba7a293ae9a2ab777335c96c1cf6d1cf292220"
+    },
+    {
+     "tic": 13499636,
+     "split": "held_out",
+     "sector": 15,
+     "published": 5.595,
+     "published_err": 0.921,
+     "teff": 5518.0,
+     "detected": true,
+     "period": 5.519999531283496,
+     "period_err": 0.511201198947535,
+     "candidate_period": 5.519999531283496,
+     "alias": 11.039999062566991,
+     "rule": "an ACF peak lies within 15% of the periodogram period",
+     "reasons": [
+      "an ACF peak lies within 15% of the periodogram period"
+     ],
+     "beyond_limit": false,
+     "ls_period": 5.519999531283496,
+     "acf_period": 4.875,
+     "semi_amplitude": 0.002232041165766696,
+     "file_sha256": "9b87a79d15ec23eeb081c5e480b79bcea8001f0140af4fe90452ed4e0c1809d3"
+    },
+    {
+     "tic": 77951245,
+     "split": "held_out",
+     "sector": 5,
+     "published": 5.388,
+     "published_err": 0.338,
+     "teff": 3054.0,
+     "detected": true,
+     "period": 5.683734002092265,
+     "period_err": 0.6044057455412652,
+     "candidate_period": 5.683734002092265,
+     "alias": 11.36746800418453,
+     "rule": "an ACF peak lies within 15% of the periodogram period",
+     "reasons": [
+      "an ACF peak lies within 15% of the periodogram period"
+     ],
+     "beyond_limit": false,
+     "ls_period": 5.683734002092265,
+     "acf_period": 5.825,
+     "semi_amplitude": 0.004376501566682567,
+     "file_sha256": "3f2c0c200085bb77e712c40111918239770a6ba72bee3efea045a2388153aa9d"
+    },
+    {
+     "tic": 451645081,
+     "split": "held_out",
+     "sector": 10,
+     "published": 5.569,
+     "published_err": 0.705,
+     "teff": 4499.0,
+     "detected": true,
+     "period": 11.675290628096088,
+     "period_err": 2.6730075477632185,
+     "candidate_period": 11.675290628096088,
+     "alias": 5.837645314048044,
+     "rule": "the ACF peaks higher at twice the periodogram period than at it (two spot groups): doubled",
+     "reasons": [
+      "the ACF peaks higher at twice the periodogram period than at it (two spot groups): doubled"
+     ],
+     "beyond_limit": false,
+     "ls_period": 5.837645314048044,
+     "acf_period": 6.291666666666666,
+     "semi_amplitude": 0.0013546307969253268,
+     "file_sha256": "d2ad3a9867f03bb1dbadef9fd024a0c4c77f35a0d9079b5118c01bbc7f3d9d4e"
+    },
+    {
+     "tic": 67646988,
+     "split": "held_out",
+     "sector": 21,
+     "published": 1.105,
+     "published_err": 0.027,
+     "teff": 3138.0,
+     "detected": true,
+     "period": 2.209478021978022,
+     "period_err": 0.08065080641394831,
+     "candidate_period": 2.209478021978022,
+     "alias": 1.1064254574081782,
+     "rule": "the ACF peaks higher at twice the periodogram period than at it (two spot groups): doubled",
+     "reasons": [
+      "the ACF peaks higher at twice the periodogram period than at it (two spot groups): doubled"
+     ],
+     "beyond_limit": false,
+     "ls_period": 1.1064254574081782,
+     "acf_period": 2.209478021978022,
+     "semi_amplitude": 0.0054432784383013355,
+     "file_sha256": "6233832175a77776c6248481345079049680d8e4d5a6517e35479a078b34f7a2"
+    },
+    {
+     "tic": 238086647,
+     "split": "held_out",
+     "sector": 7,
+     "published": 2.567,
+     "published_err": 0.055,
+     "teff": 5915.0,
+     "detected": true,
+     "period": 2.71534876465828,
+     "period_err": 0.14382024465604243,
+     "candidate_period": 2.71534876465828,
+     "alias": 5.43069752931656,
+     "rule": "an ACF peak lies within 15% of the periodogram period",
+     "reasons": [
+      "an ACF peak lies within 15% of the periodogram period"
+     ],
+     "beyond_limit": false,
+     "ls_period": 2.71534876465828,
+     "acf_period": 2.715972222222222,
+     "semi_amplitude": 0.0007414026118451322,
+     "file_sha256": "4736b97c22c2118e4106193f2f81769da0e9833f581c37d6552aa05c5026ec69"
+    },
+    {
+     "tic": 410214986,
+     "split": "held_out",
+     "sector": 1,
+     "published": 2.798,
+     "published_err": 0.163,
+     "teff": 5414.0,
+     "detected": true,
+     "period": 2.8519224051671697,
+     "period_err": 0.16956261201726938,
+     "candidate_period": 2.8519224051671697,
+     "alias": 5.703844810334339,
+     "rule": "an ACF peak lies within 15% of the periodogram period",
+     "reasons": [
+      "an ACF peak lies within 15% of the periodogram period"
+     ],
+     "beyond_limit": false,
+     "ls_period": 2.8519224051671697,
+     "acf_period": 2.876488095238095,
+     "semi_amplitude": 0.024194917204422017,
+     "file_sha256": "11307cadfffe5af8840f96f279dd035d15e1f667b4f43a2c309ce6868739e655"
+    },
+    {
+     "tic": 309402106,
+     "split": "held_out",
+     "sector": 1,
+     "published": 5.393,
+     "published_err": 0.109,
+     "teff": 7053.0,
+     "detected": true,
+     "period": 5.66202568641761,
+     "period_err": 0.5480185931481852,
+     "candidate_period": 5.66202568641761,
+     "alias": 11.32405137283522,
+     "rule": "an ACF peak lies within 15% of the periodogram period",
+     "reasons": [
+      "an ACF peak lies within 15% of the periodogram period"
+     ],
+     "beyond_limit": false,
+     "ls_period": 5.66202568641761,
+     "acf_period": 5.6375,
+     "semi_amplitude": 0.0024080290047855946,
+     "file_sha256": "c07d2c992c9d02c4c19f1366e1a480f199d41e8a8774632d0aecd1952cab0ae4"
+    },
+    {
+     "tic": 138017750,
+     "split": "held_out",
+     "sector": 18,
+     "published": 2.623,
+     "published_err": 0.181,
+     "teff": 6058.0,
+     "detected": true,
+     "period": 2.662741572867505,
+     "period_err": 0.17643419456126225,
+     "candidate_period": 2.662741572867505,
+     "alias": 5.32548314573501,
+     "rule": "an ACF peak lies within 15% of the periodogram period",
+     "reasons": [
+      "an ACF peak lies within 15% of the periodogram period"
+     ],
+     "beyond_limit": false,
+     "ls_period": 2.662741572867505,
+     "acf_period": 2.509722222222222,
+     "semi_amplitude": 0.002795634239586897,
+     "file_sha256": "6db9e2939d9678fffd9902926734007e88bfca38c09ab5c6ba610cd977308174"
+    },
+    {
+     "tic": 117979694,
+     "split": "held_out",
+     "sector": 5,
+     "published": 8.521,
+     "published_err": 1.513,
+     "teff": 5103.0,
+     "detected": true,
+     "period": 8.970053332470565,
+     "period_err": 1.5204838366363995,
+     "candidate_period": 8.970053332470565,
+     "alias": null,
+     "rule": "an ACF peak lies within 15% of the periodogram period",
+     "reasons": [
+      "an ACF peak lies within 15% of the periodogram period"
+     ],
+     "beyond_limit": false,
+     "ls_period": 8.970053332470565,
+     "acf_period": 9.520833333333332,
+     "semi_amplitude": 0.005672739194909293,
+     "file_sha256": "41f0e47e048ab1780d0ad2d665fda33cd1e7cb3e2296d7ae71e8c3446409d050"
+    },
+    {
+     "tic": 179034327,
+     "split": "held_out",
+     "sector": 4,
+     "published": 7.573,
+     "published_err": 0.637,
+     "teff": 5229.0,
+     "detected": true,
+     "period": 12.443873396357922,
+     "period_err": 2.4289756623504464,
+     "candidate_period": 12.443873396357922,
+     "alias": null,
+     "rule": "an ACF peak lies within 15% of the periodogram period",
+     "reasons": [
+      "an ACF peak lies within 15% of the periodogram period"
+     ],
+     "beyond_limit": false,
+     "ls_period": 12.443873396357922,
+     "acf_period": 10.9375,
+     "semi_amplitude": 0.0042691939061309525,
+     "file_sha256": "3423d33f994ebd997234faa3aad7f385020df0bfc38a10b8adbd9e22ba1ab7f9"
+    },
+    {
+     "tic": 339961200,
+     "split": "held_out",
+     "sector": 6,
+     "published": 9.67,
+     "published_err": 0.277,
+     "teff": 5321.0,
+     "detected": false,
+     "period": null,
+     "period_err": null,
+     "candidate_period": 11.45483507238073,
+     "alias": 5.727417536190365,
+     "rule": "the ACF peaks higher at twice the periodogram period than at it (two spot groups): doubled",
+     "reasons": [
+      "the signal's period is longer than this light curve can measure (about 10.9 d here; periods beyond about 13 d are not measured from one TESS sector)"
+     ],
+     "beyond_limit": true,
+     "ls_period": 5.727417536190365,
+     "acf_period": 6.020833333333333,
+     "semi_amplitude": 0.004264470318538827,
+     "file_sha256": "57a7177f878cee4aab780c4f879abc8027c531dd0c2953ea159399b5cc169771"
+    },
+    {
+     "tic": 220435095,
+     "split": "held_out",
+     "sector": 1,
+     "published": 3.538,
+     "published_err": 0.25,
+     "detected": false,
+     "error": "LookupError: TIC 220435095 has none of the sectors [1] at 120 s"
+    },
+    {
+     "tic": 102195674,
+     "split": "held_out",
+     "sector": 9,
+     "published": 4.908,
+     "published_err": 0.574,
+     "teff": 6159.0,
+     "detected": true,
+     "period": 10.94556467031201,
+     "period_err": 2.488503195272222,
+     "candidate_period": 10.94556467031201,
+     "alias": 5.472782335156005,
+     "rule": "the ACF peaks higher at twice the periodogram period than at it (two spot groups): doubled",
+     "reasons": [
+      "the ACF peaks higher at twice the periodogram period than at it (two spot groups): doubled"
+     ],
+     "beyond_limit": false,
+     "ls_period": 5.472782335156005,
+     "acf_period": 5.65,
+     "semi_amplitude": 0.0066862150447659086,
+     "file_sha256": "c7e6122f61ebfe6679c5ff9b5c28a34632dc6a97fe638b62c6d868e43b1d6956"
+    }
+   ]
+  },
+  "rot_injection": {
+   "recovery": {
+    "k": 58,
+    "of": 60,
+    "fraction": 0.9666666666666667,
+    "ci95": [
+     0.8863601247107462,
+     0.9908108735098498
+    ]
+   },
+   "aliases": 2,
+   "rows": [
+    {
+     "star": "pi Men",
+     "period": 9.97029952841985,
+     "semi_amplitude": 0.010790312004183636,
+     "found": 10.0,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "pi Men",
+     "period": 3.5108020860582285,
+     "semi_amplitude": 0.017487582891802314,
+     "found": 3.519344791669184,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "pi Men",
+     "period": 5.321561065048104,
+     "semi_amplitude": 0.0012459316295384654,
+     "found": 5.440945958846811,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "pi Men",
+     "period": 2.142828768563654,
+     "semi_amplitude": 0.002685382272682676,
+     "found": 2.156615704977433,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "pi Men",
+     "period": 1.496664972120982,
+     "semi_amplitude": 0.007317107335816415,
+     "found": 1.4824224915150568,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "pi Men",
+     "period": 9.427155070536722,
+     "semi_amplitude": 0.0175480093530123,
+     "found": 9.071985320034004,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "pi Men",
+     "period": 6.678538335001629,
+     "semi_amplitude": 0.011003378631304407,
+     "found": 6.679945975891669,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "pi Men",
+     "period": 3.914769647810751,
+     "semi_amplitude": 0.006506438515968073,
+     "found": 3.858800580742469,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "pi Men",
+     "period": 4.83474732341351,
+     "semi_amplitude": 0.004833697739285767,
+     "found": 4.869216356875618,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "pi Men",
+     "period": 2.2560042508365927,
+     "semi_amplitude": 0.0013799806399990313,
+     "found": 2.243437833906029,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "pi Men",
+     "period": 3.6237209961487302,
+     "semi_amplitude": 0.0010229348551496927,
+     "found": 3.6089375243968984,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "pi Men",
+     "period": 7.323571436191059,
+     "semi_amplitude": 0.005326815854430849,
+     "found": 7.291689692723671,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "pi Men",
+     "period": 2.05532636855907,
+     "semi_amplitude": 0.004467276581587623,
+     "found": 2.053341633036867,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "pi Men",
+     "period": 4.257512426829133,
+     "semi_amplitude": 0.010924680735115664,
+     "found": 4.25983002237103,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "pi Men",
+     "period": 2.3528309373307246,
+     "semi_amplitude": 0.006407486906029907,
+     "found": 2.377282275478884,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "pi Men",
+     "period": 1.800861427847104,
+     "semi_amplitude": 0.0025002695335710192,
+     "found": 1.801183429739639,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "pi Men",
+     "period": 1.09421148655669,
+     "semi_amplitude": 0.0010634691670373291,
+     "found": 1.094055846003846,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "pi Men",
+     "period": 1.0875861069986543,
+     "semi_amplitude": 0.004045671415236079,
+     "found": 1.0881226270899669,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "pi Men",
+     "period": 10.261643297999024,
+     "semi_amplitude": 0.0012459870752406592,
+     "found": 10.238551091418415,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "pi Men",
+     "period": 8.022458672834684,
+     "semi_amplitude": 0.005012826095541614,
+     "found": 3.997171712706266,
+     "detected": true,
+     "recovered": false,
+     "alias": true
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 3.0593990189984406,
+     "semi_amplitude": 0.01073561530263423,
+     "found": 3.1185282357806563,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 3.2471362463518054,
+     "semi_amplitude": 0.0019526693948534325,
+     "found": 3.251057305763622,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 1.0849676274977715,
+     "semi_amplitude": 0.007922031124333054,
+     "found": 1.085935191230989,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 1.653620300956955,
+     "semi_amplitude": 0.0021217016261898575,
+     "found": 1.651872385680859,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 7.3435077225709415,
+     "semi_amplitude": 0.002460728477608149,
+     "found": 7.291059751006987,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 3.2713769260972385,
+     "semi_amplitude": 0.001562811752599984,
+     "found": 1.6379091353858386,
+     "detected": true,
+     "recovered": false,
+     "alias": true
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 1.7932279096721329,
+     "semi_amplitude": 0.005970918191134594,
+     "found": 1.775986342434421,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 1.5431680228675348,
+     "semi_amplitude": 0.0030009997685227514,
+     "found": 1.5078312810571908,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 2.0425080620994986,
+     "semi_amplitude": 0.009678170194509056,
+     "found": 2.0518761556556786,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 4.7511819526537495,
+     "semi_amplitude": 0.007566671887693344,
+     "found": 4.82819406677186,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 1.9640000294467495,
+     "semi_amplitude": 0.00798473069047669,
+     "found": 1.9526232151740972,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 7.412807631352871,
+     "semi_amplitude": 0.0026686911433743254,
+     "found": 7.482071341586693,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 1.9798246964044695,
+     "semi_amplitude": 0.0024251993479775255,
+     "found": 1.9789392222259234,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 5.244933878186047,
+     "semi_amplitude": 0.011640590353021233,
+     "found": 5.366669751047384,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 5.176194377872853,
+     "semi_amplitude": 0.011583139388997502,
+     "found": 5.177907830728929,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 8.31121813620198,
+     "semi_amplitude": 0.0010895315545510736,
+     "found": 8.264807494070313,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 2.8239553613003765,
+     "semi_amplitude": 0.0066755506928365994,
+     "found": 2.7869758104063607,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 5.834239856550516,
+     "semi_amplitude": 0.01651276584517168,
+     "found": 5.935093983848136,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 1.4452926516145614,
+     "semi_amplitude": 0.0010012333922369322,
+     "found": 1.438558205989193,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "zeta Tuc",
+     "period": 2.420187935952748,
+     "semi_amplitude": 0.01522725515157897,
+     "found": 2.4253787878787874,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "beta Hyi",
+     "period": 3.22182713716851,
+     "semi_amplitude": 0.001956850946516771,
+     "found": 3.214583333333333,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "beta Hyi",
+     "period": 1.2091696486278278,
+     "semi_amplitude": 0.0012055670898942126,
+     "found": 1.205227700897208,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "beta Hyi",
+     "period": 4.638373996971091,
+     "semi_amplitude": 0.004099872068850971,
+     "found": 4.627686335532959,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "beta Hyi",
+     "period": 2.097263183628869,
+     "semi_amplitude": 0.0012469775338838018,
+     "found": 2.107657455357077,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "beta Hyi",
+     "period": 1.9736332113125508,
+     "semi_amplitude": 0.004959996508105801,
+     "found": 1.9846167946708186,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "beta Hyi",
+     "period": 2.72356473618782,
+     "semi_amplitude": 0.0014912518832174513,
+     "found": 2.7396350088160233,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "beta Hyi",
+     "period": 4.186315669978233,
+     "semi_amplitude": 0.017429648057968785,
+     "found": 4.176834711407528,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "beta Hyi",
+     "period": 1.327939362678395,
+     "semi_amplitude": 0.0033625589402762933,
+     "found": 1.3263134357503388,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "beta Hyi",
+     "period": 4.503780438615008,
+     "semi_amplitude": 0.012287230132749495,
+     "found": 4.515214789218714,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "beta Hyi",
+     "period": 2.429290000511461,
+     "semi_amplitude": 0.008902081789471352,
+     "found": 2.4328882218911345,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "beta Hyi",
+     "period": 2.88173318174292,
+     "semi_amplitude": 0.01633226773510708,
+     "found": 2.896237492533766,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "beta Hyi",
+     "period": 9.163676653333903,
+     "semi_amplitude": 0.005879948523706576,
+     "found": 9.145833333333332,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "beta Hyi",
+     "period": 1.7845547182120187,
+     "semi_amplitude": 0.0012606997198618213,
+     "found": 1.789582986115563,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "beta Hyi",
+     "period": 1.764239521223291,
+     "semi_amplitude": 0.0010178359544383386,
+     "found": 1.7725087778900372,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "beta Hyi",
+     "period": 3.6241557494996637,
+     "semi_amplitude": 0.004218441045433231,
+     "found": 3.656224348285482,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "beta Hyi",
+     "period": 3.5528443695132848,
+     "semi_amplitude": 0.0012259091407831523,
+     "found": 3.562736405878958,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "beta Hyi",
+     "period": 6.828955695779526,
+     "semi_amplitude": 0.006627839552268839,
+     "found": 6.760876669390697,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "beta Hyi",
+     "period": 5.640361346891077,
+     "semi_amplitude": 0.01161493521444005,
+     "found": 5.72006060849481,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "beta Hyi",
+     "period": 11.416606872067085,
+     "semi_amplitude": 0.001178898804441124,
+     "found": 11.506704391403785,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    },
+    {
+     "star": "beta Hyi",
+     "period": 3.276585812144555,
+     "semi_amplitude": 0.0012529261885680099,
+     "found": 3.3486762044793457,
+     "detected": true,
+     "recovered": true,
+     "alias": false
+    }
+   ],
+   "long_period": {
+    "n": 15,
+    "reported_beyond_limit": 11,
+    "reported_as_a_period": 3,
+    "rows": [
+     {
+      "star": "pi Men",
+      "period": 23.838349880275757,
+      "semi_amplitude": 0.0037782871502382667,
+      "detected": true,
+      "found": 11.749406167270719,
+      "beyond_limit": false
+     },
+     {
+      "star": "pi Men",
+      "period": 21.070168986664584,
+      "semi_amplitude": 0.007091989653831635,
+      "detected": false,
+      "found": null,
+      "beyond_limit": true
+     },
+     {
+      "star": "pi Men",
+      "period": 14.727184051566958,
+      "semi_amplitude": 0.0015731247555583888,
+      "detected": false,
+      "found": null,
+      "beyond_limit": true
+     },
+     {
+      "star": "pi Men",
+      "period": 23.780387299699264,
+      "semi_amplitude": 0.003540876253533623,
+      "detected": false,
+      "found": null,
+      "beyond_limit": true
+     },
+     {
+      "star": "pi Men",
+      "period": 17.954113890396073,
+      "semi_amplitude": 0.014448506648955034,
+      "detected": false,
+      "found": null,
+      "beyond_limit": true
+     },
+     {
+      "star": "zeta Tuc",
+      "period": 15.901661383327138,
+      "semi_amplitude": 0.016472936197866987,
+      "detected": false,
+      "found": null,
+      "beyond_limit": true
+     },
+     {
+      "star": "zeta Tuc",
+      "period": 28.585137439385438,
+      "semi_amplitude": 0.0019600913340782435,
+      "detected": false,
+      "found": null,
+      "beyond_limit": false
+     },
+     {
+      "star": "zeta Tuc",
+      "period": 13.611202698688306,
+      "semi_amplitude": 0.0025905062641074406,
+      "detected": false,
+      "found": null,
+      "beyond_limit": true
+     },
+     {
+      "star": "zeta Tuc",
+      "period": 14.626320982203346,
+      "semi_amplitude": 0.009729627462319024,
+      "detected": false,
+      "found": null,
+      "beyond_limit": true
+     },
+     {
+      "star": "zeta Tuc",
+      "period": 15.094670825610983,
+      "semi_amplitude": 0.0038830136579656492,
+      "detected": false,
+      "found": null,
+      "beyond_limit": true
+     },
+     {
+      "star": "beta Hyi",
+      "period": 18.787032623323935,
+      "semi_amplitude": 0.0038117625040804694,
+      "detected": true,
+      "found": 9.377130621310137,
+      "beyond_limit": false
+     },
+     {
+      "star": "beta Hyi",
+      "period": 23.130152143652964,
+      "semi_amplitude": 0.01686344756323438,
+      "detected": true,
+      "found": 11.05041676525827,
+      "beyond_limit": false
+     },
+     {
+      "star": "beta Hyi",
+      "period": 13.136821005603707,
+      "semi_amplitude": 0.015756870694748293,
+      "detected": false,
+      "found": null,
+      "beyond_limit": true
+     },
+     {
+      "star": "beta Hyi",
+      "period": 27.86681992575275,
+      "semi_amplitude": 0.016675007244079564,
+      "detected": false,
+      "found": null,
+      "beyond_limit": true
+     },
+     {
+      "star": "beta Hyi",
+      "period": 13.558587887560648,
+      "semi_amplitude": 0.0010158575092397131,
+      "detected": false,
+      "found": null,
+      "beyond_limit": true
+     }
+    ]
+   }
+  },
+  "rot_null": {
+   "false_detections": 0,
+   "n": 3,
+   "rows": [
+    {
+     "star": "pi Men",
+     "tic": 261136679,
+     "sector": 1,
+     "detected": false,
+     "period": null,
+     "candidate_period": 5.046805249062741,
+     "semi_amplitude": 7.611466412349444e-05,
+     "reasons": [
+      "semi-amplitude 0.08 ppt is below 0.5 ppt",
+      "semi-amplitude is below three times the 30-minute noise (0.03 ppt)",
+      "the periodogram peak's normalised power 0.06 is below 0.1"
+     ]
+    },
+    {
+     "star": "zeta Tuc",
+     "tic": 425935521,
+     "sector": 1,
+     "detected": false,
+     "period": null,
+     "candidate_period": 7.91279669319867,
+     "semi_amplitude": 4.281399151406795e-05,
+     "reasons": [
+      "semi-amplitude 0.04 ppt is below 0.5 ppt",
+      "semi-amplitude is below three times the 30-minute noise (0.02 ppt)",
+      "the periodogram peak's normalised power 0.09 is below 0.1"
+     ]
+    },
+    {
+     "star": "beta Hyi",
+     "tic": 267211065,
+     "sector": 1,
+     "detected": false,
+     "period": null,
+     "candidate_period": 12.266453706066986,
+     "semi_amplitude": 0.000405259242046041,
+     "reasons": [
+      "semi-amplitude 0.41 ppt is below 0.5 ppt"
+     ]
+    }
+   ]
+  },
+  "tr_flares": {
+   "medina_flares": 134,
+   "matched_candidates": 98,
+   "flare_like": {
+    "k": 68,
+    "of": 98,
+    "fraction": 0.6938775510204082,
+    "ci95": [
+     0.5967537243906448,
+     0.7763747417764225
+    ]
+   },
+   "matched_classes": {
+    "asteroid-crossing-like": 1,
+    "flare-like": 68,
+    "momentum-dump-like": 3,
+    "unclassified": 26
+   },
+   "sectors": [
+    {
+     "sector": 11,
+     "summary": {
+      "n_candidates": 50,
+      "n_likely_false_alarms": 1,
+      "by_class": {
+       "flare-like": 33,
+       "momentum-dump-like": 1,
+       "unclassified": 16
+      }
+     },
+     "file_sha256": "7d519340a78257c998ec22c2e155a1959f114f58a586412123f15e8e1bae27b8"
+    },
+    {
+     "sector": 12,
+     "summary": {
+      "n_candidates": 58,
+      "n_likely_false_alarms": 3,
+      "by_class": {
+       "asteroid-crossing-like": 1,
+       "flare-like": 43,
+       "momentum-dump-like": 2,
+       "unclassified": 12
+      }
+     },
+     "file_sha256": "fe74690ad75729ed761b1e887d2f2fb7f3c51a4c65f0c1222aafeb4d48393cd7"
+    }
+   ],
+   "matched_count": 98,
+   "aumic_tuning": {
+    "n_candidates": 65,
+    "n_likely_false_alarms": 8,
+    "by_class": {
+     "asteroid-crossing-like": 3,
+     "flare-like": 40,
+     "momentum-dump-like": 1,
+     "periodic-variability-like": 4,
+     "unclassified": 17
+    }
+   }
+  },
+  "tr_null": {
+   "days": 83.63826241808624,
+   "not_false_alarm": 46,
+   "fp_per_day": 0.5499875137297543,
+   "rows": [
+    {
+     "star": "pi Men",
+     "tic": 261136679,
+     "sector": 1,
+     "days": 27.880105402155323,
+     "not_false_alarm": 2,
+     "events": [
+      {
+       "t_peak": 1333.4227020268142,
+       "peak": 9.348835369491615e-05,
+       "class_hint": "unclassified",
+       "scale": "slow"
+      },
+      {
+       "t_peak": 1348.9156754091066,
+       "peak": 9.312552666655591e-05,
+       "class_hint": "unclassified",
+       "scale": "slow"
+      }
+     ]
+    },
+    {
+     "star": "zeta Tuc",
+     "tic": 425935521,
+     "sector": 1,
+     "days": 27.879306311679102,
+     "not_false_alarm": 3,
+     "events": [
+      {
+       "t_peak": 1342.9245172106077,
+       "peak": 5.634723338488475e-05,
+       "class_hint": "periodic-variability-like",
+       "scale": "slow"
+      },
+      {
+       "t_peak": 1347.9974324229227,
+       "peak": 0.00037791299365414523,
+       "class_hint": "flare-like",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1348.416875790521,
+       "peak": 0.0003276848455393442,
+       "class_hint": "unclassified",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1348.7390970823747,
+       "peak": 0.0003399433111318171,
+       "class_hint": "flare-like",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1349.1390958023198,
+       "peak": 0.00019217436649303357,
+       "class_hint": "asteroid-crossing-like",
+       "scale": "medium"
+      }
+     ]
+    },
+    {
+     "star": "beta Hyi",
+     "tic": 267211065,
+     "sector": 1,
+     "days": 27.878850704251818,
+     "not_false_alarm": 41,
+     "events": [
+      {
+       "t_peak": 1332.1749581050835,
+       "peak": 0.0004606502907941095,
+       "class_hint": "unclassified",
+       "scale": "slow"
+      },
+      {
+       "t_peak": 1334.3134405658682,
+       "peak": 0.0025570475874231997,
+       "class_hint": "unclassified",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1339.6578295149302,
+       "peak": 0.0044837898408409925,
+       "class_hint": "unclassified",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1341.4249406405447,
+       "peak": 0.0005824598243802636,
+       "class_hint": "unclassified",
+       "scale": "slow"
+      },
+      {
+       "t_peak": 1347.3618865460699,
+       "peak": 0.002620618980665997,
+       "class_hint": "unclassified",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1347.434107595955,
+       "peak": 0.0022417149667121857,
+       "class_hint": "unclassified",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1347.5910494804757,
+       "peak": 0.0024023542294083133,
+       "class_hint": "flare-like",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1347.6077158743465,
+       "peak": 0.004471425502095247,
+       "class_hint": "unclassified",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1347.6827146443193,
+       "peak": 0.0021806238441960386,
+       "class_hint": "flare-like",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1347.6910478406721,
+       "peak": 0.0022961200468724074,
+       "class_hint": "flare-like",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1347.7716020703797,
+       "peak": 0.00186079532485821,
+       "class_hint": "unclassified",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1347.8396565022977,
+       "peak": 0.0027130540676509676,
+       "class_hint": "unclassified",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1347.8493785637006,
+       "peak": 0.0020386445259748358,
+       "class_hint": "unclassified",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1347.899377735766,
+       "peak": 0.0028007360996203405,
+       "class_hint": "unclassified",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1347.9368771135355,
+       "peak": 0.004959413940427628,
+       "class_hint": "unclassified",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1347.9840985510773,
+       "peak": 0.0027079678739169106,
+       "class_hint": "flare-like",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1348.1452069730058,
+       "peak": 0.001731266264668574,
+       "class_hint": "unclassified",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1348.202150462638,
+       "peak": 0.002073608758936115,
+       "class_hint": "flare-like",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1348.3299260896083,
+       "peak": 0.003153317394853207,
+       "class_hint": "unclassified",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1348.3465924748639,
+       "peak": 0.0027166423408643784,
+       "class_hint": "flare-like",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1348.3715920522823,
+       "peak": 0.003570135059368085,
+       "class_hint": "unclassified",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1348.400758225549,
+       "peak": 0.00229907521601287,
+       "class_hint": "unclassified",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1348.4049248216302,
+       "peak": 0.003079405113767364,
+       "class_hint": "flare-like",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1348.4271466673185,
+       "peak": 0.004202494005908628,
+       "class_hint": "flare-like",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1348.4979787983696,
+       "peak": 0.0022240897303729915,
+       "class_hint": "unclassified",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1348.5021453942181,
+       "peak": 0.002683029021002592,
+       "class_hint": "unclassified",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1348.5077008551166,
+       "peak": 0.0036321737752563754,
+       "class_hint": "unclassified",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1348.5771441169268,
+       "peak": 0.003971519326928507,
+       "class_hint": "unclassified",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1348.6229766675328,
+       "peak": 0.002538086905821968,
+       "class_hint": "flare-like",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1348.6340875888638,
+       "peak": 0.003626114088379745,
+       "class_hint": "flare-like",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1348.8090845851561,
+       "peak": 0.004018893860140406,
+       "class_hint": "unclassified",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1348.8313064243257,
+       "peak": 0.002933579754157254,
+       "class_hint": "flare-like",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1348.841028478977,
+       "peak": 0.0047868925136698845,
+       "class_hint": "unclassified",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1348.9243603719617,
+       "peak": 0.00528117130788186,
+       "class_hint": "unclassified",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1348.9299158314625,
+       "peak": 0.0021392514777694993,
+       "class_hint": "unclassified",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1348.9340824259139,
+       "peak": 0.0037360740800446157,
+       "class_hint": "flare-like",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1348.970192911159,
+       "peak": 0.0036265093700741102,
+       "class_hint": "flare-like",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1349.0382472841716,
+       "peak": 0.0027273763895773184,
+       "class_hint": "unclassified",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1349.120190300232,
+       "peak": 0.002001391812810321,
+       "class_hint": "flare-like",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1349.2104664984436,
+       "peak": 0.002130950434307146,
+       "class_hint": "unclassified",
+       "scale": "fast"
+      },
+      {
+       "t_peak": 1349.2187996857165,
+       "peak": 0.002470645769591653,
+       "class_hint": "flare-like",
+       "scale": "fast"
+      }
+     ]
+    }
+   ]
+  },
+  "tr_screen": {
+   "screened": {
+    "k": 45,
+    "of": 60,
+    "fraction": 0.75,
+    "ci95": [
+     0.6276768905451521,
+     0.8422361442158816
+    ]
+   },
+   "found": {
+    "k": 54,
+    "of": 60,
+    "fraction": 0.9,
+    "ci95": [
+     0.7985030550748896,
+     0.9533578005427642
+    ]
+   },
+   "by_kind": {
+    "momentum_dump": {
+     "k": 25,
+     "of": 30,
+     "fraction": 0.8333333333333334,
+     "ci95": [
+      0.6643529481431982,
+      0.9266356575964831
+     ]
+    },
+    "asteroid": {
+     "k": 20,
+     "of": 30,
+     "fraction": 0.6666666666666666,
+     "ci95": [
+      0.48779725813830266,
+      0.807697044731538
+     ]
+    }
+   },
+   "rows": [
+    {
+     "star": "pi Men",
+     "kind": "momentum_dump",
+     "t": 1327.8455404932006,
+     "amplitude": 0.005393277659274676,
+     "found": true,
+     "classes": [
+      "momentum-dump-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "pi Men",
+     "kind": "asteroid",
+     "t": 1334.1982924895635,
+     "amplitude": 0.0030297636959174135,
+     "found": true,
+     "classes": [
+      "unclassified",
+      "asteroid-crossing-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "pi Men",
+     "kind": "momentum_dump",
+     "t": 1327.8427627479705,
+     "amplitude": 0.009009643755938082,
+     "found": true,
+     "classes": [
+      "momentum-dump-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "pi Men",
+     "kind": "asteroid",
+     "t": 1339.6648129275402,
+     "amplitude": 0.0017770993675053127,
+     "found": true,
+     "classes": [
+      "periodic-variability-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "pi Men",
+     "kind": "momentum_dump",
+     "t": 1347.188295768477,
+     "amplitude": 0.0016898762065083743,
+     "found": true,
+     "classes": [
+      "momentum-dump-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "pi Men",
+     "kind": "asteroid",
+     "t": 1340.8280215443892,
+     "amplitude": 0.005545657917747262,
+     "found": true,
+     "classes": [
+      "asteroid-crossing-like",
+      "asteroid-crossing-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "pi Men",
+     "kind": "momentum_dump",
+     "t": 1347.188295768477,
+     "amplitude": 0.0023064720239954596,
+     "found": true,
+     "classes": [
+      "momentum-dump-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "pi Men",
+     "kind": "asteroid",
+     "t": 1330.345212430678,
+     "amplitude": 0.0015594234916574616,
+     "found": true,
+     "classes": [
+      "momentum-dump-like",
+      "unclassified"
+     ],
+     "screened": true
+    },
+    {
+     "star": "pi Men",
+     "kind": "momentum_dump",
+     "t": 1349.6882500022396,
+     "amplitude": 0.0013901623015111888,
+     "found": true,
+     "classes": [
+      "momentum-dump-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "pi Men",
+     "kind": "asteroid",
+     "t": 1345.6324225238636,
+     "amplitude": 0.008150901597509719,
+     "found": true,
+     "classes": [
+      "asteroid-crossing-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "pi Men",
+     "kind": "momentum_dump",
+     "t": 1337.8412357770944,
+     "amplitude": 0.0029490475036764072,
+     "found": true,
+     "classes": [
+      "momentum-dump-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "pi Men",
+     "kind": "asteroid",
+     "t": 1326.6159884589013,
+     "amplitude": 0.007903680229427655,
+     "found": true,
+     "classes": [
+      "asteroid-crossing-like",
+      "asteroid-crossing-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "pi Men",
+     "kind": "momentum_dump",
+     "t": 1337.8467912332135,
+     "amplitude": 0.0019022770863809772,
+     "found": true,
+     "classes": [
+      "momentum-dump-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "pi Men",
+     "kind": "asteroid",
+     "t": 1335.8494656416776,
+     "amplitude": 0.00931458528013565,
+     "found": true,
+     "classes": [
+      "asteroid-crossing-like",
+      "asteroid-crossing-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "pi Men",
+     "kind": "momentum_dump",
+     "t": 1349.682694552343,
+     "amplitude": 0.005016149497174819,
+     "found": true,
+     "classes": [
+      "momentum-dump-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "pi Men",
+     "kind": "asteroid",
+     "t": 1340.8076873049858,
+     "amplitude": 0.006913406257386378,
+     "found": true,
+     "classes": [
+      "unclassified",
+      "asteroid-crossing-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "pi Men",
+     "kind": "momentum_dump",
+     "t": 1344.6883387688827,
+     "amplitude": 0.007709386661985036,
+     "found": true,
+     "classes": [
+      "momentum-dump-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "pi Men",
+     "kind": "asteroid",
+     "t": 1332.1878764256821,
+     "amplitude": 0.00617737398007957,
+     "found": true,
+     "classes": [
+      "unclassified",
+      "asteroid-crossing-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "pi Men",
+     "kind": "momentum_dump",
+     "t": 1344.6813944408977,
+     "amplitude": 0.0020918653966916175,
+     "found": true,
+     "classes": [
+      "momentum-dump-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "pi Men",
+     "kind": "asteroid",
+     "t": 1327.7232289625745,
+     "amplitude": 0.0050113411116400755,
+     "found": true,
+     "classes": [
+      "asteroid-crossing-like",
+      "unclassified"
+     ],
+     "screened": true
+    },
+    {
+     "star": "zeta Tuc",
+     "kind": "momentum_dump",
+     "t": 1342.1835435171195,
+     "amplitude": 0.002453190753500278,
+     "found": true,
+     "classes": [
+      "momentum-dump-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "zeta Tuc",
+     "kind": "asteroid",
+     "t": 1332.492961816107,
+     "amplitude": 0.004655368971408505,
+     "found": true,
+     "classes": [
+      "flare-like",
+      "asteroid-crossing-like",
+      "unclassified"
+     ],
+     "screened": true
+    },
+    {
+     "star": "zeta Tuc",
+     "kind": "momentum_dump",
+     "t": 1352.1904700794519,
+     "amplitude": 0.004078675490709358,
+     "found": true,
+     "classes": [
+      "momentum-dump-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "zeta Tuc",
+     "kind": "asteroid",
+     "t": 1349.8933955819587,
+     "amplitude": 0.0022220127345802705,
+     "found": true,
+     "classes": [
+      "asteroid-crossing-like",
+      "asteroid-crossing-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "zeta Tuc",
+     "kind": "momentum_dump",
+     "t": 1352.18352567923,
+     "amplitude": 0.007169703507437081,
+     "found": true,
+     "classes": [
+      "momentum-dump-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "zeta Tuc",
+     "kind": "asteroid",
+     "t": 1330.220358894174,
+     "amplitude": 0.0033273505044292806,
+     "found": true,
+     "classes": [
+      "asteroid-crossing-like",
+      "asteroid-crossing-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "zeta Tuc",
+     "kind": "momentum_dump",
+     "t": 1349.684927162163,
+     "amplitude": 0.009978185872350886,
+     "found": true,
+     "classes": [
+      "momentum-dump-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "zeta Tuc",
+     "kind": "asteroid",
+     "t": 1350.3369964157994,
+     "amplitude": 0.006497481654964319,
+     "found": true,
+     "classes": [
+      "asteroid-crossing-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "zeta Tuc",
+     "kind": "momentum_dump",
+     "t": 1342.187710193061,
+     "amplitude": 0.0016331586899333561,
+     "found": true,
+     "classes": [
+      "momentum-dump-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "zeta Tuc",
+     "kind": "asteroid",
+     "t": 1333.3833387839575,
+     "amplitude": 0.004461482861535725,
+     "found": true,
+     "classes": [
+      "unclassified",
+      "unclassified",
+      "asteroid-crossing-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "zeta Tuc",
+     "kind": "momentum_dump",
+     "t": 1332.8487607109657,
+     "amplitude": 0.004030622287572935,
+     "found": true,
+     "classes": [
+      "momentum-dump-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "zeta Tuc",
+     "kind": "asteroid",
+     "t": 1342.586965730118,
+     "amplitude": 0.0033913044447889643,
+     "found": true,
+     "classes": [
+      "asteroid-crossing-like",
+      "asteroid-crossing-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "zeta Tuc",
+     "kind": "momentum_dump",
+     "t": 1332.847371806801,
+     "amplitude": 0.006572291238015269,
+     "found": true,
+     "classes": [
+      "momentum-dump-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "zeta Tuc",
+     "kind": "asteroid",
+     "t": 1346.7944103186708,
+     "amplitude": 0.001444209546227585,
+     "found": true,
+     "classes": [
+      "unclassified"
+     ],
+     "screened": false
+    },
+    {
+     "star": "zeta Tuc",
+     "kind": "momentum_dump",
+     "t": 1344.68910239721,
+     "amplitude": 0.0015672913591756505,
+     "found": true,
+     "classes": [
+      "momentum-dump-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "zeta Tuc",
+     "kind": "asteroid",
+     "t": 1339.2772248173248,
+     "amplitude": 0.005754436715007234,
+     "found": true,
+     "classes": [
+      "unclassified",
+      "periodic-variability-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "zeta Tuc",
+     "kind": "momentum_dump",
+     "t": 1352.18352567923,
+     "amplitude": 0.008047644692312901,
+     "found": true,
+     "classes": [
+      "momentum-dump-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "zeta Tuc",
+     "kind": "asteroid",
+     "t": 1347.5633179008144,
+     "amplitude": 0.0028860223245334195,
+     "found": true,
+     "classes": [
+      "unclassified",
+      "flare-like",
+      "unclassified",
+      "asteroid-crossing-like",
+      "unclassified"
+     ],
+     "screened": true
+    },
+    {
+     "star": "zeta Tuc",
+     "kind": "momentum_dump",
+     "t": 1335.340452199623,
+     "amplitude": 0.001310030566693113,
+     "found": true,
+     "classes": [
+      "momentum-dump-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "zeta Tuc",
+     "kind": "asteroid",
+     "t": 1347.5390630292886,
+     "amplitude": 0.0025737824959992514,
+     "found": true,
+     "classes": [
+      "asteroid-crossing-like",
+      "unclassified"
+     ],
+     "screened": true
+    },
+    {
+     "star": "beta Hyi",
+     "kind": "momentum_dump",
+     "t": 1337.8411865147636,
+     "amplitude": 0.009863987403736408,
+     "found": true,
+     "classes": [
+      "momentum-dump-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "beta Hyi",
+     "kind": "asteroid",
+     "t": 1335.3625655062838,
+     "amplitude": 0.0055031836091759935,
+     "found": true,
+     "classes": [
+      "unclassified"
+     ],
+     "screened": false
+    },
+    {
+     "star": "beta Hyi",
+     "kind": "momentum_dump",
+     "t": 1347.188278238808,
+     "amplitude": 0.001346398486596873,
+     "found": false,
+     "classes": [],
+     "screened": false
+    },
+    {
+     "star": "beta Hyi",
+     "kind": "asteroid",
+     "t": 1340.6282212362937,
+     "amplitude": 0.004820662416859394,
+     "found": true,
+     "classes": [
+      "asteroid-crossing-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "beta Hyi",
+     "kind": "momentum_dump",
+     "t": 1347.1910559719358,
+     "amplitude": 0.0010468478993297386,
+     "found": false,
+     "classes": [],
+     "screened": false
+    },
+    {
+     "star": "beta Hyi",
+     "kind": "asteroid",
+     "t": 1333.5796431534463,
+     "amplitude": 0.005887845334471903,
+     "found": true,
+     "classes": [
+      "unclassified",
+      "unclassified"
+     ],
+     "screened": false
+    },
+    {
+     "star": "beta Hyi",
+     "kind": "momentum_dump",
+     "t": 1342.1841846277453,
+     "amplitude": 0.0012093859732590735,
+     "found": true,
+     "classes": [
+      "momentum-dump-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "beta Hyi",
+     "kind": "asteroid",
+     "t": 1338.1765952625553,
+     "amplitude": 0.0017311206195577994,
+     "found": true,
+     "classes": [
+      "unclassified"
+     ],
+     "screened": false
+    },
+    {
+     "star": "beta Hyi",
+     "kind": "momentum_dump",
+     "t": 1344.691094220791,
+     "amplitude": 0.0011784244895115302,
+     "found": false,
+     "classes": [],
+     "screened": false
+    },
+    {
+     "star": "beta Hyi",
+     "kind": "asteroid",
+     "t": 1344.890036283253,
+     "amplitude": 0.001641798796797034,
+     "found": true,
+     "classes": [
+      "unclassified"
+     ],
+     "screened": false
+    },
+    {
+     "star": "beta Hyi",
+     "kind": "momentum_dump",
+     "t": 1349.6910135389012,
+     "amplitude": 0.001541098931235743,
+     "found": false,
+     "classes": [],
+     "screened": false
+    },
+    {
+     "star": "beta Hyi",
+     "kind": "asteroid",
+     "t": 1335.1655127917077,
+     "amplitude": 0.0027646121453529927,
+     "found": true,
+     "classes": [
+      "unclassified"
+     ],
+     "screened": false
+    },
+    {
+     "star": "beta Hyi",
+     "kind": "momentum_dump",
+     "t": 1327.8412518277205,
+     "amplitude": 0.0018439009417029408,
+     "found": true,
+     "classes": [
+      "momentum-dump-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "beta Hyi",
+     "kind": "asteroid",
+     "t": 1333.951934152513,
+     "amplitude": 0.0017179735718594116,
+     "found": true,
+     "classes": [
+      "unclassified",
+      "unclassified"
+     ],
+     "screened": false
+    },
+    {
+     "star": "beta Hyi",
+     "kind": "momentum_dump",
+     "t": 1349.6896246747826,
+     "amplitude": 0.005033041446901689,
+     "found": true,
+     "classes": [
+      "momentum-dump-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "beta Hyi",
+     "kind": "asteroid",
+     "t": 1343.3161592679899,
+     "amplitude": 0.0011336336775292838,
+     "found": false,
+     "classes": [],
+     "screened": false
+    },
+    {
+     "star": "beta Hyi",
+     "kind": "momentum_dump",
+     "t": 1337.8411865147636,
+     "amplitude": 0.001244330662275114,
+     "found": true,
+     "classes": [
+      "momentum-dump-like"
+     ],
+     "screened": true
+    },
+    {
+     "star": "beta Hyi",
+     "kind": "asteroid",
+     "t": 1344.2715206826456,
+     "amplitude": 0.005611368179517826,
+     "found": true,
+     "classes": [
+      "unclassified"
+     ],
+     "screened": false
+    },
+    {
+     "star": "beta Hyi",
+     "kind": "momentum_dump",
+     "t": 1344.6855387459227,
+     "amplitude": 0.0011644177813336094,
+     "found": false,
+     "classes": [],
+     "screened": false
+    },
+    {
+     "star": "beta Hyi",
+     "kind": "asteroid",
+     "t": 1335.6725181721781,
+     "amplitude": 0.00232592828831783,
+     "found": true,
+     "classes": [
+      "unclassified"
+     ],
+     "screened": false
+    }
+   ]
+  },
+  "tr_supernovae": {
+   "rows": [
+    {
+     "name": "SN2018hkx",
+     "other": "ASASSN-18yc",
+     "split": "tuning",
+     "published": {
+      "tmag_peak": 16.19,
+      "t_peak_btjd": 1418.35,
+      "t_first_light_btjd": 1399.98,
+      "t_rise_d": 17.92
+     },
+     "sector_rule": "contains the event time",
+     "sector": 4,
+     "cutout_sha256": "19c9ecf6b703af58d9cea1f0130d09d6dd12e88ba693ca7ef38fc8cc3ef653a2",
+     "aperture_correction": 0.5,
+     "aperture_correction_source": "median of 1 reference-image stars",
+     "controls_used": [
+      "east",
+      "west"
+     ],
+     "cadence_days": 0.020833101306607205,
+     "n_candidates": 2,
+     "summary": {
+      "n_candidates": 2,
+      "n_likely_false_alarms": 0,
+      "by_class": {
+       "extragalactic-transient-like": 1,
+       "unclassified": 1
+      }
+     },
+     "detected": true,
+     "matched": {
+      "scale": "slow",
+      "t_peak": 1418.0637356068485,
+      "peak": 21.142607600466235,
+      "peak_mag": 16.374528637061616,
+      "rise_time": 4.996202110623926,
+      "decay_time": 3.2707971672216445,
+      "decay_time_lower_limit": null,
+      "first_light": {
+       "t0": 1413.0675334962245,
+       "amplitude": 119.69662450387824,
+       "points": 10
+      },
+      "class_hint": "unclassified",
+      "hints": [],
+      "reasons": [
+       "no rule matched"
+      ],
+      "likely_false_alarm": false
+     },
+     "peak_time_diff": -0.28626439315144125,
+     "rise_ratio": 0.27880592135178156,
+     "peak_mag_diff": 0.18452863706161438,
+     "controls": [
+      {
+       "aperture": "east",
+       "n_candidates": 2,
+       "sn_like": 0
+      },
+      {
+       "aperture": "west",
+       "n_candidates": 2,
+       "sn_like": 1
+      }
+     ]
+    },
+    {
+     "name": "SN2018hss",
+     "other": "ASASSN-18yv",
+     "split": "tuning",
+     "published": {
+      "tmag_peak": 16.59,
+      "t_peak_btjd": 1433.91,
+      "t_first_light_btjd": 1414.19,
+      "t_rise_d": 18.91
+     },
+     "sector_rule": "contains the event time",
+     "sector": 4,
+     "cutout_sha256": "b77fb57c05fc1154fb64dac7fbfc54dbe863b1a9071d6798e581a7b9a4ed4dfc",
+     "aperture_correction": 0.85,
+     "aperture_correction_source": "assumed (no star in the cutout bright enough to measure it)",
+     "controls_used": [
+      "west",
+      "south"
+     ],
+     "cadence_days": 0.020833073023936777,
+     "n_candidates": 3,
+     "summary": {
+      "n_candidates": 3,
+      "n_likely_false_alarms": 2,
+      "by_class": {
+       "scattered-light-like": 2,
+       "unclassified": 1
+      }
+     },
+     "detected": true,
+     "matched": {
+      "scale": "slow",
+      "t_peak": 1425.0647609928255,
+      "peak": 36.39745668872431,
+      "peak_mag": 16.36086971949294,
+      "rise_time": 1.7151440345728588,
+      "decay_time": 4.2499479890409475,
+      "decay_time_lower_limit": null,
+      "first_light": {
+       "t0": 1423.3496169582527,
+       "amplitude": 429.12982086194114,
+       "points": 15
+      },
+      "class_hint": "unclassified",
+      "hints": [],
+      "reasons": [
+       "no rule matched"
+      ],
+      "likely_false_alarm": false
+     },
+     "peak_time_diff": -8.845239007174541,
+     "rise_ratio": 0.09070037200279528,
+     "peak_mag_diff": -0.22913028050706075,
+     "controls": [
+      {
+       "aperture": "west",
+       "n_candidates": 4,
+       "sn_like": 0
+      },
+      {
+       "aperture": "south",
+       "n_candidates": 2,
+       "sn_like": 0
+      }
+     ]
+    },
+    {
+     "name": "SN2020csx",
+     "other": "ZTF20aaodkvl",
+     "split": "tuning",
+     "published": {
+      "tmag_peak": 16.43,
+      "t_peak_btjd": 1906.59,
+      "t_first_light_btjd": 1889.84,
+      "t_rise_d": 16.33
+     },
+     "sector_rule": "contains the event time",
+     "sector": 22,
+     "cutout_sha256": "b54eabb8062985c6a7aaf60c1d10fef58ca05bb1f3e8004f16255254a737813f",
+     "aperture_correction": 0.85,
+     "aperture_correction_source": "assumed (no star in the cutout bright enough to measure it)",
+     "controls_used": [
+      "east",
+      "west"
+     ],
+     "cadence_days": 0.02081298828125,
+     "n_candidates": 1,
+     "summary": {
+      "n_candidates": 1,
+      "n_likely_false_alarms": 0,
+      "by_class": {
+       "unclassified": 1
+      }
+     },
+     "detected": true,
+     "matched": {
+      "scale": "slow",
+      "t_peak": 1914.2092692057292,
+      "peak": 14.772411849884966,
+      "peak_mag": 17.339918796455382,
+      "rise_time": 10.940376759770743,
+      "decay_time": 0.75,
+      "decay_time_lower_limit": null,
+      "first_light": {
+       "t0": 1903.2688924459585,
+       "amplitude": 0.12037664202698074,
+       "points": 43
+      },
+      "class_hint": "unclassified",
+      "hints": [],
+      "reasons": [
+       "no rule matched"
+      ],
+      "likely_false_alarm": false
+     },
+     "peak_time_diff": 7.619269205729324,
+     "rise_ratio": 0.6699557109473817,
+     "peak_mag_diff": 0.9099187964553828,
+     "controls": [
+      {
+       "aperture": "east",
+       "n_candidates": 1,
+       "sn_like": 0
+      },
+      {
+       "aperture": "west",
+       "n_candidates": 1,
+       "sn_like": 0
+      }
+     ]
+    },
+    {
+     "name": "SN2021zny",
+     "other": "ZTF21acdmwae",
+     "split": "tuning",
+     "published": {
+      "tmag_peak": 15.81,
+      "t_peak_btjd": 2498.55,
+      "t_first_light_btjd": 2477.37,
+      "t_rise_d": 20.63
+     },
+     "sector_rule": "contains the event time",
+     "sector": 43,
+     "cutout_sha256": "912862437c1df06a537086141b1b5380a02cba4598d5b839044942a17fb8290c",
+     "aperture_correction": 0.85,
+     "aperture_correction_source": "assumed (no star in the cutout bright enough to measure it)",
+     "controls_used": [
+      "west",
+      "south"
+     ],
+     "cadence_days": 0.0069447517450953455,
+     "n_candidates": 2,
+     "summary": {
+      "n_candidates": 2,
+      "n_likely_false_alarms": 1,
+      "by_class": {
+       "extragalactic-transient-like": 1,
+       "scattered-light-like": 1
+      }
+     },
+     "detected": true,
+     "matched": {
+      "scale": "slow",
+      "t_peak": 2498.297214861399,
+      "peak": 77.64113636657893,
+      "peak_mag": 15.53831760639101,
+      "rise_time": 25.430746165437995,
+      "decay_time": null,
+      "decay_time_lower_limit": 0.4861230235815128,
+      "first_light": {
+       "t0": 2472.866468695961,
+       "amplitude": 0.16011109074004826,
+       "points": 40
+      },
+      "class_hint": "extragalactic-transient-like",
+      "hints": [
+       "extragalactic-transient-like"
+      ],
+      "reasons": [
+       "slow rise (25.4 d) and a decay longer than the data, as a supernova or tidal disruption event (photometry alone cannot tell which)"
+      ],
+      "likely_false_alarm": false
+     },
+     "peak_time_diff": -0.25278513860121166,
+     "rise_ratio": 1.2327070366184196,
+     "peak_mag_diff": -0.27168239360899094,
+     "controls": [
+      {
+       "aperture": "west",
+       "n_candidates": 3,
+       "sn_like": 0
+      },
+      {
+       "aperture": "south",
+       "n_candidates": 2,
+       "sn_like": 0
+      }
+     ]
+    },
+    {
+     "name": "SN2021soe",
+     "other": "ZTF21abkdpnw",
+     "split": "tuning",
+     "published": {
+      "tmag_peak": 15.96,
+      "t_peak_btjd": 2422.51,
+      "t_first_light_btjd": 2405.33,
+      "t_rise_d": 16.98
+     },
+     "sector_rule": "contains the event time",
+     "sector": 41,
+     "cutout_sha256": "8ed08809bf54ed19074b4df2ef58d6380087654a925bc982f344c61c7c98165d",
+     "aperture_correction": 0.85,
+     "aperture_correction_source": "assumed (no star in the cutout bright enough to measure it)",
+     "controls_used": [
+      "west",
+      "north"
+     ],
+     "cadence_days": 0.0069443351076188264,
+     "n_candidates": 1,
+     "summary": {
+      "n_candidates": 1,
+      "n_likely_false_alarms": 0,
+      "by_class": {
+       "unclassified": 1
+      }
+     },
+     "detected": true,
+     "matched": {
+      "scale": "slow",
+      "t_peak": 2420.62846029792,
+      "peak": 16.47928300991257,
+      "peak_mag": 17.22120153368827,
+      "rise_time": 0.5034705380298874,
+      "decay_time": 6.749970846864471,
+      "decay_time_lower_limit": null,
+      "first_light": null,
+      "class_hint": "unclassified",
+      "hints": [],
+      "reasons": [
+       "no rule matched"
+      ],
+      "likely_false_alarm": false
+     },
+     "peak_time_diff": -1.8815397020803175,
+     "rise_ratio": null,
+     "peak_mag_diff": 1.2612015336882685,
+     "controls": [
+      {
+       "aperture": "west",
+       "n_candidates": 1,
+       "sn_like": 0
+      },
+      {
+       "aperture": "north",
+       "n_candidates": 1,
+       "sn_like": 1
+      }
+     ]
+    },
+    {
+     "name": "SN2018fhw",
+     "other": "ASASSN-18tb",
+     "split": "held_out",
+     "published": {
+      "tmag_peak": 16.1,
+      "t_peak_btjd": 1360.41,
+      "t_first_light_btjd": 1343.08,
+      "t_rise_d": 17.04
+     },
+     "sector_rule": "contains the event time",
+     "sector": 2,
+     "cutout_sha256": "680c2f9516b9a6ab3e2966c04d404f70737d8bda407efb254d8757e032c94617",
+     "aperture_correction": 0.85,
+     "aperture_correction_source": "assumed (no star in the cutout bright enough to measure it)",
+     "controls_used": [
+      "west",
+      "north"
+     ],
+     "cadence_days": 0.02083355569993728,
+     "n_candidates": 1,
+     "summary": {
+      "n_candidates": 1,
+      "n_likely_false_alarms": 0,
+      "by_class": {
+       "extragalactic-transient-like": 1
+      }
+     },
+     "detected": true,
+     "matched": {
+      "scale": "slow",
+      "t_peak": 1358.742776432582,
+      "peak": 21.119522547313316,
+      "peak_mag": 16.951837074779384,
+      "rise_time": 4.49172729565521,
+      "decay_time": 9.873017651823375,
+      "decay_time_lower_limit": null,
+      "first_light": null,
+      "class_hint": "extragalactic-transient-like",
+      "hints": [
+       "extragalactic-transient-like"
+      ],
+      "reasons": [
+       "slow rise (4.5 d) and a decay of 9.9 d, as a supernova or tidal disruption event (photometry alone cannot tell which)"
+      ],
+      "likely_false_alarm": false
+     },
+     "peak_time_diff": -1.6672235674179774,
+     "rise_ratio": null,
+     "peak_mag_diff": 0.8518370747793824,
+     "controls": [
+      {
+       "aperture": "west",
+       "n_candidates": 1,
+       "sn_like": 1
+      },
+      {
+       "aperture": "north",
+       "n_candidates": 1,
+       "sn_like": 0
+      }
+     ]
+    },
+    {
+     "name": "SN2021rgm",
+     "other": "ZTF21abilrxd",
+     "split": "held_out",
+     "published": {
+      "tmag_peak": 16.45,
+      "t_peak_btjd": 2408.26,
+      "t_first_light_btjd": 2393.35,
+      "t_rise_d": 14.66
+     },
+     "sector_rule": "contains the event time",
+     "sector": 40,
+     "cutout_sha256": "571085b333cc5c71bf9e4178df08a069aa4749e4a00203afbb501403d2aa1663",
+     "aperture_correction": 0.85,
+     "aperture_correction_source": "assumed (no star in the cutout bright enough to measure it)",
+     "controls_used": [
+      "west",
+      "north"
+     ],
+     "cadence_days": 0.006944384478856591,
+     "n_candidates": 5,
+     "summary": {
+      "n_candidates": 5,
+      "n_likely_false_alarms": 3,
+      "by_class": {
+       "asteroid-crossing-like": 2,
+       "scattered-light-like": 1,
+       "unclassified": 2
+      }
+     },
+     "detected": true,
+     "matched": {
+      "scale": "medium",
+      "t_peak": 2404.22565150518,
+      "peak": 8.992427692733756,
+      "peak_mag": 17.87885492832708,
+      "rise_time": 0.5833292589295525,
+      "decay_time": 1.1284575618951749,
+      "decay_time_lower_limit": null,
+      "first_light": null,
+      "class_hint": "asteroid-crossing-like",
+      "hints": [
+       "asteroid-crossing-like"
+      ],
+      "reasons": [
+       "the difference-image centroid moves 1.6 pixels during the event"
+      ],
+      "likely_false_alarm": true
+     },
+     "peak_time_diff": -4.034348494820279,
+     "rise_ratio": null,
+     "peak_mag_diff": 1.4288549283270804,
+     "controls": [
+      {
+       "aperture": "west",
+       "n_candidates": 2,
+       "sn_like": 0
+      },
+      {
+       "aperture": "north",
+       "n_candidates": 5,
+       "sn_like": 0
+      }
+     ]
+    },
+    {
+     "name": "SN2021aesq",
+     "other": "ZTF21acpmcgo",
+     "split": "held_out",
+     "published": {
+      "tmag_peak": 16.43,
+      "t_peak_btjd": 2545.74,
+      "t_first_light_btjd": 2529.5,
+      "t_rise_d": 15.99
+     },
+     "sector_rule": "contains the event time",
+     "sector": 45,
+     "cutout_sha256": "19cbdbe73f238dd858ea9f5fb0efe0d5876b48289bf93f6ad2d403763ff132cb",
+     "aperture_correction": 0.85,
+     "aperture_correction_source": "assumed (no star in the cutout bright enough to measure it)",
+     "controls_used": [
+      "west",
+      "south"
+     ],
+     "cadence_days": 0.006944754279629706,
+     "n_candidates": 1,
+     "summary": {
+      "n_candidates": 1,
+      "n_likely_false_alarms": 0,
+      "by_class": {
+       "extragalactic-transient-like": 1
+      }
+     },
+     "detected": true,
+     "matched": {
+      "scale": "slow",
+      "t_peak": 2545.172034764398,
+      "peak": 17.288006330979407,
+      "peak_mag": 17.169185031994097,
+      "rise_time": 14.852334342043378,
+      "decay_time": null,
+      "decay_time_lower_limit": 5.416816909127192,
+      "first_light": {
+       "t0": 2530.319700422355,
+       "amplitude": 0.305598786472009,
+       "points": 38
+      },
+      "class_hint": "extragalactic-transient-like",
+      "hints": [
+       "extragalactic-transient-like"
+      ],
+      "reasons": [
+       "slow rise (14.9 d) and a decay longer than the data, as a supernova or tidal disruption event (photometry alone cannot tell which)"
+      ],
+      "likely_false_alarm": false
+     },
+     "peak_time_diff": -0.567965235601605,
+     "rise_ratio": 0.9288514285205364,
+     "peak_mag_diff": 0.7391850319940971,
+     "controls": [
+      {
+       "aperture": "west",
+       "n_candidates": 3,
+       "sn_like": 1
+      },
+      {
+       "aperture": "south",
+       "n_candidates": 0,
+       "sn_like": 0
+      }
+     ]
+    },
+    {
+     "name": "SN2021iff",
+     "other": "ASASSN-21ex",
+     "split": "held_out",
+     "published": {
+      "tmag_peak": 16.01,
+      "t_peak_btjd": 2319.03,
+      "t_first_light_btjd": 2300.35,
+      "t_rise_d": 18.13
+     },
+     "sector_rule": "contains the event time",
+     "sector": 37,
+     "cutout_sha256": "2d99cc0bd99ae1f4e482174ed13040eada5729b9d7a5f9de0a7929eb8d6d8ca6",
+     "aperture_correction": 0.85,
+     "aperture_correction_source": "assumed (no star in the cutout bright enough to measure it)",
+     "controls_used": [
+      "east",
+      "west"
+     ],
+     "cadence_days": 0.006944371264580695,
+     "n_candidates": 3,
+     "summary": {
+      "n_candidates": 3,
+      "n_likely_false_alarms": 2,
+      "by_class": {
+       "asteroid-crossing-like": 1,
+       "scattered-light-like": 1,
+       "unclassified": 1
+      }
+     },
+     "detected": true,
+     "matched": {
+      "scale": "slow",
+      "t_peak": 2318.4185989744055,
+      "peak": 29.677631607786545,
+      "peak_mag": 16.582474215348327,
+      "rise_time": 6.069592582158293,
+      "decay_time": 1.8402554965691706,
+      "decay_time_lower_limit": null,
+      "first_light": {
+       "t0": 2312.3490063922472,
+       "amplitude": 1.8910669602059014,
+       "points": 31
+      },
+      "class_hint": "unclassified",
+      "hints": [],
+      "reasons": [
+       "no rule matched"
+      ],
+      "likely_false_alarm": false
+     },
+     "peak_time_diff": -0.6114010255946596,
+     "rise_ratio": 0.3347817199204795,
+     "peak_mag_diff": 0.5724742153483255,
+     "controls": [
+      {
+       "aperture": "east",
+       "n_candidates": 3,
+       "sn_like": 1
+      },
+      {
+       "aperture": "west",
+       "n_candidates": 3,
+       "sn_like": 1
+      }
+     ]
+    },
+    {
+     "name": "SN2020swy",
+     "other": "ATLAS20zid",
+     "split": "held_out",
+     "published": {
+      "tmag_peak": 16.84,
+      "t_peak_btjd": 2111.84,
+      "t_first_light_btjd": 2094.84,
+      "t_rise_d": 16.47
+     },
+     "sector_rule": "contains the event time",
+     "sector": 29,
+     "cutout_sha256": "588b0f9010b8e2be9923eeda07957a5f1c8f2e331f40629a3c331fa2ab269964",
+     "aperture_correction": 0.85,
+     "aperture_correction_source": "assumed (no star in the cutout bright enough to measure it)",
+     "controls_used": [
+      "west",
+      "north"
+     ],
+     "cadence_days": 0.006944521975583484,
+     "n_candidates": 2,
+     "summary": {
+      "n_candidates": 2,
+      "n_likely_false_alarms": 1,
+      "by_class": {
+       "extragalactic-transient-like": 1,
+       "scattered-light-like": 1
+      }
+     },
+     "detected": true,
+     "matched": {
+      "scale": "slow",
+      "t_peak": 2113.8452590902975,
+      "peak": 28.024892909068374,
+      "peak_mag": 16.644687410011116,
+      "rise_time": 23.168734640822095,
+      "decay_time": null,
+      "decay_time_lower_limit": 0.5147549417042683,
+      "first_light": {
+       "t0": 2090.6765244494754,
+       "amplitude": 0.05589435387828834,
+       "points": 64
+      },
+      "class_hint": "extragalactic-transient-like",
+      "hints": [
+       "extragalactic-transient-like"
+      ],
+      "reasons": [
+       "slow rise (23.2 d) and a decay longer than the data, as a supernova or tidal disruption event (photometry alone cannot tell which)"
+      ],
+      "likely_false_alarm": false
+     },
+     "peak_time_diff": 2.005259090297386,
+     "rise_ratio": 1.4067234147432968,
+     "peak_mag_diff": -0.1953125899888839,
+     "controls": [
+      {
+       "aperture": "west",
+       "n_candidates": 2,
+       "sn_like": 1
+      },
+      {
+       "aperture": "north",
+       "n_candidates": 3,
+       "sn_like": 0
+      }
+     ]
+    },
+    {
+     "name": "SN2020aoi",
+     "other": "ZTF20aahfobk",
+     "split": "held_out",
+     "published": {
+      "tmag_peak": 16.73,
+      "t_peak_btjd": 1887.53,
+      "t_first_light_btjd": 1871.03,
+      "t_rise_d": 15.98
+     },
+     "sector_rule": "contains the event time",
+     "sector": 21,
+     "cutout_sha256": "0cd11283957b420721238440f3dc49769d66c11e8a186d2385c080d6160a3fb2",
+     "aperture_correction": 0.85,
+     "aperture_correction_source": "assumed (no star in the cutout bright enough to measure it)",
+     "controls_used": [
+      "east",
+      "west"
+     ],
+     "cadence_days": 0.02081298828125,
+     "n_candidates": 1,
+     "summary": {
+      "n_candidates": 1,
+      "n_likely_false_alarms": 0,
+      "by_class": {
+       "extragalactic-transient-like": 1
+      }
+     },
+     "detected": true,
+     "matched": {
+      "scale": "slow",
+      "t_peak": 1885.5657145182292,
+      "peak": 17.81205914376355,
+      "peak_mag": 17.136761993016574,
+      "rise_time": 10.973804406952468,
+      "decay_time": 11.500081380208258,
+      "decay_time_lower_limit": null,
+      "first_light": {
+       "t0": 1874.5919101112768,
+       "amplitude": 0.6930905339174451,
+       "points": 30
+      },
+      "class_hint": "extragalactic-transient-like",
+      "hints": [
+       "extragalactic-transient-like"
+      ],
+      "reasons": [
+       "slow rise (11.0 d) and a decay of 11.5 d, as a supernova or tidal disruption event (photometry alone cannot tell which)"
+      ],
+      "likely_false_alarm": false
+     },
+     "peak_time_diff": -1.9642854817707303,
+     "rise_ratio": 0.6867211769056613,
+     "peak_mag_diff": 0.40676199301657334,
+     "controls": [
+      {
+       "aperture": "east",
+       "n_candidates": 0,
+       "sn_like": 0
+      },
+      {
+       "aperture": "west",
+       "n_candidates": 0,
+       "sn_like": 0
+      }
+     ]
+    },
+    {
+     "name": "SN2022re",
+     "other": "ATLAS22bpp",
+     "split": "held_out",
+     "published": {
+      "tmag_peak": 17.0,
+      "t_peak_btjd": 2605.08,
+      "t_first_light_btjd": 2586.0,
+      "t_rise_d": 18.35
+     },
+     "sector_rule": "contains the event time",
+     "sector": 47,
+     "cutout_sha256": "04ae03d99c0745e288b37989b943c3fb7f167833eddc81ea537786bb795ae4c7",
+     "aperture_correction": 0.85,
+     "aperture_correction_source": "assumed (no star in the cutout bright enough to measure it)",
+     "controls_used": [
+      "east",
+      "west"
+     ],
+     "cadence_days": 0.0069443591951312555,
+     "n_candidates": 3,
+     "summary": {
+      "n_candidates": 3,
+      "n_likely_false_alarms": 1,
+      "by_class": {
+       "asteroid-crossing-like": 1,
+       "unclassified": 2
+      }
+     },
+     "detected": true,
+     "matched": {
+      "scale": "slow",
+      "t_peak": 2606.4410823456374,
+      "peak": 6.51260450267833,
+      "peak_mag": 18.229160551416047,
+      "rise_time": 4.7682187888376575,
+      "decay_time": null,
+      "decay_time_lower_limit": 0.4374869644075261,
+      "first_light": {
+       "t0": 2601.6728635567997,
+       "amplitude": 0.32461931996915294,
+       "points": 79
+      },
+      "class_hint": "unclassified",
+      "hints": [],
+      "reasons": [
+       "no rule matched"
+      ],
+      "likely_false_alarm": false
+     },
+     "peak_time_diff": 1.361082345637442,
+     "rise_ratio": 0.2598484353590004,
+     "peak_mag_diff": 1.2291605514160473,
+     "controls": [
+      {
+       "aperture": "east",
+       "n_candidates": 1,
+       "sn_like": 1
+      },
+      {
+       "aperture": "west",
+       "n_candidates": 4,
+       "sn_like": 0
+      }
+     ]
+    },
+    {
+     "name": "SN2019gqv",
+     "other": "ASASSN-19ny",
+     "split": "held_out",
+     "published": {
+      "tmag_peak": 16.55,
+      "t_peak_btjd": 1638.95,
+      "t_first_light_btjd": 1630.38,
+      "t_rise_d": 8.43
+     },
+     "sector_rule": "contains the event time",
+     "sector": 12,
+     "cutout_sha256": "195529a04e4867ea343f32e247df9f6925487bf1b9205d2aa3fae5ccd88988b5",
+     "aperture_correction": 0.85,
+     "aperture_correction_source": "assumed (no star in the cutout bright enough to measure it)",
+     "controls_used": [
+      "east",
+      "west"
+     ],
+     "cadence_days": 0.020833116439007426,
+     "n_candidates": 2,
+     "summary": {
+      "n_candidates": 2,
+      "n_likely_false_alarms": 1,
+      "by_class": {
+       "asteroid-crossing-like": 1,
+       "unclassified": 1
+      }
+     },
+     "detected": true,
+     "matched": {
+      "scale": "slow",
+      "t_peak": 1640.626073822426,
+      "peak": 48.53204781712412,
+      "peak_mag": 16.048475772226993,
+      "rise_time": 5.910715456232083,
+      "decay_time": 1.9791465873079233,
+      "decay_time_lower_limit": null,
+      "first_light": {
+       "t0": 1634.7153583661939,
+       "amplitude": 0.23699893404268074,
+       "points": 54
+      },
+      "class_hint": "unclassified",
+      "hints": [],
+      "reasons": [
+       "no rule matched"
+      ],
+      "likely_false_alarm": false
+     },
+     "peak_time_diff": 1.6760738224259057,
+     "rise_ratio": 0.7011524859112791,
+     "peak_mag_diff": -0.5015242277730074,
+     "controls": [
+      {
+       "aperture": "east",
+       "n_candidates": 1,
+       "sn_like": 0
+      },
+      {
+       "aperture": "west",
+       "n_candidates": 2,
+       "sn_like": 0
+      }
+     ]
+    },
+    {
+     "name": "SN2018exc",
+     "other": "ATLAS18tne",
+     "split": "held_out",
+     "published": {
+      "tmag_peak": 16.21,
+      "t_peak_btjd": 1352.91,
+      "t_first_light_btjd": 1336.02,
+      "t_rise_d": 15.98
+     },
+     "sector_rule": "contains the event time",
+     "sector": 1,
+     "cutout_sha256": "e7a283d9d1218c5e2f40710b9f90b153f48768cf9c9b9ffd398eb0e046e05d1c",
+     "aperture_correction": 0.85,
+     "aperture_correction_source": "assumed (no star in the cutout bright enough to measure it)",
+     "controls_used": [
+      "west",
+      "south"
+     ],
+     "cadence_days": 0.020832965037925533,
+     "n_candidates": 1,
+     "summary": {
+      "n_candidates": 1,
+      "n_likely_false_alarms": 0,
+      "by_class": {
+       "extragalactic-transient-like": 1
+      }
+     },
+     "detected": true,
+     "matched": {
+      "scale": "slow",
+      "t_peak": 1352.218066140681,
+      "peak": 25.237968164227034,
+      "peak_mag": 16.758411343816636,
+      "rise_time": 12.148743530860429,
+      "decay_time": null,
+      "decay_time_lower_limit": 0.40207189342777383,
+      "first_light": {
+       "t0": 1340.0693226098206,
+       "amplitude": 0.5435697757825615,
+       "points": 62
+      },
+      "class_hint": "extragalactic-transient-like",
+      "hints": [
+       "extragalactic-transient-like"
+      ],
+      "reasons": [
+       "slow rise (12.1 d) and a decay longer than the data, as a supernova or tidal disruption event (photometry alone cannot tell which)"
+      ],
+      "likely_false_alarm": false
+     },
+     "peak_time_diff": -0.6919338593190787,
+     "rise_ratio": 0.7602467791527177,
+     "peak_mag_diff": 0.5484113438166354,
+     "controls": [
+      {
+       "aperture": "west",
+       "n_candidates": 0,
+       "sn_like": 0
+      },
+      {
+       "aperture": "south",
+       "n_candidates": 0,
+       "sn_like": 0
+      }
+     ]
+    },
+    {
+     "name": "SN2018jwi",
+     "other": "ASASSN-18abr",
+     "split": "held_out",
+     "published": {
+      "tmag_peak": 14.89,
+      "t_peak_btjd": 1478.53,
+      "t_first_light_btjd": 1461.07,
+      "t_rise_d": 17.17
+     },
+     "sector_rule": "contains the event time",
+     "sector": 6,
+     "cutout_sha256": "aa878a14e87eba430acd88410cc625f21161d49e340c7b3ddaaf62df21d3b942",
+     "aperture_correction": 0.85,
+     "aperture_correction_source": "assumed (no star in the cutout bright enough to measure it)",
+     "controls_used": [
+      "west",
+      "south"
+     ],
+     "cadence_days": 0.020833544795095804,
+     "n_candidates": 1,
+     "summary": {
+      "n_candidates": 1,
+      "n_likely_false_alarms": 0,
+      "by_class": {
+       "extragalactic-transient-like": 1
+      }
+     },
+     "detected": true,
+     "matched": {
+      "scale": "slow",
+      "t_peak": 1478.648096930098,
+      "peak": 35.854495536664174,
+      "peak_mag": 16.377188273107183,
+      "rise_time": 6.750068188858222,
+      "decay_time": 7.000068660374382,
+      "decay_time_lower_limit": null,
+      "first_light": null,
+      "class_hint": "extragalactic-transient-like",
+      "hints": [
+       "extragalactic-transient-like"
+      ],
+      "reasons": [
+       "slow rise (6.8 d) and a decay of 7.0 d, as a supernova or tidal disruption event (photometry alone cannot tell which)"
+      ],
+      "likely_false_alarm": false
+     },
+     "peak_time_diff": 0.11809693009809052,
+     "rise_ratio": null,
+     "peak_mag_diff": 1.4871882731071828,
+     "controls": [
+      {
+       "aperture": "west",
+       "n_candidates": 0,
+       "sn_like": 0
+      },
+      {
+       "aperture": "south",
+       "n_candidates": 1,
+       "sn_like": 0
+      }
+     ]
+    },
+    {
+     "name": "SN2018fub",
+     "other": "ASASSN-18ty",
+     "split": "held_out",
+     "published": {
+      "tmag_peak": 16.21,
+      "t_peak_btjd": 1378.24,
+      "t_first_light_btjd": 1360.42,
+      "t_rise_d": 17.32
+     },
+     "sector_rule": "contains the event time",
+     "sector": 2,
+     "cutout_sha256": "0df6a7aa5ca979eed6f017d7ee4a87ee817563a221370e1e1b2b509e6fadc5e3",
+     "aperture_correction": 0.85,
+     "aperture_correction_source": "assumed (no star in the cutout bright enough to measure it)",
+     "controls_used": [
+      "west",
+      "north"
+     ],
+     "cadence_days": 0.02083312931040382,
+     "n_candidates": 1,
+     "summary": {
+      "n_candidates": 1,
+      "n_likely_false_alarms": 0,
+      "by_class": {
+       "extragalactic-transient-like": 1
+      }
+     },
+     "detected": true,
+     "matched": {
+      "scale": "slow",
+      "t_peak": 1377.7750762622757,
+      "peak": 28.210158003522448,
+      "peak_mag": 16.637533517732326,
+      "rise_time": 13.154880127143542,
+      "decay_time": null,
+      "decay_time_lower_limit": 3.6769931791607178,
+      "first_light": {
+       "t0": 1364.6201961351321,
+       "amplitude": 1.3289132373285448,
+       "points": 52
+      },
+      "class_hint": "extragalactic-transient-like",
+      "hints": [
+       "extragalactic-transient-like"
+      ],
+      "reasons": [
+       "slow rise (13.2 d) and a decay longer than the data, as a supernova or tidal disruption event (photometry alone cannot tell which)"
+      ],
+      "likely_false_alarm": false
+     },
+     "peak_time_diff": -0.46492373772434803,
+     "rise_ratio": 0.7595196378258396,
+     "peak_mag_diff": 0.42753351773232495,
+     "controls": [
+      {
+       "aperture": "west",
+       "n_candidates": 1,
+       "sn_like": 0
+      },
+      {
+       "aperture": "north",
+       "n_candidates": 1,
+       "sn_like": 0
+      }
+     ]
+    },
+    {
+     "name": "SN2018hib",
+     "other": "Gaia18czg",
+     "split": "held_out",
+     "published": {
+      "tmag_peak": 15.43,
+      "t_peak_btjd": 1415.02,
+      "t_first_light_btjd": 1397.71,
+      "t_rise_d": 17.03
+     },
+     "sector_rule": "contains the event time",
+     "sector": 4,
+     "cutout_sha256": "6430006daa5d9e5b83f609db1e3a655b218ec7ebf70ed7f5cf576f62c437e1be",
+     "aperture_correction": 0.85,
+     "aperture_correction_source": "assumed (no star in the cutout bright enough to measure it)",
+     "controls_used": [
+      "east",
+      "west"
+     ],
+     "cadence_days": 0.02083306812801311,
+     "n_candidates": 3,
+     "summary": {
+      "n_candidates": 3,
+      "n_likely_false_alarms": 0,
+      "by_class": {
+       "extragalactic-transient-like": 1,
+       "unclassified": 2
+      }
+     },
+     "detected": true,
+     "matched": {
+      "scale": "slow",
+      "t_peak": 1421.8168855897632,
+      "peak": 267.4788735025396,
+      "peak_mag": 14.195323600575815,
+      "rise_time": 15.758288914029663,
+      "decay_time": 0.4999938410596769,
+      "decay_time_lower_limit": null,
+      "first_light": {
+       "t0": 1406.0585966757335,
+       "amplitude": 0.5577936773599432,
+       "points": 31
+      },
+      "class_hint": "unclassified",
+      "hints": [],
+      "reasons": [
+       "no rule matched"
+      ],
+      "likely_false_alarm": false
+     },
+     "peak_time_diff": 6.796885589763178,
+     "rise_ratio": 0.9253252445114305,
+     "peak_mag_diff": -1.2346763994241847,
+     "controls": [
+      {
+       "aperture": "east",
+       "n_candidates": 2,
+       "sn_like": 0
+      },
+      {
+       "aperture": "west",
+       "n_candidates": 0,
+       "sn_like": 0
+      }
+     ]
+    },
+    {
+     "name": "SN2020hyh",
+     "other": "ZTF20aavnnat",
+     "split": "held_out",
+     "published": {
+      "tmag_peak": 16.86,
+      "t_peak_btjd": 1974.16,
+      "t_first_light_btjd": 1961.4,
+      "t_rise_d": 12.36
+     },
+     "sector_rule": "contains the event time",
+     "sector": 24,
+     "cutout_sha256": "10f25525821fda7368ce6632d7bcc431d7908e05b9b4def282ef4c74088ea5ce",
+     "aperture_correction": 0.85,
+     "aperture_correction_source": "assumed (no star in the cutout bright enough to measure it)",
+     "controls_used": [
+      "east",
+      "west"
+     ],
+     "cadence_days": 0.02081298828125,
+     "n_candidates": 3,
+     "summary": {
+      "n_candidates": 3,
+      "n_likely_false_alarms": 0,
+      "by_class": {
+       "flare-like": 1,
+       "unclassified": 2
+      }
+     },
+     "detected": true,
+     "matched": {
+      "scale": "slow",
+      "t_peak": 1967.9401041666667,
+      "peak": 126.63794404639538,
+      "peak_mag": 15.007137686319155,
+      "rise_time": 16.750203450520985,
+      "decay_time": 1.3541768391926325,
+      "decay_time_lower_limit": null,
+      "first_light": {
+       "t0": 1951.1899007161458,
+       "amplitude": 0.44940634036317856,
+       "points": 24
+      },
+      "class_hint": "unclassified",
+      "hints": [],
+      "reasons": [
+       "no rule matched"
+      ],
+      "likely_false_alarm": false
+     },
+     "peak_time_diff": -6.219895833333339,
+     "rise_ratio": 1.3551944539256462,
+     "peak_mag_diff": -1.8528623136808449,
+     "controls": [
+      {
+       "aperture": "east",
+       "n_candidates": 1,
+       "sn_like": 0
+      },
+      {
+       "aperture": "west",
+       "n_candidates": 0,
+       "sn_like": 0
+      }
+     ]
+    },
+    {
+     "name": "SN2020fcw",
+     "other": "ZTF20aattotq",
+     "split": "held_out",
+     "published": {
+      "tmag_peak": 16.35,
+      "t_peak_btjd": 1940.83,
+      "t_first_light_btjd": 1931.03,
+      "t_rise_d": 9.66
+     },
+     "sector_rule": "contains the event time",
+     "sector": 23,
+     "cutout_sha256": "f62d1f3b13f50f819dcdf09055244662ba8e501a16f4dac3bd5998adc8aa538a",
+     "aperture_correction": 0.85,
+     "aperture_correction_source": "assumed (no star in the cutout bright enough to measure it)",
+     "controls_used": [
+      "east",
+      "west"
+     ],
+     "cadence_days": 0.02081298828125,
+     "n_candidates": 2,
+     "summary": {
+      "n_candidates": 2,
+      "n_likely_false_alarms": 0,
+      "by_class": {
+       "flare-like": 1,
+       "unclassified": 1
+      }
+     },
+     "detected": true,
+     "matched": {
+      "scale": "slow",
+      "t_peak": 1937.984130859375,
+      "peak": 21.828225560251248,
+      "peak_mag": 16.916001232080355,
+      "rise_time": 1.7434137517755062,
+      "decay_time": 7.8438313802082575,
+      "decay_time_lower_limit": null,
+      "first_light": null,
+      "class_hint": "unclassified",
+      "hints": [],
+      "reasons": [
+       "no rule matched"
+      ],
+      "likely_false_alarm": false
+     },
+     "peak_time_diff": -2.8458691406249272,
+     "rise_ratio": null,
+     "peak_mag_diff": 0.5660012320803531,
+     "controls": [
+      {
+       "aperture": "east",
+       "n_candidates": 0,
+       "sn_like": 0
+      },
+      {
+       "aperture": "west",
+       "n_candidates": 1,
+       "sn_like": 1
+      }
+     ]
+    },
+    {
+     "name": "SN2021ahmz",
+     "other": "ASASSN-21wl",
+     "split": "held_out",
+     "published": {
+      "tmag_peak": 16.89,
+      "t_peak_btjd": 2574.89,
+      "t_first_light_btjd": 2556.99,
+      "t_rise_d": 17.34
+     },
+     "sector_rule": "contains the event time",
+     "sector": 46,
+     "cutout_sha256": "1eda38c9e954bbee16a6e326a81327652f14deb3b7386cb62a8cc653037ec94a",
+     "aperture_correction": 0.85,
+     "aperture_correction_source": "assumed (no star in the cutout bright enough to measure it)",
+     "controls_used": [
+      "west",
+      "north"
+     ],
+     "cadence_days": 0.006945121659555298,
+     "n_candidates": 0,
+     "summary": {
+      "n_candidates": 0,
+      "n_likely_false_alarms": 0,
+      "by_class": {}
+     },
+     "detected": false,
+     "controls": [
+      {
+       "aperture": "west",
+       "n_candidates": 1,
+       "sn_like": 0
+      },
+      {
+       "aperture": "north",
+       "n_candidates": 0,
+       "sn_like": 0
+      }
+     ]
+    }
+   ],
+   "held_out": {
+    "n": 15,
+    "detected": {
+     "k": 14,
+     "of": 15,
+     "fraction": 0.9333333333333333,
+     "ci95": [
+      0.7018292244757601,
+      0.9881334113938051
+     ]
+    },
+    "peak_time": {
+     "k": 9,
+     "of": 15,
+     "fraction": 0.6,
+     "ci95": [
+      0.357464427565077,
+      0.8017577191740534
+     ]
+    },
+    "rise_ratio": {
+     "median": 0.7598832084892786,
+     "ci95": [
+      0.5471506788731596,
+      1.0573570458757429
+     ],
+     "n": 10
+    },
+    "rise_measured": 10,
+    "peak_mag_diff": {
+     "median": 0.5572062879484942,
+     "ci95": [
+      -0.1953125899888839,
+      0.8518370747793824
+     ],
+     "n": 14
+    },
+    "sn_like": {
+     "k": 7,
+     "of": 14,
+     "fraction": 0.5,
+     "ci95": [
+      0.2679886791947528,
+      0.7320113208052472
+     ]
+    },
+    "detected_not_false_alarm": {
+     "k": 13,
+     "of": 15,
+     "fraction": 0.8666666666666667,
+     "ci95": [
+      0.6211750079348376,
+      0.9626395301086407
+     ]
+    },
+    "control_apertures": 30,
+    "control_sn_like_rate": 0.23333333333333334,
+    "control_any_candidate_rate": 0.6666666666666666
+   },
+   "tuning": {
+    "n": 5,
+    "detected": {
+     "k": 5,
+     "of": 5,
+     "fraction": 1.0,
+     "ci95": [
+      0.5655085052479191,
+      1.0
+     ]
+    },
+    "peak_time": {
+     "k": 3,
+     "of": 5,
+     "fraction": 0.6,
+     "ci95": [
+      0.23071993220883708,
+      0.8823817688407467
+     ]
+    },
+    "rise_ratio": {
+     "median": 0.4743808161495816,
+     "ci95": [
+      0.09070037200279528,
+      1.2327070366184196
+     ],
+     "n": 4
+    },
+    "rise_measured": 4,
+    "peak_mag_diff": {
+     "median": 0.18452863706161438,
+     "ci95": [
+      -0.27168239360899094,
+      1.2612015336882685
+     ],
+     "n": 5
+    },
+    "sn_like": {
+     "k": 1,
+     "of": 5,
+     "fraction": 0.2,
+     "ci95": [
+      0.03622316096978745,
+      0.6244717358814613
+     ]
+    },
+    "detected_not_false_alarm": {
+     "k": 5,
+     "of": 5,
+     "fraction": 1.0,
+     "ci95": [
+      0.5655085052479191,
+      1.0
+     ]
+    },
+    "control_apertures": 10,
+    "control_sn_like_rate": 0.2,
+    "control_any_candidate_rate": 1.0
+   }
+  }
+ },
+ "references": {
+  "binaries": "Prša et al. 2022, ApJS 258, 16 (TESS Eclipsing Binary stars I, sectors 1-26), VizieR J/ApJS/258/16; the 2-Gaussian model columns (Dp-2g, Wp-2g, Phip-2g, Ds-2g, Ws-2g, Phis-2g), the period and the morphology coefficient (Matijevič et al. 2012: 0 widest detached, 1 ellipsoidal)",
+  "rotation": "Canto Martins et al. 2020, ApJS 250, 20 (rotation periods of TESS objects of interest), VizieR J/ApJS/250/20, table 1 (unambiguous rotation periods)",
+  "transients": "Fausnaugh et al. 2023, ApJ 956, 108 (four years of type Ia supernovae observed by TESS), VizieR J/ApJ/956/108, table 1 (peak TESS magnitude, time of peak) and table 3 (time of first light, rise time). Table 3's BJD column is BJD - 2457000 (the ReadMe says 2470000; the values are in the TESS range).",
+  "flare_contrast": "Medina et al. 2020, J/ApJ/905/107"
+ },
+ "labels": [
+  "An eclipsing binary or a transient SetuHQ finds is a candidate, never new and never confirmed.",
+  "Morphology and transient classes are heuristic hints from the light curve alone."
+ ]
+}

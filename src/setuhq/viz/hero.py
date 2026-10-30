@@ -33,6 +33,9 @@ from urllib.parse import quote
 
 from setuhq.looks import RJ_IN_RE, find_planet, look, row, seed, teff_rgb
 from setuhq.renderer import LABEL_ART, PICTURES, figure
+from setuhq.i18n import N_, k as ik, span
+
+N_("hero.pause", "Pause")
 from setuhq.viz import require_source
 
 RSUN_IN_RE = 109.076      # the Sun's radius in Earth radii (695,700 km / 6,378.137 km, the R⊕ that RJ_IN_RE uses)
@@ -114,12 +117,12 @@ def featured(app: dict, run: str, meta: dict | None = None) -> dict | None:
     src = f"{cat.get('source_short') or 'exoplanet.eu'}{', fetched ' + fetched if fetched else ''}"
     e = _html.escape
     bword = f"b {b:.2f} ({'exoplanet.eu' if b_src == 'catalogue' else 'not stored: illustrative'})"
-    caption = (f"<b>Model from stored values.</b> {e(shown)}: Rp {rp_re:.2f} R⊕ ({e(src)}) over R★ {rstar:.2f} R☉ "
+    caption = (f'<b{ik("hero.model")}>{N_("hero.model", "Model from stored values.")}</b> ' + f"{e(shown)}: Rp {rp_re:.2f} R⊕ ({e(src)}) over R★ {rstar:.2f} R☉ "
                f"and Teff {round(teff):,} K ({e(sp.get('source') or 'stellar.json')}) give Rp/R★ {k:.4f}; {e(bword)}, "
                f"P {period:.3f} d. Depth {depth:,.0f} ppm{dur} (quadratic limb darkening, Claret 2017). "
-               f"{e(star)}'s star disc is in its blackbody colour; the planet is an artist's impression "
-               f"({e(lk['composition'] or 'not drawn')}{', ' + e(lk['band']) if lk['band'] else ''}). "
-               f'<a href="{PICTURES}">How the pictures are drawn ›</a>')
+               + span("hero.disc", "{star}'s star disc is in its blackbody colour; the planet is an artist's impression ({look}).",
+                      star=star, look=(lk['composition'] or 'not drawn') + (', ' + lk['band'] if lk['band'] else '')) + " "
+               f'<a href="{PICTURES}"{ik("footer.pictures")}>How the pictures are drawn ›</a>')
     return {"run": run, "star": star, "planet": name, "slug": slug, "teff": round(teff, 1), "rstar": round(rstar, 4),
             "rp_re": round(rp_re, 4), "k": round(k, 6), "b": round(b, 4), "b_src": b_src, "period_d": round(period, 6),
             "a_rs": round(a_rs, 3) if a_rs else None, "t14_h": round(t14, 3) if t14 else None, "depth_ppm": round(depth, 1),
@@ -200,7 +203,7 @@ def html(data: dict, **opts) -> str:
                  still=still_svg(m), priority=True)
     fig = fig.replace('class="stage rfig"', 'class="stage rfig herofig"', 1)
     fig = fig.replace('loading="lazy" ', "", 1)
-    ctrls = '<div class="stage-ctrls heroctrls"><button class="btn" type="button" data-hero-pause aria-pressed="false" hidden>Pause</button></div>'
+    ctrls = '<div class="stage-ctrls heroctrls"><button class="btn" type="button" data-hero-pause aria-pressed="false" hidden data-i18n="hero.pause">Pause</button></div>'
     fig = fig.replace('<div class="rbox">', '<div class="rbox">' + ctrls, 1)
     rotj = e(json.dumps(rot, separators=(",", ":"), ensure_ascii=False))
     return (f'<div class="herostage" data-viz="hero" data-run="{e(m["run"])}" data-rotate=\'{rotj}\'>'
@@ -268,7 +271,7 @@ window.SetuHero = window.SetuHero || {frames: 0};
       if (pick && pick.run !== st.dataset.run){
         S.p = pick.p; st.dataset.run = pick.run; fig.dataset.params = JSON.stringify(pick.p);
         const img = fig.querySelector('img.rstill'), cap = fig.querySelector('figcaption');
-        if (img) img.alt = pick.alt; if (cap) cap.innerHTML = pick.caption;
+        if (img) img.alt = pick.alt; if (cap){ cap.innerHTML = pick.caption; if (window.SetuI18n) SetuI18n.apply(cap); }
       }
     }
     function setBtn(){ if (!btn) return; btn.setAttribute('aria-pressed', S.paused ? 'true' : 'false'); btn.hidden = !T(); }

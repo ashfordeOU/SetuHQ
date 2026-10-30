@@ -17,6 +17,7 @@ import json
 import math
 from pathlib import Path
 
+from setuhq.i18n import span as ispan
 from setuhq.names import display_name, role
 
 DEFAULT_TARGETS = "docs/results/targets.json"
@@ -197,28 +198,42 @@ def story_data(run_dir: str | Path, dock: dict, feed: list[dict], calibration: d
     v = xm.get("validation") or {}
     proof = []
     if planet and v.get("pl_name") == planet:
+        mins = f"{abs(v.get('mean_timing_offset_min', 0)):.0f}"
         proof.append({"big": str(v.get("epochs_recovered", "")), "colour": "#64D2FF",
                       "text": f"transits of {planet} found without being told where to look, each about "
-                              f"{abs(v.get('mean_timing_offset_min', 0)):.0f} minutes from its published timing. A known planet, recovered."})
+                              f"{mins} minutes from its published timing. A known planet, recovered.",
+                      "html": ispan("story.recovered", "transits of {planet} found without being told where to look, each about {min} minutes "
+                                   "from its published timing. A known planet, recovered.", planet=planet, min=mins)})
     elif planet:
         proof.append({"big": str(counts["known"]), "colour": "#64D2FF",
-                      "text": f"dips on the period of {planet}, a known planet. Recovered, not discovered."})
+                      "text": f"dips on the period of {planet}, a known planet. Recovered, not discovered.",
+                      "html": ispan("story.recovered_period", "dips on the period of {planet}, a known planet. Recovered, not discovered.", planet=planet)})
     proof.append({"big": f"{len(sentinels)} + {len(probes)}", "colour": "#F5F5F7",
-                  "text": "AI Sentinels and Probes read this run's light curve; each vote counts as much as it scored on planted test transits."})
+                  "text": "AI Sentinels and Probes read this run's light curve; each vote counts as much as it scored on planted test transits.",
+                  "html": ispan("story.panel", "AI Sentinels and Probes read this run's light curve; each vote counts as much as it scored on planted test transits.")})
     if feed:
         stars = {r["tic"] for r in feed}
         n_new = sum(1 for r in feed if r.get("status") == "new_candidate")
         proof.append({"big": str(len(feed)), "colour": "#FFD60A",
                       "text": f"entries from {len(stars)} more star{'s' if len(stars) != 1 else ''} in the search feed, "
-                              f"{n_new} at a new period. Leads for review, not planets."})
+                              + (f"{n_new} at a new period. " if n_new else "matching known TOIs. ")
+                              + "Leads for review, not planets.",
+                      "html": ispan("story.feed", "entries from {stars, plural, one {# more star} other {# more stars}} in the search feed, "
+                                   "{new, plural, =0 {matching known TOIs.} one {# at a new period.} other {# at a new period.}} Leads for review, not planets.",
+                                   stars=len(stars), new=n_new)})
     opens = [d for d in dips if d["status"] == "open"]
     if opens:
         w = opens[0]["who"]
         saw = (f"The Probes saw it ({w['probes']} of {w['of_probes']})." if w["probes"] else "No Probe marked it.")
-        sen = ("Both Sentinels passed it by." if w["sentinels"] == 0 and w["of_sentinels"] == 2
-               else f"{w['sentinels']} of {w['of_sentinels']} Sentinels marked it.")
+        saw_h = (ispan("story.probes_saw", "The Probes saw it ({k} of {n}).", k=w["probes"], n=w["of_probes"]) if w["probes"]
+                 else ispan("story.no_probe", "No Probe marked it."))
+        both = w["sentinels"] == 0 and w["of_sentinels"] == 2
+        sen = "Both Sentinels passed it by." if both else f"{w['sentinels']} of {w['of_sentinels']} Sentinels marked it."
+        sen_h = (ispan("story.both_passed", "Both Sentinels passed it by.") if both
+                 else ispan("story.sentinels", "{k} of {n} Sentinels marked it.", k=w["sentinels"], n=w["of_sentinels"]))
         proof.append({"big": str(len(opens)), "colour": "#F5F5F7",
-                      "text": f"dip{'' if len(opens) == 1 else 's'} still open. {saw} {sen}"})
+                      "text": f"dip{'' if len(opens) == 1 else 's'} still open. {saw} {sen}",
+                      "html": f'{ispan("story.open", "{n, plural, one {dip} other {dips}} still open.", n=len(opens))} {saw_h} {sen_h}'})
 
     sectors = {}
     for r in feed:

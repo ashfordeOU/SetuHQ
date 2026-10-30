@@ -19,7 +19,8 @@ from setuhq.names import ATTRIBUTION
 from setuhq.routes import (ALIASES, CHAPTER_SLUGS, DIP_SLUGS, LEGACY_PAGES, ROUTE_PATHS, ROUTES_CORE_JS, from_hash,
                            legacy_target, parse_path, route_table, set_dip_slugs, url_for)
 from setuhq.stubs import write_stubs
-from setuhq.site import PAGE_BUDGET, STUB_BUDGET, check_asset_budget, check_budget
+from setuhq.site import PAGE_BUDGET, SHELL_BUDGET, STUB_BUDGET, check_asset_budget, check_budget
+from setuhq.i18n import unkey
 
 LEAD = "tess-x-001"
 
@@ -125,7 +126,7 @@ def test_each_page_has_its_own_address_title_and_preview(site):
     assert sum(p.startswith("/how-it-works/") for p in pages) == len(CHAPTERS)
     titles = set()
     for p in pages:
-        html = (site / p.strip("/") / "index.html").read_text()
+        html = unkey((site / p.strip("/") / "index.html").read_text())
         title = re.search(r"<title>([^<]+)</title>", html).group(1)
         titles.add(title)
         assert f'<link rel="canonical" href="{brand.SITE_URL}{p}">' in html, p
@@ -169,7 +170,7 @@ def test_sitemap_robots_404_and_forwarding_pages(site):
 
 
 def test_the_header_is_five_plain_sections_search_theme_and_a_menu(site):
-    home = (site / "index.html").read_text()
+    home = unkey((site / "index.html").read_text())
     top = re.search(r'<header class="topbar">.*?</header>', home, re.S).group(0)
     labels = re.findall(r'<a href="[^"]+" data-nav="\w+">([^<]+)</a>', re.search(r'<nav class="nav".*?</nav>', top, re.S).group(0))
     assert labels == ["Explore", "Candidates", "How it works", "Evidence", "Docs"]
@@ -180,11 +181,11 @@ def test_the_header_is_five_plain_sections_search_theme_and_a_menu(site):
     # No run chip, no duplicate page label; breadcrumbs only on deep pages.
     assert "Sector 1" not in top and "curlabel" not in home and 'class="eyebrow"' not in re.search(r'id="route-overview".*?</header>', home, re.S).group(0)
     assert '<nav class="crumbs" id="crumbs" aria-label="Breadcrumb" hidden>' in home
-    assert '<nav class="crumbs" id="crumbs" aria-label="Breadcrumb"><ol>' in (site / "explore" / "galaxy" / "index.html").read_text()
-    assert '<nav class="crumbs" id="crumbs" aria-label="Breadcrumb" hidden>' in (site / "explore" / "index.html").read_text()
+    assert '<nav class="crumbs" id="crumbs" aria-label="Breadcrumb"><ol>' in unkey((site / "explore" / "galaxy" / "index.html").read_text())
+    assert '<nav class="crumbs" id="crumbs" aria-label="Breadcrumb" hidden>' in unkey((site / "explore" / "index.html").read_text())
     css = next(site.glob("assets/site-*.css")).read_text()
     assert "env(safe-area-inset-top" in css and ".topbar{display:block;position:sticky;top:0" in css
-    assert "@media (max-width:899.98px){\n  .nav{display:none}\n  .menubtn{display:inline-grid}" in css
+    assert "@media (max-width:899.98px){\n.nav{display:none}\n.menubtn{display:inline-grid}" in css  # comments and indentation stripped
 
 
 def test_the_home_page(site):
@@ -381,11 +382,12 @@ def test_shared_assets_stay_within_their_budgets(site):
     assert check_asset_budget(site) == []
     assert STUB_BUDGET == 4_096
     assert next((site / "assets").glob("render-*.js")).stat().st_size <= 64_000
+    assert SHELL_BUDGET == 16_000 and next((site / "assets").glob("site-*.js")).stat().st_size <= SHELL_BUDGET
     assert len(list((site / "assets" / "render").glob("*/*.webp"))) == 36
 
 
 def test_the_pictures_page_exists_with_one_heading_and_is_in_the_sitemap(site):
-    page = (site / "docs" / "pictures" / "index.html").read_text()
+    page = unkey((site / "docs" / "pictures" / "index.html").read_text())
     assert len(re.findall(r"<h1\b", page)) == 1 and "How the pictures are drawn." in page
     assert "/docs/pictures/" in json.loads((site / "assets" / "pages.json").read_text())
     assert f"<loc>{brand.SITE_URL}/docs/pictures/</loc>" in (site / "sitemap-pages.xml").read_text()
@@ -409,3 +411,12 @@ def test_every_page_has_the_starfield_the_renderer_and_the_font_preload(site):
     assert '<div class="starfield" data-render="starfield"' in page and '<script type="speculationrules">' in page
     assert '<meta name="view-transition" content="same-origin">' in page
     assert "{{PORTRAIT}}" in (site / "assets" / "stub-template.html").read_text()
+
+
+def test_the_shell_script_has_a_budget_of_its_own(tmp_path):
+    """site-*.js (the shell, and SetuUI's figure utilities) is checked like the app's script and the stylesheet."""
+    (tmp_path / "assets").mkdir()
+    (tmp_path / "assets" / "site-0000000000.js").write_bytes(b"x" * SHELL_BUDGET)
+    assert check_asset_budget(tmp_path) == []
+    (tmp_path / "assets" / "site-0000000000.js").write_bytes(b"x" * (SHELL_BUDGET + 1))
+    assert check_asset_budget(tmp_path) == [f"assets/site-0000000000.js: {SHELL_BUDGET + 1:,} bytes (budget {SHELL_BUDGET:,})"]

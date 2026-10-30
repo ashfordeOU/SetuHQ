@@ -27,6 +27,7 @@ import math
 from functools import lru_cache
 from pathlib import Path
 
+from setuhq.i18n import N_, k as ik, span
 from setuhq.viz import require_source
 
 VALIDATION = "docs/results/pi_men_validation.json"
@@ -235,17 +236,24 @@ def html(data: dict, **opts) -> str:
     if compact:
         # The home page's budget is tight: the figure is its label and caption; the script adds the canvas and the
         # toggle (and, under reduced motion, draws the two panels on it once).
-        return (f'<figure class="stage foldfig compact"><span class="stage-tag">{LABEL}</span>'
-                f'<figcaption>{e(_short_caption(fd))}</figcaption></figure>')
+        return (f'<figure class="stage foldfig compact"><span class="stage-tag" data-i18n="label.real">{LABEL}</span>'
+                f'<figcaption>{span("fold.short", "{n, number} points folded on {p} d: a {depth} ppm, {t14} h dip. Source: {run}.", **_short_args(fd))}</figcaption></figure>')
     return (f'<figure class="stage foldfig" data-fold="{e(where)}" aria-labelledby="{cap}">'
-            f'<span class="stage-tag">{LABEL}</span>'
+            f'<span class="stage-tag" data-i18n="label.real">{LABEL}</span>'
             f'<div class="foldpanels">'
-            f'<div class="foldpanel"><p class="foldlbl"><b>Unfolded</b> · {fd["span"][1] - fd["span"][0]:.0f} days in time order</p>{un}</div>'
-            f'<div class="foldpanel"><p class="foldlbl"><b>Folded</b> on the {fd["p"]:.4f}-day period</p>{fo}</div></div>'
+            f'<div class="foldpanel"><p class="foldlbl">{span("fold.unfolded", "<b>Unfolded</b> · {d} days in time order", d=format(fd["span"][1] - fd["span"][0], ".0f"))}</p>{un}</div>'
+            f'<div class="foldpanel"><p class="foldlbl">{span("fold.folded", "<b>Folded</b> on the {p}-day period", p=format(fd["p"], ".4f"))}</p>{fo}</div></div>'
             f'<div class="foldlive" hidden><canvas role="img" aria-label="{e(alt)}"></canvas></div>'
             f'<div class="foldctl"><button class="btn foldbtn" type="button" aria-pressed="false" hidden>Fold on the period</button>'
             f'<span class="foldstate" aria-live="polite"></span></div>'
-            f'<figcaption id="{cap}" class="readout">{e(alt)} <span class="foldsrc">Source: {e(fd["source"])}</span></figcaption></figure>')
+            f'<figcaption id="{cap}" class="readout">{e(alt)} <span class="foldsrc"{ik("fold.source", s=fd["source"])}>Source: {e(fd["source"])}</span></figcaption></figure>')
+
+
+N_("fold.source", "Source: {s}")
+
+
+def _short_args(fd: dict) -> dict:
+    return {"n": fd["n_points"], "p": f"{fd['p']:.4f}", "depth": f"{fd['depth_ppm']:.0f}", "t14": f"{fd['t14_h']:.2f}", "run": fd["run"]}
 
 
 def _short_caption(fd: dict) -> str:
@@ -298,6 +306,7 @@ CSS = """
 JS = r"""
 // ---------- V05 the fold (setuhq.viz.fold): pi Men's stored light curve, folded on the joint-fit period ----------
 (function(){
+  const TT = (id, en, a) => (window.SetuI18n ? SetuI18n.T(id, en, a) : en.replace(/\{(\w+)[^}]*\}/g, (m, k) => a && k in a ? a[k] : m)).replace(/&#(\d+);/g, (x, d) => String.fromCharCode(d));
   const figs = Array.from(document.querySelectorAll('figure.foldfig'));
   if (!figs.length) return;
   const RM = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } };
@@ -363,7 +372,7 @@ JS = r"""
       c.fillStyle = '#000'; c.fillRect(0, 0, w, h);
       if (!split) return panel(c, dpr, 0, 0, w, h, ease(k), '');
       // The reduced-motion still drawn from the bins (the compact figure carries no static panels): both panels at once.
-      const wide = w > 1.4 * h, a = 'Unfolded: in time order', b = `Folded on the ${F.p.toFixed(4)}-day period`;
+      const wide = w > 1.4 * h, a = TT('fold.a', 'Unfolded: in time order'), b = TT('fold.b', 'Folded on the {p}-day period', {p: F.p.toFixed(4)});
       if (wide){ panel(c, dpr, 0, 0, w / 2, h, 0, a); panel(c, dpr, w / 2, 0, w / 2, h, 1, b); }
       else { panel(c, dpr, 0, 0, w, h / 2, 0, a); panel(c, dpr, 0, h / 2, w, h / 2, 1, b); }
     }
@@ -376,8 +385,8 @@ JS = r"""
       if (k !== target && vis && !document.hidden) raf = requestAnimationFrame(frame);
     }
     const run = () => { if (raf || !F) return; if (RM() || !vis || document.hidden){ k = target; draw(); return; } last = 0; raf = requestAnimationFrame(frame); };
-    const setTarget = (t, say) => { target = t; btn.setAttribute('aria-pressed', String(!!t)); btn.textContent = t ? 'Unfold to time' : 'Fold on the period';
-      if (say && state) state.textContent = t ? `Folded on ${F.p.toFixed(4)} days: the dip appears at zero hours.` : 'In time order: each transit is a handful of points among the rest.'; run(); };
+    const setTarget = (t, say) => { target = t; btn.setAttribute('aria-pressed', String(!!t)); btn.textContent = t ? TT('fold.unfold', 'Unfold to time') : TT('fold.fold', 'Fold on the period');
+      if (say && state) state.textContent = t ? TT('fold.said', 'Folded on {p} days: the dip appears at zero hours.', {p: F.p.toFixed(4)}) : TT('fold.said_time', 'In time order: each transit is a handful of points among the rest.'); run(); };
     const goLive = () => { fig.classList.add('live'); fig.classList.toggle('split', split); live.hidden = false; draw(); };
     btn.hidden = false;
     btn.addEventListener('click', () => { touched = true;

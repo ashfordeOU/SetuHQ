@@ -8,6 +8,7 @@ name each dip by its vetting outcome, carry the attribution line, and show the b
 from __future__ import annotations
 
 import hashlib
+import json
 import re
 from pathlib import Path
 
@@ -120,7 +121,9 @@ def test_the_dashboard_uses_the_outcome_words_tokens_and_the_crosshair(outs):
 def test_the_feed_page_has_its_per_night_chart_and_tables(outs):
     page = outs["discover"].read_text()
     chart = re.search(r"<figure class='chart card'><svg[^>]*role='img' aria-label='([^']+)'", page)
-    assert chart and "per night" in chart.group(1) and "24 matches to known TOIs" in chart.group(1)
+    # The feed grows every scheduled batch, so the expected count is read from the committed catalogue.
+    known = sum(1 for e in json.loads(FEED.read_text())["candidates"] if e.get("status") == "known_toi")
+    assert chart and "per night" in chart.group(1) and f"{known} matches to known TOIs" in chart.group(1)
     assert "<rect class='known'" in page and "candidate, unconfirmed" in page
     assert "None is a confirmed planet until independent follow-up confirms it." in page
 

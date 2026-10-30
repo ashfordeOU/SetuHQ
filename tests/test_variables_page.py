@@ -13,6 +13,7 @@ import pytest
 from setuhq import docket as docket_mod
 from setuhq.everything import DEFAULT_SWEEP, VARIABLES_JS, load_sweep, sweep_meta, variables_filter
 from conftest import served, site_bundle
+from setuhq.i18n import unkey
 
 PLAYWRIGHT = "/opt/node22/lib/node_modules/playwright"
 CHROMIUM = "/opt/pw-browsers/chromium"
@@ -51,7 +52,7 @@ def test_every_figure_comes_from_the_committed_catalogue(pi_men_app):
     assert "entries" not in d and "coverage" not in d
     # The home page says it in one sentence and links here; the counts and the null comparison live on this page.
     home = _route(page, "overview")
-    assert '<p class="sweepline">We have searched ' in home and "null " not in home
+    assert '<p class="sweepline"><span>We have searched ' in unkey(home) and "null " not in home
     over = _route(page, "variables")
     c = CAT["counts"]
     for n, label in ((c["stars_searched"], "stars searched"), (c["star_sectors_searched"], "star-sectors"),
@@ -210,3 +211,11 @@ const { chromium } = require(%s);
         assert r["skyLayer"] == ""
         assert f"Sweep {c['stars_searched']:,} stars" in r["tele"]
         assert any(f"TIC {tic}" in s for s in r["search"]), r["search"]
+
+
+def test_no_div_carries_an_aria_label_without_a_role(pi_men_app):
+    """axe's aria-prohibited-attr: a generic div may not be named. The entries list was <div aria-label="Entries">."""
+    page = _page(pi_men_app)
+    assert 'id="valist"' in page
+    bad = re.findall(r"<div(?![^>]*\brole=)[^>]*\baria-label=[^>]*>", page)
+    assert bad == [], bad[:3]

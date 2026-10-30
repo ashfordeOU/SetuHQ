@@ -12,6 +12,8 @@ On a phone the panes become a stacked list.
 
 from __future__ import annotations
 
+from setuhq.i18n import N_, k as ik, span, t, th
+
 import html
 
 from setuhq.methods import system_stage
@@ -39,7 +41,7 @@ def mission_section(eyebrow: str) -> str:
     grids = "".join(f'<button class="btn" type="button" data-mcgrid="{k}" aria-pressed="false">{e(v)}</button>' for k, v in GRIDS)
     return f"""<header class="headrow mchero">
         <div>{eyebrow}<h1 id="h-mission" tabindex="-1">Mission Control</h1>
-        <p>Pick a star in any pane; every pane and every popped-out window follows.</p></div>
+        <p{ik("mc.intro")}>{t("mc.intro", "Pick a star in any pane; every pane and every popped-out window follows.")}</p></div>
       </header>
       <div class="mctele mono" id="mctele"></div>
       <div class="mctoolbar" role="toolbar" aria-label="Layout">

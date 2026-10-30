@@ -1,0 +1,3909 @@
+{
+ "@@locale": "nl",
+ "@@x-source-locale": "en",
+ "cat.h1": "Elke bekende exoplaneet.",
+ "@cat.h1": {
+  "x-review": "machine",
+  "x-source": "c12b2894d2"
+ },
+ "cat.h1b": "{n, number} records, doorzoekbaar.",
+ "@cat.h1b": {
+  "x-review": "machine",
+  "x-source": "0082f39a49"
+ },
+ "cat.intro": "Alle {n, number} planeten in {source}, inclusief de {nodist, number} zonder opgeslagen afstand die de Melkwegkaart niet kan plaatsen. SetuHQ heeft deze planeten niet ontdekt; het catalogiseert ze.",
+ "@cat.intro": {
+  "x-review": "machine",
+  "x-source": "ca9826547d"
+ },
+ "cat.not_ours": "SetuHQ heeft deze planeten niet ontdekt.",
+ "@cat.not_ours": {
+  "x-review": "machine",
+  "x-source": "759a661951"
+ },
+ "cf.h1": "Elk signaal, zijn dips en de controles achter elk oordeel.",
+ "@cf.h1": {
+  "x-review": "machine",
+  "x-source": "2b73eb58d2"
+ },
+ "cf.intro": "Het dossier van de run van de dip: elk signaal en zijn dips, met de uitkomst van de vetting, de transitstrook en het oordeelregister. Elk signaal dat de vetting doorstond is een {status}; een afgewezen of gemarkeerd signaal wordt naar zijn status genoemd.",
+ "@cf.intro": {
+  "x-review": "machine",
+  "x-source": "252d456e94"
+ },
+ "cf.link": "Dossier ›",
+ "@cf.link": {
+  "x-review": "machine",
+  "x-source": "ceac0b11e3"
+ },
+ "chapter.astrometry": "Astrometrie",
+ "@chapter.astrometry": {
+  "x-review": "machine",
+  "x-source": "8a0961eea7"
+ },
+ "chapter.doppler": "Naar ons toe en van ons af",
+ "@chapter.doppler": {
+  "x-review": "machine",
+  "x-source": "982502489b"
+ },
+ "chapter.equations": "Vergelijkingen van het leven",
+ "@chapter.equations": {
+  "x-review": "machine",
+  "x-source": "a586047366"
+ },
+ "chapter.falsepos": "Fout-positieven",
+ "@chapter.falsepos": {
+  "x-review": "machine",
+  "x-source": "04819af0c8"
+ },
+ "chapter.history": "Geschiedenis en artikelen",
+ "@chapter.history": {
+  "x-review": "machine",
+  "x-source": "c6638a4574"
+ },
+ "chapter.imaging": "Sterlicht afschermen",
+ "@chapter.imaging": {
+  "x-review": "machine",
+  "x-source": "6464ce5238"
+ },
+ "chapter.microlensing": "Microlensing",
+ "@chapter.microlensing": {
+  "x-review": "machine",
+  "x-source": "7713c65bef"
+ },
+ "chapter.molecules": "Moleculen en leven",
+ "@chapter.molecules": {
+  "x-review": "machine",
+  "x-source": "d0ac3c4b97"
+ },
+ "chapter.population": "Populatie",
+ "@chapter.population": {
+  "x-review": "machine",
+  "x-source": "5b828861ae"
+ },
+ "chapter.radio": "Radio",
+ "@chapter.radio": {
+  "x-review": "machine",
+  "x-source": "2a7dfeb2f2"
+ },
+ "chapter.rv": "Radiële snelheid",
+ "@chapter.rv": {
+  "x-review": "machine",
+  "x-source": "5605460ec2"
+ },
+ "chapter.spectroscopy": "Atmosferen lezen",
+ "@chapter.spectroscopy": {
+  "x-review": "machine",
+  "x-source": "e57371d577"
+ },
+ "chapter.survey": "Hoe een survey werkt",
+ "@chapter.survey": {
+  "x-review": "machine",
+  "x-source": "418a56729e"
+ },
+ "chapter.timing": "Timing en fase",
+ "@chapter.timing": {
+  "x-review": "machine",
+  "x-source": "f5f7adb77b"
+ },
+ "chapter.transit": "Transit",
+ "@chapter.transit": {
+  "x-review": "machine",
+  "x-source": "99da84d9ad"
+ },
+ "cli.argparse.argument": "argument %(argument_name)s: %(message)s",
+ "@cli.argparse.argument": {
+  "x-review": "machine",
+  "x-source": "2ee7b9a91a"
+ },
+ "cli.argparse.choice": "ongeldige keuze: %(value)r (kies uit %(choices)s)",
+ "@cli.argparse.choice": {
+  "x-review": "machine",
+  "x-source": "9dbc964dd3"
+ },
+ "cli.argparse.error": "%(prog)s: fout: %(message)s\n",
+ "@cli.argparse.error": {
+  "x-review": "machine",
+  "x-source": "954b9f0ae6"
+ },
+ "cli.argparse.help": "deze hulp tonen en afsluiten",
+ "@cli.argparse.help": {
+  "x-review": "machine",
+  "x-source": "608017daf4"
+ },
+ "cli.argparse.one": "één argument verwacht",
+ "@cli.argparse.one": {
+  "x-review": "machine",
+  "x-source": "d5d4f7b111"
+ },
+ "cli.argparse.options": "opties",
+ "@cli.argparse.options": {
+  "x-review": "machine",
+  "x-source": "a793ab8fcc"
+ },
+ "cli.argparse.positional": "positionele argumenten",
+ "@cli.argparse.positional": {
+  "x-review": "machine",
+  "x-source": "a5f91c7a58"
+ },
+ "cli.argparse.required": "de volgende argumenten zijn verplicht: %s",
+ "@cli.argparse.required": {
+  "x-review": "machine",
+  "x-source": "25fb5034ca"
+ },
+ "cli.argparse.unrecognized": "onbekende argumenten: %s",
+ "@cli.argparse.unrecognized": {
+  "x-review": "machine",
+  "x-source": "5ed6ba5c37"
+ },
+ "cli.argparse.usage": "gebruik:",
+ "@cli.argparse.usage": {
+  "x-review": "machine",
+  "x-source": "d85f7a9a6f"
+ },
+ "cli.argparse.version": "het versienummer van het programma tonen en afsluiten",
+ "@cli.argparse.version": {
+  "x-review": "machine",
+  "x-source": "d534d67f66"
+ },
+ "cli.cmd.app": "hetzelfde als 'setuhq site' (de oude naam, toen de site één app-pagina was)",
+ "@cli.cmd.app": {
+  "x-review": "machine",
+  "x-source": "f119fa15f1"
+ },
+ "cli.cmd.batch": "de discover-stroom over een doellijst uitvoeren, gecachet en hervatbaar",
+ "@cli.cmd.batch": {
+  "x-review": "machine",
+  "x-source": "40b27855e9"
+ },
+ "cli.cmd.benchmark": "benchmark met injectie en terugvinden voor het geconfigureerde panel",
+ "@cli.cmd.benchmark": {
+  "x-review": "machine",
+  "x-source": "4c26cdd1fc"
+ },
+ "cli.cmd.binaries": "bedekkingsveranderlijken en ellipsoïdale of reflectieveranderlijken: periode, bedekkingen, secundaire fase (hint voor e cos w), morfologie; een kandidaatvlag met redenen",
+ "@cli.cmd.binaries": {
+  "x-review": "machine",
+  "x-source": "0abdc48c4a"
+ },
+ "cli.cmd.bundle": "het sectorrecord van een sweep exporteren als bijdragepakket, verzegeld met inhoudshashes",
+ "@cli.cmd.bundle": {
+  "x-review": "machine",
+  "x-source": "9852df2e94"
+ },
+ "cli.cmd.calibrate": "gewichten van beoordelaars schatten met injectie",
+ "@cli.cmd.calibrate": {
+  "x-review": "machine",
+  "x-source": "207a6e9d1b"
+ },
+ "cli.cmd.check-sweep": "controleren dat elke bijdrage is opgenomen en intact is, en dat de catalogus is wat de geverifieerde bronnen opnieuw opbouwen",
+ "@cli.cmd.check-sweep": {
+  "x-review": "machine",
+  "x-source": "5634f750a9"
+ },
+ "cli.cmd.cheops": "CHEOPS Guest Observers Running Call: een voorbereidingspakket voor een voorstel schrijven",
+ "@cli.cmd.cheops": {
+  "x-review": "machine",
+  "x-source": "4f36cba2a0"
+ },
+ "cli.cmd.crossmatch": "het NASA Exoplanet Archive bevragen voor de doelen van de run en crossmatch.json opslaan",
+ "@cli.cmd.crossmatch": {
+  "x-review": "machine",
+  "x-source": "3b450e6853"
+ },
+ "cli.cmd.dashboard": "het interactieve dashboard bouwen uit een run en een optionele ontdekkingscatalogus",
+ "@cli.cmd.dashboard": {
+  "x-review": "machine",
+  "x-source": "75a27378f8"
+ },
+ "cli.cmd.discover": "één geplande ontdekkingsbatch uitvoeren en de catalogus bijwerken",
+ "@cli.cmd.discover": {
+  "x-review": "machine",
+  "x-source": "c89cac74a5"
+ },
+ "cli.cmd.docket": "de dossierweergave van de kandidaten van een run bouwen",
+ "@cli.cmd.docket": {
+  "x-review": "machine",
+  "x-source": "6d3fd99980"
+ },
+ "cli.cmd.export": "een tabel in ExoFOP-CTOI-stijl en voorspelde transitvensters voor een run schrijven",
+ "@cli.cmd.export": {
+  "x-review": "machine",
+  "x-source": "20cf1a8c0c"
+ },
+ "cli.cmd.flares": "stellaire flares detecteren: morfologie, energieën, volledigheid en een nultoets",
+ "@cli.cmd.flares": {
+  "x-review": "machine",
+  "x-source": "9d57912ca7"
+ },
+ "cli.cmd.ingest": "een bijdragepakket valideren en in de catalogus samenvoegen, met naamsvermelding",
+ "@cli.cmd.ingest": {
+  "x-review": "machine",
+  "x-source": "d729fd0e7d"
+ },
+ "cli.cmd.leaderboard": "een inzending beoordelen op de achtergehouden helft van de bevroren benchmark met echte TOI's, of docs/leaderboard opnieuw opbouwen uit elke opgeslagen inzending",
+ "@cli.cmd.leaderboard": {
+  "x-review": "machine",
+  "x-source": "eff0c84e54"
+ },
+ "cli.cmd.lint": "voorsteltekst (of pdf, met pypdf) doorzoeken op alles wat de anonimiteit breekt; een hulp, geen garantie",
+ "@cli.cmd.lint": {
+  "x-review": "machine",
+  "x-source": "dec0a3adc2"
+ },
+ "cli.cmd.mcp": "de MCP-server via stdio starten, zoals setuhq-mcp (vereist de extra mcp: pip install 'setuhq[mcp]')",
+ "@cli.cmd.mcp": {
+  "x-review": "machine",
+  "x-source": "36efd33521"
+ },
+ "cli.cmd.plate": "de drukklare platenpagina bouwen: één plaat per ster, met bijschriften",
+ "@cli.cmd.plate": {
+  "x-review": "machine",
+  "x-source": "54445abdca"
+ },
+ "cli.cmd.propose": "een waarneemvoorstel voorbereiden (een voorbereidingspakket; er wordt niets ingediend)",
+ "@cli.cmd.propose": {
+  "x-review": "machine",
+  "x-source": "f565d45d49"
+ },
+ "cli.cmd.pulsations": "frequentieanalyse: prewhitening, combinaties, achtergrond, numax/Δν, type",
+ "@cli.cmd.pulsations": {
+  "x-review": "machine",
+  "x-source": "6f493bd600"
+ },
+ "cli.cmd.rebuild": "een opgeslagen run opnieuw vetten (fit, FAP, vlaggen) uit de opgeslagen classificaties",
+ "@cli.cmd.rebuild": {
+  "x-review": "machine",
+  "x-source": "aaf332ed6a"
+ },
+ "cli.cmd.report": "een statische HTML-rapportsite bouwen uit een runmap",
+ "@cli.cmd.report": {
+  "x-review": "machine",
+  "x-source": "52964d6b1b"
+ },
+ "cli.cmd.rotation": "een rotatieperiode uit vlekmodulatie (Lomb-Scargle en ACF), per sector; perioden boven ongeveer 13 d worden niet gemeten",
+ "@cli.cmd.rotation": {
+  "x-review": "machine",
+  "x-source": "ce419593f9"
+ },
+ "cli.cmd.run": "de pijplijn draaien op de doelen in een configuratiebestand",
+ "@cli.cmd.run": {
+  "x-review": "machine",
+  "x-source": "ebbdd3027a"
+ },
+ "cli.cmd.site": "de website bouwen (elke pagina, de gedeelde bestanden, de rapporten, platen en dossiers) uit een of meer runs",
+ "@cli.cmd.site": {
+  "x-review": "machine",
+  "x-source": "bdfe2af14f"
+ },
+ "cli.cmd.sweep": "de SPOC-2-minutendoelen van een TESS-sector doorzoeken (hervatbaar) voor de variabiliteitscatalogus",
+ "@cli.cmd.sweep": {
+  "x-review": "machine",
+  "x-source": "7da0597b32"
+ },
+ "cli.cmd.transients": "niet-periodieke ophelderingen: stijging, daling, amplitude, klassehints en filters tegen vals alarm, in een SPOC-lichtcurve of een TESScut-uitsnede van elke positie",
+ "@cli.cmd.transients": {
+  "x-review": "machine",
+  "x-source": "edf6a53e13"
+ },
+ "cli.desc.propose.cheops": "SetuHQ is onafhankelijk en is niet gelieerd aan, niet onderschreven door en wordt niet uitgevoerd namens ESA, de CHEOPS-missie of het CHEOPS-consortium. Het vervangt niet de Target Checker, de Visibility Tool, de Exposure Time Calculator, de Scheduling Feasibility Checker of het document Policies & Procedures van ESA; de officiële oproep en hulpmiddelen zijn bepalend.",
+ "@cli.desc.propose.cheops": {
+  "x-review": "machine",
+  "x-source": "cceac73b43"
+ },
+ "cli.desc.setuhq": "Opdrachtregel: ``setuhq run``, ``setuhq benchmark``, ``setuhq calibrate``, ``setuhq site``, ``setuhq plate`` en meer.",
+ "@cli.desc.setuhq": {
+  "x-review": "machine",
+  "x-source": "b77812ae01"
+ },
+ "cli.opt.batch.max-targets": "stoppen na zoveel doelen in deze sessie",
+ "@cli.opt.batch.max-targets": {
+  "x-review": "machine",
+  "x-source": "d73a203b72"
+ },
+ "cli.opt.batch.retries": "nieuwe pogingen voor een mislukt doel in latere sessies",
+ "@cli.opt.batch.retries": {
+  "x-review": "machine",
+  "x-source": "c1df123c33"
+ },
+ "cli.opt.batch.sectors": "nieuwste sectoren per doel",
+ "@cli.opt.batch.sectors": {
+  "x-review": "machine",
+  "x-source": "9847836fea"
+ },
+ "cli.opt.batch.targets": "tekstbestand met TIC-id's, één per regel",
+ "@cli.opt.batch.targets": {
+  "x-review": "machine",
+  "x-source": "12cb2ebf9d"
+ },
+ "cli.opt.batch.tic": "TIC-id's",
+ "@cli.opt.batch.tic": {
+  "x-review": "machine",
+  "x-source": "1ec96f2b2c"
+ },
+ "cli.opt.batch.toi-cache": "gecachete TOI-tabel van het archief, om feedvermeldingen te labelen als known_toi of new_candidate",
+ "@cli.opt.batch.toi-cache": {
+  "x-review": "machine",
+  "x-source": "ce354b2d0e"
+ },
+ "cli.opt.batch.weights": "JSON met gewichten van beoordelaars",
+ "@cli.opt.batch.weights": {
+  "x-review": "machine",
+  "x-source": "53409ff573"
+ },
+ "cli.opt.benchmark.out": "te schrijven markdownbestand",
+ "@cli.opt.benchmark.out": {
+  "x-review": "machine",
+  "x-source": "eb949f2129"
+ },
+ "cli.opt.benchmark.weights": "JSON met gewichten",
+ "@cli.opt.benchmark.weights": {
+  "x-review": "machine",
+  "x-source": "5a7dbbe171"
+ },
+ "cli.opt.binaries.cache": "cachemap (MAST-bestanden, TIC-waarden)",
+ "@cli.opt.binaries.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.binaries.exptime": "TESS-cadans in seconden",
+ "@cli.opt.binaries.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.binaries.out": "het JSON-record hierheen schrijven",
+ "@cli.opt.binaries.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.binaries.sector": "TESS-sectoren (standaard: elke SPOC-sector)",
+ "@cli.opt.binaries.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.binaries.target": "een TIC-id (bijv. 'TIC 441420236'), een SPOC-bestand *_lc.fits of een CSV (time, flux[, flux_err])",
+ "@cli.opt.binaries.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.binaries.transit-duration": "de duur (d)",
+ "@cli.opt.binaries.transit-duration": {
+  "x-review": "machine",
+  "x-source": "14084d1df6"
+ },
+ "cli.opt.binaries.transit-epoch": "het midden van de transit (BTJD)",
+ "@cli.opt.binaries.transit-epoch": {
+  "x-review": "machine",
+  "x-source": "8e38587901"
+ },
+ "cli.opt.binaries.transit-period": "adviserende vetting-hints bij de periode van een transitkandidaat (d)",
+ "@cli.opt.binaries.transit-period": {
+  "x-review": "machine",
+  "x-source": "2c253e7f29"
+ },
+ "cli.opt.bundle.contributor": "de te vermelden naam (zelf te kiezen; getoond op de site)",
+ "@cli.opt.bundle.contributor": {
+  "x-review": "machine",
+  "x-source": "52709c8c8b"
+ },
+ "cli.opt.bundle.out": "te schrijven pakketmap",
+ "@cli.opt.bundle.out": {
+  "x-review": "machine",
+  "x-source": "0fd5207362"
+ },
+ "cli.opt.bundle.record": "het sectorrecord, bijv. my-sweep/sector_0005.json.gz",
+ "@cli.opt.bundle.record": {
+  "x-review": "machine",
+  "x-source": "277968793c"
+ },
+ "cli.opt.calibrate.image-dir": "waar kalibratiebeelden worden getekend, als beoordelaars ze nodig hebben",
+ "@cli.opt.calibrate.image-dir": {
+  "x-review": "machine",
+  "x-source": "8ddc793e3a"
+ },
+ "cli.opt.calibrate.out": "te schrijven JSON met gewichten",
+ "@cli.opt.calibrate.out": {
+  "x-review": "machine",
+  "x-source": "d107a13850"
+ },
+ "cli.opt.check-sweep.fix": "catalogue.json opnieuw opbouwen uit de geverifieerde bronnen",
+ "@cli.opt.check-sweep.fix": {
+  "x-review": "machine",
+  "x-source": "f89150012c"
+ },
+ "cli.opt.check-sweep.ledger-base": "een git-ref waarvan dit opnamelogboek alleen een uitbreiding mag zijn; 'auto' is de merge-base met de basisbranch (SETUHQ_BASE, GITHUB_BASE_REF of de standaardbranch van de remote). Een ontbrekende basis faalt als CI is ingesteld",
+ "@cli.opt.check-sweep.ledger-base": {
+  "x-review": "machine",
+  "x-source": "f6b4b1fabb"
+ },
+ "cli.opt.cheops.denoise": "met --flares: eerst ruisonderdrukking met wavelets",
+ "@cli.opt.cheops.denoise": {
+  "x-review": "machine",
+  "x-source": "bd0a95d70e"
+ },
+ "cli.opt.cheops.file-key": "één bezoek (CH_PR..._TG..._V....)",
+ "@cli.opt.cheops.file-key": {
+  "x-review": "machine",
+  "x-source": "e108c5fdc1"
+ },
+ "cli.opt.cheops.flares": "ook flares in elk bezoek detecteren",
+ "@cli.opt.cheops.flares": {
+  "x-review": "machine",
+  "x-source": "1b9e23c896"
+ },
+ "cli.opt.cheops.offline": "alleen cache, geen netwerk",
+ "@cli.opt.cheops.offline": {
+  "x-review": "machine",
+  "x-source": "7fb233fb38"
+ },
+ "cli.opt.cheops.out": "het JSON-record hierheen schrijven",
+ "@cli.opt.cheops.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.cheops.points": "de ontrende punten in het record opnemen",
+ "@cli.opt.cheops.points": {
+  "x-review": "machine",
+  "x-source": "de5db37740"
+ },
+ "cli.opt.cheops.target": "een sternaam of 'RA DEC' in graden",
+ "@cli.opt.cheops.target": {
+  "x-review": "machine",
+  "x-source": "19a2fbdcf5"
+ },
+ "cli.opt.crossmatch.star": "sternaam (hostname of pl_name); TIC-doelen matchen ook op tic_id",
+ "@cli.opt.crossmatch.star": {
+  "x-review": "machine",
+  "x-source": "25164e4aa2"
+ },
+ "cli.opt.dashboard.catalog": "op te nemen JSON van de ontdekkingscatalogus",
+ "@cli.opt.dashboard.catalog": {
+  "x-review": "machine",
+  "x-source": "941f727440"
+ },
+ "cli.opt.discover.publish-new": "alleen voor private installaties: signalen die bij geen bekende TOI passen in de catalogus houden. Standaard worden ze uit elke openbare uitvoer weggehouden (achtergehouden voor niet-openbare beoordeling); de openbare workflow geeft dit nooit mee",
+ "@cli.opt.discover.publish-new": {
+  "x-review": "machine",
+  "x-source": "fa834dcccf"
+ },
+ "cli.opt.docket.allow-missing-crossmatch": "ook bouwen als er geen bruikbare opgeslagen archiefmatch is; de pagina toont dan de opgeslagen fout",
+ "@cli.opt.docket.allow-missing-crossmatch": {
+  "x-review": "machine",
+  "x-source": "ea4922a1f2"
+ },
+ "cli.opt.docket.refresh-crossmatch": "eerst 'setuhq crossmatch' uitvoeren: het archief bevragen en crossmatch.json opslaan",
+ "@cli.opt.docket.refresh-crossmatch": {
+  "x-review": "machine",
+  "x-source": "16850a4df3"
+ },
+ "cli.opt.docket.star": "sternaam voor de archiefmatch (hostname of pl_name); TIC-doelen matchen ook op tic_id",
+ "@cli.opt.docket.star": {
+  "x-review": "machine",
+  "x-source": "fa232a85fb"
+ },
+ "cli.opt.export.allow-unchecked": "ook exporteren als de TOI-duplicaatcontrole niet kan (de rijen zeggen het)",
+ "@cli.opt.export.allow-unchecked": {
+  "x-review": "machine",
+  "x-source": "00695ab022"
+ },
+ "cli.opt.export.days": "hoe ver vooruit transitvensters worden voorspeld",
+ "@cli.opt.export.days": {
+  "x-review": "machine",
+  "x-source": "331c4f1544"
+ },
+ "cli.opt.export.toi-cache": "gecachete TOI-tabel van het archief (opgehaald en hier geschreven als die ontbreekt)",
+ "@cli.opt.export.toi-cache": {
+  "x-review": "machine",
+  "x-source": "a99eb8c584"
+ },
+ "cli.opt.flares.cache": "cachemap (MAST-bestanden, TIC-waarden)",
+ "@cli.opt.flares.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.flares.completeness": "N pogingen met injectie en terugvinden (elk 10 flares)",
+ "@cli.opt.flares.completeness": {
+  "x-review": "machine",
+  "x-source": "138f48258e"
+ },
+ "cli.opt.flares.denoise": "eerst stationaire ruisonderdrukking met wavelets (vereist setuhq[wavelets])",
+ "@cli.opt.flares.denoise": {
+  "x-review": "machine",
+  "x-source": "923a73f3ed"
+ },
+ "cli.opt.flares.distance-pc": "de TIC-afstand overschrijven (pc)",
+ "@cli.opt.flares.distance-pc": {
+  "x-review": "machine",
+  "x-source": "5f618e8fe1"
+ },
+ "cli.opt.flares.exptime": "TESS-cadans in seconden",
+ "@cli.opt.flares.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.flares.mission": "bepaalt de detectie-instellingen en de band",
+ "@cli.opt.flares.mission": {
+  "x-review": "machine",
+  "x-source": "707cfede2f"
+ },
+ "cli.opt.flares.no-null": "de nultoets met omgekeerde flux overslaan",
+ "@cli.opt.flares.no-null": {
+  "x-review": "machine",
+  "x-source": "15da4f002c"
+ },
+ "cli.opt.flares.out": "het JSON-record hierheen schrijven",
+ "@cli.opt.flares.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.flares.radius": "de TIC-straal overschrijven (zonsstralen)",
+ "@cli.opt.flares.radius": {
+  "x-review": "machine",
+  "x-source": "2333e6c1d4"
+ },
+ "cli.opt.flares.sector": "TESS-sectoren (standaard: elke SPOC-sector)",
+ "@cli.opt.flares.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.flares.target": "een TIC-id (bijv. 'TIC 441420236'), een SPOC-bestand *_lc.fits of een CSV (time, flux[, flux_err])",
+ "@cli.opt.flares.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.flares.teff": "de TIC-Teff overschrijven (K)",
+ "@cli.opt.flares.teff": {
+  "x-review": "machine",
+  "x-source": "f8dce33e3f"
+ },
+ "cli.opt.flares.tmag": "de TIC-TESS-magnitude overschrijven",
+ "@cli.opt.flares.tmag": {
+  "x-review": "machine",
+  "x-source": "5d89050461"
+ },
+ "cli.opt.ingest.accept-sentinels": "een pakket met Sentinels accepteren, waarvan de dips hier niet opnieuw kunnen worden doorzocht (de catalogus zegt het)",
+ "@cli.opt.ingest.accept-sentinels": {
+  "x-review": "machine",
+  "x-source": "43052bd204"
+ },
+ "cli.opt.ingest.attested-by": "de GitHub-login van wie het pakket stuurde (de auteur van de pull request)",
+ "@cli.opt.ingest.attested-by": {
+  "x-review": "machine",
+  "x-source": "99ebfcc35a"
+ },
+ "cli.opt.ingest.bundle": "pakketmap of .zip",
+ "@cli.opt.ingest.bundle": {
+  "x-review": "machine",
+  "x-source": "8a6728595c"
+ },
+ "cli.opt.ingest.verify-lightcurves": "hoeveel ster-sectoren willekeurig op te halen en opnieuw te doorzoeken, naast elk met een planeetkandidaat of een vermelding in een klasse boven haar nultoets (standaard: max(3, 5%%)); elke vermelding moet overeenkomen",
+ "@cli.opt.ingest.verify-lightcurves": {
+  "x-review": "machine",
+  "x-source": "a8325b1730"
+ },
+ "cli.opt.leaderboard.submission": "een JSON-inzending (docs/leaderboard/README.md); weglaten om de tabel opnieuw op te bouwen",
+ "@cli.opt.leaderboard.submission": {
+  "x-review": "machine",
+  "x-source": "0a572af021"
+ },
+ "cli.opt.leaderboard.submissions": "map met inzendingen om te beoordelen bij het opnieuw opbouwen",
+ "@cli.opt.leaderboard.submissions": {
+  "x-review": "machine",
+  "x-source": "d14c33cf89"
+ },
+ "cli.opt.plate.allow-missing-crossmatch": "ook bouwen als er geen bruikbare opgeslagen archiefmatch is; de pagina toont dan de opgeslagen fout",
+ "@cli.opt.plate.allow-missing-crossmatch": {
+  "x-review": "machine",
+  "x-source": "ea4922a1f2"
+ },
+ "cli.opt.plate.catalog": "JSON van de ontdekkingscatalogus: de sterren krijgen platen en komen in de rivier van de tijd",
+ "@cli.opt.plate.catalog": {
+  "x-review": "machine",
+  "x-source": "e0f0c444fc"
+ },
+ "cli.opt.plate.star": "sternaam voor de archiefmatch, zoals bij 'setuhq docket'",
+ "@cli.opt.plate.star": {
+  "x-review": "machine",
+  "x-source": "5a6e358f96"
+ },
+ "cli.opt.propose.cheops.author-name": "een naam die de anonimiteitscontrole moet melden (herhaalbaar; nooit in het pakket geschreven)",
+ "@cli.opt.propose.cheops.author-name": {
+  "x-review": "machine",
+  "x-source": "4155c649d2"
+ },
+ "cli.opt.propose.cheops.coord-source": "waar --ra/--dec vandaan komen (posities van ExoFOP en Gaia worden geweigerd: verkeerd epoch)",
+ "@cli.opt.propose.cheops.coord-source": {
+  "x-review": "machine",
+  "x-source": "60a0952794"
+ },
+ "cli.opt.propose.cheops.cycle": "indieningscyclus JJJJ-MM (standaard: de volgende open cyclus voor het programma)",
+ "@cli.opt.propose.cheops.cycle": {
+  "x-review": "machine",
+  "x-source": "0fd6ca07d8"
+ },
+ "cli.opt.propose.cheops.dec": "uw Dec. in graden (ICRS, J2000)",
+ "@cli.opt.propose.cheops.dec": {
+  "x-review": "machine",
+  "x-source": "c89b51ca1f"
+ },
+ "cli.opt.propose.cheops.depth-ppm": "diepte van de gebeurtenis (transit, bedekking) of flare-amplitude, ppm",
+ "@cli.opt.propose.cheops.depth-ppm": {
+  "x-review": "machine",
+  "x-source": "f68df536ad"
+ },
+ "cli.opt.propose.cheops.duration-hours": "duur van de gebeurtenis in uren",
+ "@cli.opt.propose.cheops.duration-hours": {
+  "x-review": "machine",
+  "x-source": "5e5ef3e71f"
+ },
+ "cli.opt.propose.cheops.efficiency": "aan te nemen waarneemefficiëntie (voorlopig; neem die van u uit de Visibility Tool)",
+ "@cli.opt.propose.cheops.efficiency": {
+  "x-review": "machine",
+  "x-source": "365381f043"
+ },
+ "cli.opt.propose.cheops.flare-rate": "flares per dag boven de amplitude (voor --event flare)",
+ "@cli.opt.propose.cheops.flare-rate": {
+  "x-review": "machine",
+  "x-source": "83b5c5aff0"
+ },
+ "cli.opt.propose.cheops.gmag": "Gaia-G-magnitude (standaard: die van SIMBAD)",
+ "@cli.opt.propose.cheops.gmag": {
+  "x-review": "machine",
+  "x-source": "1501588e77"
+ },
+ "cli.opt.propose.cheops.institution": "een instelling die de anonimiteitscontrole moet melden (herhaalbaar; nooit in het pakket geschreven)",
+ "@cli.opt.propose.cheops.institution": {
+  "x-review": "machine",
+  "x-source": "c02f921244"
+ },
+ "cli.opt.propose.cheops.name": "pakketnaam onder runs/propose/ (standaard cheops-<target>-<cycle>)",
+ "@cli.opt.propose.cheops.name": {
+  "x-review": "machine",
+  "x-source": "31cda5b062"
+ },
+ "cli.opt.propose.cheops.no-cache": "cache/cheops-propose/ niet lezen of schrijven",
+ "@cli.opt.propose.cheops.no-cache": {
+  "x-review": "machine",
+  "x-source": "082b236e30"
+ },
+ "cli.opt.propose.cheops.offline": "geen netwerkverzoek doen (alleen cache; controles zeggen dan 'not checked')",
+ "@cli.opt.propose.cheops.offline": {
+  "x-review": "machine",
+  "x-source": "fa7a0c88a2"
+ },
+ "cli.opt.propose.cheops.orbits": "banen die u wilt aanvragen (gecontroleerd tegen de grenzen van het programma)",
+ "@cli.opt.propose.cheops.orbits": {
+  "x-review": "machine",
+  "x-source": "8d710414cd"
+ },
+ "cli.opt.propose.cheops.out": "aan te maken pakketmap (standaard runs/propose/<name>; nooit overschreven)",
+ "@cli.opt.propose.cheops.out": {
+  "x-review": "machine",
+  "x-source": "fc29338ed1"
+ },
+ "cli.opt.propose.cheops.period": "periode, dagen",
+ "@cli.opt.propose.cheops.period": {
+  "x-review": "machine",
+  "x-source": "0f00d3ed0b"
+ },
+ "cli.opt.propose.cheops.period-err": "de 1-sigmafout, dagen",
+ "@cli.opt.propose.cheops.period-err": {
+  "x-review": "machine",
+  "x-source": "e090374184"
+ },
+ "cli.opt.propose.cheops.ra": "uw RA in graden (ICRS, J2000), in plaats van die van SIMBAD",
+ "@cli.opt.propose.cheops.ra": {
+  "x-review": "machine",
+  "x-source": "7452b9af9c"
+ },
+ "cli.opt.propose.cheops.snr": "beoogde S/N op de gebeurtenis (standaard 10)",
+ "@cli.opt.propose.cheops.snr": {
+  "x-review": "machine",
+  "x-source": "1bed72cce4"
+ },
+ "cli.opt.propose.cheops.t0": "midden van de transit, BJD_TDB (of BTJD)",
+ "@cli.opt.propose.cheops.t0": {
+  "x-review": "machine",
+  "x-source": "3583f77acc"
+ },
+ "cli.opt.propose.cheops.t0-err": "de 1-sigmafout, dagen",
+ "@cli.opt.propose.cheops.t0-err": {
+  "x-review": "machine",
+  "x-source": "e090374184"
+ },
+ "cli.opt.propose.cheops.target": "doelnaam zoals SIMBAD die kent (bijv. 'TOI-1987', 'HD 39091', 'TIC 349088467')",
+ "@cli.opt.propose.cheops.target": {
+  "x-review": "machine",
+  "x-source": "dc643ed38a"
+ },
+ "cli.opt.propose.cheops.window-end": "laatste waarneemdatum (standaard 2029-12-31)",
+ "@cli.opt.propose.cheops.window-end": {
+  "x-review": "machine",
+  "x-source": "bb4ef3a3e8"
+ },
+ "cli.opt.propose.cheops.window-start": "eerste waarneemdatum (standaard: het vroegste begin van de cyclus)",
+ "@cli.opt.propose.cheops.window-start": {
+  "x-review": "machine",
+  "x-source": "f1537bbf4b"
+ },
+ "cli.opt.propose.lint.author-name": "een te melden naam, in de gangbare varianten (herhaalbaar)",
+ "@cli.opt.propose.lint.author-name": {
+  "x-review": "machine",
+  "x-source": "896776ed61"
+ },
+ "cli.opt.propose.lint.institution": "een te melden instelling (herhaalbaar)",
+ "@cli.opt.propose.lint.institution": {
+  "x-review": "machine",
+  "x-source": "7dfbfc57ef"
+ },
+ "cli.opt.pulsations.cache": "cachemap (MAST-bestanden, TIC-waarden)",
+ "@cli.opt.pulsations.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.pulsations.exptime": "TESS-cadans in seconden",
+ "@cli.opt.pulsations.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.pulsations.fmax": "hoogste frequentie (d⁻¹; standaard Nyquist)",
+ "@cli.opt.pulsations.fmax": {
+  "x-review": "machine",
+  "x-source": "1d96a068e1"
+ },
+ "cli.opt.pulsations.fmin": "laagste frequentie (d⁻¹)",
+ "@cli.opt.pulsations.fmin": {
+  "x-review": "machine",
+  "x-source": "e982706993"
+ },
+ "cli.opt.pulsations.out": "het JSON-record hierheen schrijven",
+ "@cli.opt.pulsations.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.pulsations.sector": "TESS-sectoren (standaard: elke SPOC-sector)",
+ "@cli.opt.pulsations.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.pulsations.solar": "altijd de numax/Δν-analyse uitvoeren",
+ "@cli.opt.pulsations.solar": {
+  "x-review": "machine",
+  "x-source": "0cc921a51c"
+ },
+ "cli.opt.pulsations.surrogates": "surrogaten met rode ruis voor het aandeel valse frequenties",
+ "@cli.opt.pulsations.surrogates": {
+  "x-review": "machine",
+  "x-source": "2d606e2fee"
+ },
+ "cli.opt.pulsations.target": "een TIC-id (bijv. 'TIC 441420236'), een SPOC-bestand *_lc.fits of een CSV (time, flux[, flux_err])",
+ "@cli.opt.pulsations.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.pulsations.teff": "Teff (K) voor de typeheuristiek (standaard: TIC)",
+ "@cli.opt.pulsations.teff": {
+  "x-review": "machine",
+  "x-source": "3cd47aa62d"
+ },
+ "cli.opt.report.benchmark": "in te voegen benchmark-markdown",
+ "@cli.opt.report.benchmark": {
+  "x-review": "machine",
+  "x-source": "50a27fedb7"
+ },
+ "cli.opt.report.out": "te schrijven sitemap",
+ "@cli.opt.report.out": {
+  "x-review": "machine",
+  "x-source": "439462c999"
+ },
+ "cli.opt.report.validation": "in te voegen validatie-markdown",
+ "@cli.opt.report.validation": {
+  "x-review": "machine",
+  "x-source": "8ea7211541"
+ },
+ "cli.opt.rotation.cache": "cachemap (MAST-bestanden, TIC-waarden)",
+ "@cli.opt.rotation.cache": {
+  "x-review": "machine",
+  "x-source": "564abe0623"
+ },
+ "cli.opt.rotation.exptime": "TESS-cadans in seconden",
+ "@cli.opt.rotation.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.rotation.out": "het JSON-record hierheen schrijven",
+ "@cli.opt.rotation.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.rotation.sector": "TESS-sectoren (standaard: elke SPOC-sector)",
+ "@cli.opt.rotation.sector": {
+  "x-review": "machine",
+  "x-source": "01d2b98d28"
+ },
+ "cli.opt.rotation.target": "een TIC-id (bijv. 'TIC 441420236'), een SPOC-bestand *_lc.fits of een CSV (time, flux[, flux_err])",
+ "@cli.opt.rotation.target": {
+  "x-review": "machine",
+  "x-source": "50bc2ed8a2"
+ },
+ "cli.opt.run.cache": "cachemap voor antwoorden van Claude",
+ "@cli.opt.run.cache": {
+  "x-review": "machine",
+  "x-source": "eeda390458"
+ },
+ "cli.opt.run.calibrated-weights": "gekalibreerde gewichten, standaard gebruikt als hun beoordelaar-id's bij de configuratie passen",
+ "@cli.opt.run.calibrated-weights": {
+  "x-review": "machine",
+  "x-source": "0d6473928d"
+ },
+ "cli.opt.run.out": "uitvoermap",
+ "@cli.opt.run.out": {
+  "x-review": "machine",
+  "x-source": "7e0ee3625e"
+ },
+ "cli.opt.run.uniform-weights": "elke beoordelaar gewicht 1.0 geven",
+ "@cli.opt.run.uniform-weights": {
+  "x-review": "machine",
+  "x-source": "db3384cb7c"
+ },
+ "cli.opt.run.weights": "JSON-bestand met gewichten van beoordelaars uit 'setuhq calibrate' (overschrijft de standaard)",
+ "@cli.opt.run.weights": {
+  "x-review": "machine",
+  "x-source": "802d0e0a5b"
+ },
+ "cli.opt.setuhq.lang": "taal van de uitvoer en de hulp (en, nl, pl, pt, fi, sv, da, nb, cs, uk, ru, de, fr, es, et, ja, zh-Hans); anders SETUHQ_LANG, LC_ALL, LC_MESSAGES of LANG; standaard Engels. Bestanden en JSON blijven Engels",
+ "@cli.opt.setuhq.lang": {
+  "x-review": "machine",
+  "x-source": "02f46f5ea1"
+ },
+ "cli.opt.site.allow-missing-crossmatch": "ook bouwen als er geen bruikbare opgeslagen archiefmatch is; de pagina toont dan de opgeslagen fout",
+ "@cli.opt.site.allow-missing-crossmatch": {
+  "x-review": "machine",
+  "x-source": "ea4922a1f2"
+ },
+ "cli.opt.site.benchmark": "benchmarknotities voor het runrapport",
+ "@cli.opt.site.benchmark": {
+  "x-review": "machine",
+  "x-source": "8c60c65795"
+ },
+ "cli.opt.site.catalog": "JSON van de ontdekkingscatalogus voor de pagina's Kandidaten en Runs",
+ "@cli.opt.site.catalog": {
+  "x-review": "machine",
+  "x-source": "3c64583755"
+ },
+ "cli.opt.site.no-extras": "het runrapport, de platen en het losse dossier weglaten",
+ "@cli.opt.site.no-extras": {
+  "x-review": "machine",
+  "x-source": "ea0dea2308"
+ },
+ "cli.opt.site.out": "de hoofdmap van de site (site/ voor setuhq.com)",
+ "@cli.opt.site.out": {
+  "x-review": "machine",
+  "x-source": "ff9482ee28"
+ },
+ "cli.opt.site.run_dir": "de opgeslagen runs: eerst de hoofdrun (de hemelkaart, het panel en de referentiecontrole op de startpagina), dan eventuele andere voorbeeldruns; elk krijgt de pagina's van zijn dips, zijn dossier, zijn platen en zijn rapport",
+ "@cli.opt.site.run_dir": {
+  "x-review": "machine",
+  "x-source": "935df39235"
+ },
+ "cli.opt.site.showcase": "de beschrijvingen van de voorbeeldruns en vergelijkingen met de literatuur (scripts/showcase_compare.py)",
+ "@cli.opt.site.showcase": {
+  "x-review": "machine",
+  "x-source": "a8d2fbc8b7"
+ },
+ "cli.opt.site.star": "sternaam voor de archiefmatch van het dossier, zoals bij 'setuhq docket'",
+ "@cli.opt.site.star": {
+  "x-review": "machine",
+  "x-source": "3a81206f9b"
+ },
+ "cli.opt.site.sweep": "de sweepcatalogus (setuhq sweep) voor Alles wat dimt, de teller op de startpagina en de hemellaag",
+ "@cli.opt.site.sweep": {
+  "x-review": "machine",
+  "x-source": "2cbca7c299"
+ },
+ "cli.opt.site.validation": "validatienotities voor het runrapport",
+ "@cli.opt.site.validation": {
+  "x-review": "machine",
+  "x-source": "3aa3ee0254"
+ },
+ "cli.opt.site.weights": "JSON met gekalibreerde gewichten van beoordelaars, getoond op de pagina Bewijs",
+ "@cli.opt.site.weights": {
+  "x-review": "machine",
+  "x-source": "17d9554285"
+ },
+ "cli.opt.sweep.cache": "cachemap: doellijsten, lichtcurvebestanden, records per ster",
+ "@cli.opt.sweep.cache": {
+  "x-review": "machine",
+  "x-source": "4ceefeb748"
+ },
+ "cli.opt.sweep.classified-commit": "met --reclassify: de git-revisie die zulke records het laatst classificeerde",
+ "@cli.opt.sweep.classified-commit": {
+  "x-review": "machine",
+  "x-source": "a041546a77"
+ },
+ "cli.opt.sweep.config": "sweepconfiguratie, bijv. configs/sweep.toml (Probes) of configs/sweep_sentinels.toml",
+ "@cli.opt.sweep.config": {
+  "x-review": "machine",
+  "x-source": "7d010ce268"
+ },
+ "cli.opt.sweep.contributor": "de naam die voor deze sweep wordt vermeld",
+ "@cli.opt.sweep.contributor": {
+  "x-review": "machine",
+  "x-source": "2d65f8895f"
+ },
+ "cli.opt.sweep.limit": "hoeveel doelen van de sector, in sweepvolgorde",
+ "@cli.opt.sweep.limit": {
+  "x-review": "machine",
+  "x-source": "b2105a1cbf"
+ },
+ "cli.opt.sweep.min-interval": "seconden tussen MAST-verzoeken (minstens)",
+ "@cli.opt.sweep.min-interval": {
+  "x-review": "machine",
+  "x-source": "1e29475701"
+ },
+ "cli.opt.sweep.no-control": "de controlerun met omgekeerde flux van elke ster overslaan",
+ "@cli.opt.sweep.no-control": {
+  "x-review": "machine",
+  "x-source": "0af9322de6"
+ },
+ "cli.opt.sweep.out": "waar het sectorrecord en catalogue.json komen",
+ "@cli.opt.sweep.out": {
+  "x-review": "machine",
+  "x-source": "74a76b8e20"
+ },
+ "cli.opt.sweep.reclassify": "de classificatieregels opnieuw toepassen op de opgeslagen ster-sectoren (alleen na een wijziging in variables.py)",
+ "@cli.opt.sweep.reclassify": {
+  "x-review": "machine",
+  "x-source": "86ff3a8c91"
+ },
+ "cli.opt.sweep.rule-change": "met --reclassify: wat er in de regels veranderde (herhalen voor elke wijziging)",
+ "@cli.opt.sweep.rule-change": {
+  "x-review": "machine",
+  "x-source": "a0203dbc98"
+ },
+ "cli.opt.sweep.search-commit": "met --reclassify: de git-revisie die records doorzocht die maar één code noemen",
+ "@cli.opt.sweep.search-commit": {
+  "x-review": "machine",
+  "x-source": "139e54a5b2"
+ },
+ "cli.opt.sweep.time-budget-min": "na zoveel minuten geen nieuwe sterren meer beginnen",
+ "@cli.opt.sweep.time-budget-min": {
+  "x-review": "machine",
+  "x-source": "838fb96162"
+ },
+ "cli.opt.sweep.weights": "gekalibreerde gewichten; een beoordelaar die niet in het bestand staat weegt 1.0",
+ "@cli.opt.sweep.weights": {
+  "x-review": "machine",
+  "x-source": "015b47d6f0"
+ },
+ "cli.opt.sweep.workers": "processen die tegelijk sterren doorzoeken (downloads blijven één voor één)",
+ "@cli.opt.sweep.workers": {
+  "x-review": "machine",
+  "x-source": "8046b64f2f"
+ },
+ "cli.opt.transients.cache": "cachemap (MAST-bestanden, TIC-waarden, uitsneden)",
+ "@cli.opt.transients.cache": {
+  "x-review": "machine",
+  "x-source": "4994163c4f"
+ },
+ "cli.opt.transients.dec": "Dec. (graden)",
+ "@cli.opt.transients.dec": {
+  "x-review": "machine",
+  "x-source": "9b73841e14"
+ },
+ "cli.opt.transients.exptime": "TESS-cadans in seconden",
+ "@cli.opt.transients.exptime": {
+  "x-review": "machine",
+  "x-source": "ddf163864b"
+ },
+ "cli.opt.transients.keep-cutout": "de gedownloade uitsnede in de cache bewaren",
+ "@cli.opt.transients.keep-cutout": {
+  "x-review": "machine",
+  "x-source": "30d3ece3c5"
+ },
+ "cli.opt.transients.out": "het JSON-record hierheen schrijven",
+ "@cli.opt.transients.out": {
+  "x-review": "machine",
+  "x-source": "bce9074a94"
+ },
+ "cli.opt.transients.ra": "RA (graden): fotometrie op een TESScut-uitsnede van de volledige beelden",
+ "@cli.opt.transients.ra": {
+  "x-review": "machine",
+  "x-source": "80c280d2d9"
+ },
+ "cli.opt.transients.sector": "TESS-sectoren (met --ra/--dec: de ene uit te snijden sector)",
+ "@cli.opt.transients.sector": {
+  "x-review": "machine",
+  "x-source": "471c0813f6"
+ },
+ "cli.opt.transients.size": "grootte van de uitsnede in pixels (standaard 11)",
+ "@cli.opt.transients.size": {
+  "x-review": "machine",
+  "x-source": "c0ba5e1825"
+ },
+ "cli.opt.transients.target": "een TIC-id, een SPOC-bestand *_lc.fits of een CSV (weglaten met --ra/--dec)",
+ "@cli.opt.transients.target": {
+  "x-review": "machine",
+  "x-source": "eb65265df5"
+ },
+ "cli.opt.transients.time": "met --ra/--dec en zonder --sector: de sector die deze BTJD bevat",
+ "@cli.opt.transients.time": {
+  "x-review": "machine",
+  "x-source": "59af8e0810"
+ },
+ "cli.out.asset_budget": "boven een bestandsbudget: {line}",
+ "@cli.out.asset_budget": {
+  "x-review": "machine",
+  "x-source": "1a08ee7ef2"
+ },
+ "cli.out.catalogue_site": "catalogus {catalogue}, site {site}",
+ "@cli.out.catalogue_site": {
+  "x-review": "machine",
+  "x-source": "45ece88b52"
+ },
+ "cli.out.classifications": "classificaties: {n}",
+ "@cli.out.classifications": {
+  "x-review": "machine",
+  "x-source": "0f32738b00"
+ },
+ "cli.out.consensus": "consensusgebeurtenissen: {n} ({k} doorstaan de vetting)",
+ "@cli.out.consensus": {
+  "x-review": "machine",
+  "x-source": "0e7161a11f"
+ },
+ "cli.out.dashboard": "dashboard geschreven naar {path}",
+ "@cli.out.dashboard": {
+  "x-review": "machine",
+  "x-source": "794588aab9"
+ },
+ "cli.out.discover": "doelen beoordeeld in deze run: {n}, matches met bekende TOI's: {k}",
+ "@cli.out.discover": {
+  "x-review": "machine",
+  "x-source": "e86d5ed05d"
+ },
+ "cli.out.docket": "dossier geschreven naar {path}",
+ "@cli.out.docket": {
+  "x-review": "machine",
+  "x-source": "3461730266"
+ },
+ "cli.out.lightcurves": "lichtcurves: {n}",
+ "@cli.out.lightcurves": {
+  "x-review": "machine",
+  "x-source": "b98d2bfa2b"
+ },
+ "cli.out.outputs": "uitvoer in {path}",
+ "@cli.out.outputs": {
+  "x-review": "machine",
+  "x-source": "ad5b1626c3"
+ },
+ "cli.out.page_budget": "boven het paginabudget: {line}",
+ "@cli.out.page_budget": {
+  "x-review": "machine",
+  "x-source": "719f1ca170"
+ },
+ "cli.out.plates": "platen geschreven naar {path}",
+ "@cli.out.plates": {
+  "x-review": "machine",
+  "x-source": "3fd4254e8b"
+ },
+ "cli.out.rebuilt": "{n} consensusgebeurtenissen opnieuw opgebouwd ({k} doorstaan de vetting) in {path}",
+ "@cli.out.rebuilt": {
+  "x-review": "machine",
+  "x-source": "06707f0892"
+ },
+ "cli.out.site": "site geschreven naar {path}",
+ "@cli.out.site": {
+  "x-review": "machine",
+  "x-source": "e59ebe1ee1"
+ },
+ "cli.out.subjects": "segmenten:    {n}",
+ "@cli.out.subjects": {
+  "x-review": "machine",
+  "x-source": "184630bc2c"
+ },
+ "cli.out.weights": "gewichten van beoordelaars: {source}",
+ "@cli.out.weights": {
+  "x-review": "machine",
+  "x-source": "1089f763c0"
+ },
+ "cli.out.weights_written": "gewichten geschreven naar {path}, percentages naar {rates}",
+ "@cli.out.weights_written": {
+  "x-review": "machine",
+  "x-source": "6828f69f91"
+ },
+ "cov.bulge": "Microlensing in de bulge",
+ "@cov.bulge": {
+  "x-review": "machine",
+  "x-source": "bd05242cca"
+ },
+ "cov.corot": "CoRoT-zones",
+ "@cov.corot": {
+  "x-review": "machine",
+  "x-source": "41d07bad32"
+ },
+ "cov.k2": "K2-campagnes",
+ "@cov.k2": {
+  "x-review": "machine",
+  "x-source": "848c24db6a"
+ },
+ "cov.kepler": "Kepler-veld",
+ "@cov.kepler": {
+  "x-review": "machine",
+  "x-source": "147a21f59a"
+ },
+ "cov.tess": "TESS-sectoren",
+ "@cov.tess": {
+  "x-review": "machine",
+  "x-source": "c63d55d777"
+ },
+ "cov.unmapped": "Niet gedekt door transitsurveys",
+ "@cov.unmapped": {
+  "x-review": "machine",
+  "x-source": "261bc97dee"
+ },
+ "desc.catalogue": "Elke planeet in exoplanet.eu, doorzoekbaar en sorteerbaar, elk met een eigen pagina. SetuHQ heeft deze planeten niet ontdekt.",
+ "@desc.catalogue": {
+  "x-review": "machine",
+  "x-source": "4321b00077"
+ },
+ "desc.docs": "SetuHQ installeren, een ster doorzoeken, een sweep bijdragen, een AI-assistent via MCP koppelen en de data downloaden.",
+ "@desc.docs": {
+  "x-review": "machine",
+  "x-source": "242925f427"
+ },
+ "desc.editions": "De edities van SetuHQ: de gratis open kern (AGPL-3.0 of een commerciële licentie), SetuHQ Pro (in ontwikkeling, onder contract) en maatwerkstudies. Geen prijzen; elke betaalde route begint met een bericht.",
+ "@desc.editions": {
+  "x-review": "machine",
+  "x-source": "34320f5c27"
+ },
+ "desc.explorer": "De dips van de run en hun dossiers, en {n, plural, one {# vermelding} other {# vermeldingen}} van de zoekfeed. Kandidaten zijn onbevestigd; geen enkele is een bevestigde planeet.",
+ "@desc.explorer": {
+  "x-review": "machine",
+  "x-source": "12bbc1141b"
+ },
+ "desc.galaxy": "Elke bekende exoplaneet met een opgeslagen afstand, in 3D rond de Zon geplaatst, naar ontdekkingsmethode en jaar.",
+ "@desc.galaxy": {
+  "x-review": "machine",
+  "x-source": "1d04a19fb8"
+ },
+ "desc.leaderboard": "Methoden blind beoordeeld op de achtergehouden helft van de benchmark met echte TOI's, met Wilson-intervallen van 95%.",
+ "@desc.leaderboard": {
+  "x-review": "machine",
+  "x-source": "f63d09cd7f"
+ },
+ "desc.methods": "Hoofdstuk {i} van {n} van Hoe het werkt: {title}. Een geanimeerde uitleg met de natuurkunde en de bronnen.",
+ "@desc.methods": {
+  "x-review": "machine",
+  "x-source": "72765a8c0c"
+ },
+ "desc.mission": "Een tegelwerkruimte met de weergaven van SetuHQ, verbonden door één gekozen ster: de Melkweg, de hemel, de lichtcurve, de catalogus en de feed van het panel.",
+ "@desc.mission": {
+  "x-review": "machine",
+  "x-source": "aea05e50d5"
+ },
+ "desc.overview": "{tagline} Een gekalibreerd panel van Sentinels en Probes leest TESS-lichtcurves en legt elk oordeel uit. Elk resultaat van SetuHQ is een {status}.",
+ "@desc.overview": {
+  "x-review": "machine",
+  "x-source": "e4c31340b2"
+ },
+ "desc.pictures": "Hoe SetuHQ zijn afbeeldingen tekent: sterren in hun zwartlichaamkleur en planeten als artistieke impressies, gekozen op gemeten straal en instraling, met elke regel en bron.",
+ "@desc.pictures": {
+  "x-review": "machine",
+  "x-source": "f81ce510dd"
+ },
+ "desc.planets": "Wat de diepte van elke kandidaat zou betekenen als het een planeet was: de verhouding van de stralen van planeet en ster, en waarom er geen planeetgrootte wordt genoemd.",
+ "@desc.planets": {
+  "x-review": "machine",
+  "x-source": "33a6642674"
+ },
+ "desc.propose": "Een voorstel voor het CHEOPS Guest Observers-programma voorbereiden met setuhq propose cheops: een schrijfhulp die de regels en het doel controleert en nooit iets indient.",
+ "@desc.propose": {
+  "x-review": "machine",
+  "x-source": "415a0f0956"
+ },
+ "desc.runs": "Elke zoekrun, zijn fouten zoals opgeslagen, en de configuratie achter de kandidaatpagina's.",
+ "@desc.runs": {
+  "x-review": "machine",
+  "x-source": "2fc865ecd8"
+ },
+ "desc.sentinels": "De beoordelaars achter elk oordeel, hun kalibratie en hoe het panel blind scoort op echte TESS Objects of Interest. {attribution}",
+ "@desc.sentinels": {
+  "x-review": "machine",
+  "x-source": "6325eab793"
+ },
+ "desc.sky": "De ster van de run op een hemelkaart, met de dips die het panel markeerde en waar surveys hebben gekeken. {headline}",
+ "@desc.sky": {
+  "x-review": "machine",
+  "x-source": "22c5e64296"
+ },
+ "desc.stellar": "Flares, pulsaties, CHEOPS-lichtcurves, bedekkingsveranderlijken, rotatie en transiënten: hoe ver elk stellair hulpmiddel van SetuHQ is gevalideerd, met elke getelde controle en figuren van echte TESS-data.",
+ "@desc.stellar": {
+  "x-review": "machine",
+  "x-source": "fd3ad97a67"
+ },
+ "desc.stellardocs": "De stellaire opdrachten van SetuHQ uitvoeren: flares, pulsaties, openbare CHEOPS-lichtcurves, bedekkingsveranderlijken, rotatie en transiënten, met hun validatiestatus en de voorwaarden van ESA voor CHEOPS-data.",
+ "@desc.stellardocs": {
+  "x-review": "machine",
+  "x-source": "69d64ce7ce"
+ },
+ "desc.tessnow": "Waar de TESS-satelliet naar wijst, sector na sector, volgens zijn gepubliceerde schema: de vier camera-velden op de hemelkaart en de gecatalogiseerde sterren erin. Geen live telemetrie.",
+ "@desc.tessnow": {
+  "x-review": "machine",
+  "x-source": "b892187187"
+ },
+ "desc.variables": "De sweep van SetuHQ door TESS-sectoren: elke gevonden en geclassificeerde dip, elke klasse afgezet tegen haar eigen nultoets.",
+ "@desc.variables": {
+  "x-review": "machine",
+  "x-source": "ec6feba9c3"
+ },
+ "desc.vetter": "Bekijk een echte opgeslagen dip uit de voorbeeldruns van SetuHQ, beoordeel hem als geslaagd, gemarkeerd of afgewezen, en zie dan wat de vetting besloot. Een leeroefening; antwoorden worden niet verzameld.",
+ "@desc.vetter": {
+  "x-review": "machine",
+  "x-source": "a0ad69fc0e"
+ },
+ "dip.state.cand": "kandidaat, onbevestigd",
+ "@dip.state.cand": {
+  "x-review": "machine",
+  "x-source": "fda6f263a4"
+ },
+ "dip.state.open": "gemarkeerd voor controle, open",
+ "@dip.state.open": {
+  "x-review": "machine",
+  "x-source": "5c42a6d0b9"
+ },
+ "dip.state.rej": "afgewezen door de vetting, geen kandidaat",
+ "@dip.state.rej": {
+  "x-review": "machine",
+  "x-source": "0c75827454"
+ },
+ "dip.tag.cand": "kandidaat",
+ "@dip.tag.cand": {
+  "x-review": "machine",
+  "x-source": "dda18a0e21"
+ },
+ "dip.tag.open": "gemarkeerd",
+ "@dip.tag.open": {
+  "x-review": "machine",
+  "x-source": "5588be887f"
+ },
+ "dip.tag.rej": "afgewezen",
+ "@dip.tag.rej": {
+  "x-review": "machine",
+  "x-source": "20cd938a2e"
+ },
+ "dips.cand": "{n, plural, one {# kandidaat} other {# kandidaten}}",
+ "@dips.cand": {
+  "x-review": "machine",
+  "x-source": "0ff385febf"
+ },
+ "dips.flag": "{n, plural, one {# gemarkeerd} other {# gemarkeerd}}",
+ "@dips.flag": {
+  "x-review": "machine",
+  "x-source": "1d74535739"
+ },
+ "dips.n": "{n, plural, one {# dip} other {# dips}}",
+ "@dips.n": {
+  "x-review": "machine",
+  "x-source": "d34249d767"
+ },
+ "dips.rej": "{n, plural, one {# afgewezen} other {# afgewezen}}",
+ "@dips.rej": {
+  "x-review": "machine",
+  "x-source": "9fdbc5d13a"
+ },
+ "docs.contribute": "Een sweep bijdragen",
+ "@docs.contribute": {
+  "x-review": "machine",
+  "x-source": "3118488db2"
+ },
+ "docs.contribute.a": "Zo draagt u bij ›",
+ "@docs.contribute.a": {
+  "x-review": "machine",
+  "x-source": "fefd95f45c"
+ },
+ "docs.contribute.p": "Doorzoek een stuk van een TESS-sector op uw eigen computer en stuur het resultaat in, met naamsvermelding.",
+ "@docs.contribute.p": {
+  "x-review": "machine",
+  "x-source": "7636e0e0dd"
+ },
+ "docs.data": "Data en bestanden",
+ "@docs.data": {
+  "x-review": "machine",
+  "x-source": "1544ff48d7"
+ },
+ "docs.data.a": "Downloads ›",
+ "@docs.data.a": {
+  "x-review": "machine",
+  "x-source": "8e6ab2918b"
+ },
+ "docs.data.p": "Elke catalogus op deze site als download, en de rapporten achter het bewijs.",
+ "@docs.data.p": {
+  "x-review": "machine",
+  "x-source": "a7dd9ada99"
+ },
+ "docs.editions": "Edities",
+ "@docs.editions": {
+  "x-review": "machine",
+  "x-source": "c6a48dcca4"
+ },
+ "docs.editions.a": "De edities vergelijken ›",
+ "@docs.editions.a": {
+  "x-review": "machine",
+  "x-source": "90fe459127"
+ },
+ "docs.editions.p": "De open kern is gratis. SetuHQ Pro (in ontwikkeling) en maatwerkstudies zijn onder contract, zonder prijzen: elk begint met een bericht.",
+ "@docs.editions.p": {
+  "x-review": "machine",
+  "x-source": "a4c5119805"
+ },
+ "docs.h1": "Draai het zelf.",
+ "@docs.h1": {
+  "x-review": "machine",
+  "x-source": "a1737d6898"
+ },
+ "docs.install": "Installatie en eerste run",
+ "@docs.install": {
+  "x-review": "machine",
+  "x-source": "ea230bebae"
+ },
+ "docs.intro": "SetuHQ is open source. Installeer het, doorzoek de lichtcurve van een ster met hetzelfde panel dat deze site toont, draag een sweep van de hemel bij of laat uw AI-assistent het gebruiken.",
+ "@docs.intro": {
+  "x-review": "machine",
+  "x-source": "7d1db3c963"
+ },
+ "docs.mcp": "Gebruik vanuit een assistent",
+ "@docs.mcp": {
+  "x-review": "machine",
+  "x-source": "ee854c3928"
+ },
+ "docs.mcp.a": "Koppelen via MCP ›",
+ "@docs.mcp.a": {
+  "x-review": "machine",
+  "x-source": "c393096cc9"
+ },
+ "docs.mcp.h": "Gebruik vanuit een AI-assistent (MCP)",
+ "@docs.mcp.h": {
+  "x-review": "machine",
+  "x-source": "f46e936a3b"
+ },
+ "docs.mcp.p": "Met de MCP-server kan een assistent de eigen code van SetuHQ uitvoeren en de resultaten lezen.",
+ "@docs.mcp.p": {
+  "x-review": "machine",
+  "x-source": "eb88b7d692"
+ },
+ "docs.pictures": "Hoe de afbeeldingen worden getekend",
+ "@docs.pictures": {
+  "x-review": "machine",
+  "x-source": "e2d864dc53"
+ },
+ "docs.pictures.a": "De afbeeldingen ›",
+ "@docs.pictures.a": {
+  "x-review": "machine",
+  "x-source": "d4afb0f5d1"
+ },
+ "docs.pictures.p": "Sterren in hun zwartlichaamkleur; planeten als artistieke impressies, gekozen op gemeten straal en instraling. Elke regel en bron.",
+ "@docs.pictures.p": {
+  "x-review": "machine",
+  "x-source": "7c281d6576"
+ },
+ "docs.prov": "Technische details: waar de cijfers vandaan komen",
+ "@docs.prov": {
+  "x-review": "machine",
+  "x-source": "1cfbcdad80"
+ },
+ "docs.python": "SetuHQ vereist Python {v} of nieuwer.",
+ "@docs.python": {
+  "x-review": "machine",
+  "x-source": "3159020543"
+ },
+ "docs.runfiles": "<a href=\"{report}\">het runrapport</a>, <a href=\"{plates}\">de platen</a> en <a href=\"{cf}\">het dossier</a> van run {run}.",
+ "@docs.runfiles": {
+  "x-review": "machine",
+  "x-source": "065db1dbf8"
+ },
+ "docs.start": "Aan de slag",
+ "@docs.start": {
+  "x-review": "machine",
+  "x-source": "61e8d44ad4"
+ },
+ "docs.start.a": "Installatie en eerste run ›",
+ "@docs.start.a": {
+  "x-review": "machine",
+  "x-source": "468f664b71"
+ },
+ "docs.start.p": "Installeer en doorzoek daarna de lichtcurve van elke TESS-ster, zoals elke voorbeeldrun op deze site deed.",
+ "@docs.start.p": {
+  "x-review": "machine",
+  "x-source": "2e8b6ed67a"
+ },
+ "ed.compare": "De edities vergelijken",
+ "@ed.compare": {
+  "x-review": "machine",
+  "x-source": "0a79392035"
+ },
+ "ed.compare.p": "Lees een rij van links naar rechts om de drie te vergelijken.",
+ "@ed.compare.p": {
+  "x-review": "machine",
+  "x-source": "59ba9870b5"
+ },
+ "ed.h1": "Edities.",
+ "@ed.h1": {
+  "x-review": "machine",
+  "x-source": "d98733b93e"
+ },
+ "ed.intro": "De hele motor is gratis en blijft gratis. Ashforde OÜ onderhoudt hem met een commerciële licentie, SetuHQ Pro en maatwerkstudies, niet met afgeschermde functies. Op deze site staan geen prijzen: elke betaalde route begint met een bericht.",
+ "@ed.intro": {
+  "x-review": "machine",
+  "x-source": "d588b090c3"
+ },
+ "ex.h1": "{n, plural, one {# dip} other {# dips}} om te openen, van {stars, plural, =1 {één voorbeeldster} one {# voorbeeldster} other {# voorbeeldsterren}}.",
+ "@ex.h1": {
+  "x-review": "machine",
+  "x-source": "ad8e8b5e42"
+ },
+ "ex.intro": "Dips die het panel markeerde in de TESS-lichtcurve van elke voorbeeldster, gegroepeerd per ster en geteld naar uitkomst van de vetting. Een dip die de vetting doorstond is een {status}; een gemarkeerde is open; een afgewezen dip is geen kandidaat. Geen enkele is een bevestigde planeet. Open er een om hem afgespeeld te zien, of het dossier voor elke controle achter het oordeel.",
+ "@ex.intro": {
+  "x-review": "machine",
+  "x-source": "3a25873c3b"
+ },
+ "ex.more": " Verderop: de {n} vermeldingen van de zoekfeed van andere sterren, die nog geen dossier hebben.",
+ "@ex.more": {
+  "x-review": "machine",
+  "x-source": "96432c834d"
+ },
+ "fold.a": "Niet gevouwen: in volgorde van tijd",
+ "@fold.a": {
+  "x-review": "machine",
+  "x-source": "ca7c3036c1"
+ },
+ "fold.b": "Gevouwen op de periode van {p} dagen",
+ "@fold.b": {
+  "x-review": "machine",
+  "x-source": "92616c60e0"
+ },
+ "fold.fold": "Vouwen op de periode",
+ "@fold.fold": {
+  "x-review": "machine",
+  "x-source": "4458109b7d"
+ },
+ "fold.folded": "<b>Gevouwen</b> op de periode van {p} dagen",
+ "@fold.folded": {
+  "x-review": "machine",
+  "x-source": "4ed8a2a718"
+ },
+ "fold.said": "Gevouwen op {p} dagen: de dip verschijnt bij nul uur.",
+ "@fold.said": {
+  "x-review": "machine",
+  "x-source": "c0920801da"
+ },
+ "fold.said_time": "In volgorde van tijd: elke transit is een handvol punten tussen de rest.",
+ "@fold.said_time": {
+  "x-review": "machine",
+  "x-source": "a90b68372c"
+ },
+ "fold.short": "{n, number} punten gevouwen op {p} d: een dip van {depth} ppm en {t14} u. Bron: {run}.",
+ "@fold.short": {
+  "x-review": "machine",
+  "x-source": "8958c78471"
+ },
+ "fold.source": "Bron: {s}",
+ "@fold.source": {
+  "x-review": "machine",
+  "x-source": "7015dd2710"
+ },
+ "fold.unfold": "Terug naar de tijd",
+ "@fold.unfold": {
+  "x-review": "machine",
+  "x-source": "73824685c9"
+ },
+ "fold.unfolded": "<b>Niet gevouwen</b> · {d} dagen in volgorde van tijd",
+ "@fold.unfolded": {
+  "x-review": "machine",
+  "x-source": "5fc4a52069"
+ },
+ "footer.all_chapters": "Alle {n} hoofdstukken",
+ "@footer.all_chapters": {
+  "x-review": "machine",
+  "x-source": "177340a477"
+ },
+ "footer.contribute": "Een sweep bijdragen",
+ "@footer.contribute": {
+  "x-review": "machine",
+  "x-source": "960b0242d4"
+ },
+ "footer.data": "Datadownloads",
+ "@footer.data": {
+  "x-review": "machine",
+  "x-source": "47e65bf65c"
+ },
+ "footer.nav": "Site",
+ "@footer.nav": {
+  "x-review": "machine",
+  "x-source": "fa7955814e"
+ },
+ "footer.overview": "Overzicht",
+ "@footer.overview": {
+  "x-review": "machine",
+  "x-source": "d4b1ea5708"
+ },
+ "footer.pictures": "Hoe de afbeeldingen worden getekend ›",
+ "@footer.pictures": {
+  "x-review": "machine",
+  "x-source": "f4d87c6ca3"
+ },
+ "footer.source": "Broncode",
+ "@footer.source": {
+  "x-review": "machine",
+  "x-source": "bf046c7395"
+ },
+ "gal.example": "Voorbeeldrun",
+ "@gal.example": {
+  "x-review": "machine",
+  "x-source": "ed62203839"
+ },
+ "gal.noart": "Geen enkele kandidaat krijgt een planeetafbeelding.",
+ "@gal.noart": {
+  "x-review": "machine",
+  "x-source": "9d55cea042"
+ },
+ "gal.note": "Elk podium: de schijf van de ster in haar zwartlichaamskleur bij de Teff die haar run opslaat, en wat de run als schaduw mat bij zijn gefitte Rp/R★ (een planeet die de run miste is een gestippelde omtrek). De afmetingen zijn op schaal ten opzichte van de schijf; waar elk erop staat is illustratief.",
+ "@gal.note": {
+  "x-review": "machine",
+  "x-source": "bbb017f062"
+ },
+ "gal.sectors": "{mission} {n, plural, one {sector} other {sectoren}} {list}",
+ "@gal.sectors": {
+  "x-review": "machine",
+  "x-source": "737f03f940"
+ },
+ "gal.stages": "Podia: {s}.",
+ "@gal.stages": {
+  "x-review": "machine",
+  "x-source": "b469db30f4"
+ },
+ "gx.h1": "Elke bekende exoplaneet,",
+ "@gx.h1": {
+  "x-review": "machine",
+  "x-source": "22fff7c222"
+ },
+ "gx.h1b": "rond de Zon.",
+ "@gx.h1b": {
+  "x-review": "machine",
+  "x-source": "0513cb70f1"
+ },
+ "gx.intro": "{n, number} planeten rond {hosts, number} sterren, geplaatst waar ze zijn. SetuHQ heeft deze planeten niet gevonden; het brengt ze in kaart vanuit {source}.",
+ "@gx.intro": {
+  "x-review": "machine",
+  "x-source": "b60778b897"
+ },
+ "hero.disc": "De schijf van {star} is in haar zwartlichaamskleur; de planeet is een artistieke impressie ({look}).",
+ "@hero.disc": {
+  "x-review": "machine",
+  "x-source": "f391f5d10f"
+ },
+ "hero.model": "Model uit opgeslagen waarden.",
+ "@hero.model": {
+  "x-review": "machine",
+  "x-source": "761a8963d7"
+ },
+ "hero.pause": "Pauze",
+ "@hero.pause": {
+  "x-review": "machine",
+  "x-source": "858e4ba7a2"
+ },
+ "hint.dismiss": "Hint sluiten: {h}",
+ "@hint.dismiss": {
+  "x-review": "machine",
+  "x-source": "704395b8f4"
+ },
+ "hint.orbits": "Groottes niet op schaal · fasen ter illustratie",
+ "@hint.orbits": {
+  "x-review": "machine",
+  "x-source": "f31d20fed2"
+ },
+ "home.band.counters": "Het bewijs, geteld",
+ "@home.band.counters": {
+  "x-review": "machine",
+  "x-source": "5f2b5a53a9"
+ },
+ "home.band.counters.e": "Elk getal verwijst naar zijn bewijs",
+ "@home.band.counters.e": {
+  "x-review": "machine",
+  "x-source": "6d25c68528"
+ },
+ "home.band.fold": "Hoe een planeet zich in de ruis verbergt",
+ "@home.band.fold": {
+  "x-review": "machine",
+  "x-source": "79677ced9c"
+ },
+ "home.band.fold.e": "Echte data",
+ "@home.band.fold.e": {
+  "x-review": "machine",
+  "x-source": "6a758a8937"
+ },
+ "home.band.lineup": "De voorbeeldplaneten, op schaal",
+ "@home.band.lineup": {
+  "x-review": "machine",
+  "x-source": "aaf6e55de4"
+ },
+ "home.band.lineup.e": "Planeten op schaal",
+ "@home.band.lineup.e": {
+  "x-review": "machine",
+  "x-source": "f48421d1f6"
+ },
+ "home.band.panel": "Wie een dip beoordeelt",
+ "@home.band.panel": {
+  "x-review": "machine",
+  "x-source": "fd782b5776"
+ },
+ "home.band.panel.e": "Het panel",
+ "@home.band.panel.e": {
+  "x-review": "machine",
+  "x-source": "5326ad997a"
+ },
+ "home.band.sky": "De ster van elke bekende planeet, naar het jaar waarin hij werd gevonden",
+ "@home.band.sky": {
+  "x-review": "machine",
+  "x-source": "25fe759e36"
+ },
+ "home.band.sky.e": "De hemel",
+ "@home.band.sky.e": {
+  "x-review": "machine",
+  "x-source": "587ffab2a1"
+ },
+ "home.band.tempstrip": "{n, plural, =1 {De kleur van de voorbeeldster} one {# voorbeeldster: {lo, number, integer} K tot {hi, number, integer} K, één pijplijn} other {# voorbeeldsterren: {lo, number, integer} K tot {hi, number, integer} K, één pijplijn}}",
+ "@home.band.tempstrip": {
+  "x-review": "machine",
+  "x-source": "705ec8da04"
+ },
+ "home.band.tempstrip.e": "De kleuren van de voorbeeldsterren",
+ "@home.band.tempstrip.e": {
+  "x-review": "machine",
+  "x-source": "d93001b796"
+ },
+ "home.ctr.benchmark": "echte TESS Objects of Interest in de blinde benchmark",
+ "@home.ctr.benchmark": {
+  "x-review": "machine",
+  "x-source": "9672338f63"
+ },
+ "home.ctr.catalogue": "planeten in de catalogus waarmee SetuHQ vergelijkt",
+ "@home.ctr.catalogue": {
+  "x-review": "machine",
+  "x-source": "01f04bca08"
+ },
+ "home.ctr.chapters": "geïllustreerde hoofdstukken over hoe planeten worden gevonden",
+ "@home.ctr.chapters": {
+  "x-review": "machine",
+  "x-source": "865afa5050"
+ },
+ "home.ctr.completeness": "van de achtergehouden bekende planeten blind gevonden (Wilson-interval van 95%)",
+ "@home.ctr.completeness": {
+  "x-review": "machine",
+  "x-source": "9439e30e8b"
+ },
+ "home.ctr.fetched": "{source}, opgehaald op {date, date}",
+ "@home.ctr.fetched": {
+  "x-review": "machine",
+  "x-source": "3fd1f86614"
+ },
+ "home.ctr.fetched_file": "{source}, opgehaald op {date, date} ({file})",
+ "@home.ctr.fetched_file": {
+  "x-review": "machine",
+  "x-source": "6d503bce8f"
+ },
+ "home.ctr.heldout": "achtergehouden helft van de benchmark ({file})",
+ "@home.ctr.heldout": {
+  "x-review": "machine",
+  "x-source": "f9bd8675c1"
+ },
+ "home.do.docs": "Draai het zelf",
+ "@home.do.docs": {
+  "x-review": "machine",
+  "x-source": "b3ab2275bd"
+ },
+ "home.do.docs.d": "Installeer SetuHQ, doorzoek een ster, draag een sweep van de hemel bij of koppel uw AI-assistent via MCP.",
+ "@home.do.docs.d": {
+  "x-review": "machine",
+  "x-source": "e150d9ac61"
+ },
+ "home.do.explorer": "De kandidaten bekijken",
+ "@home.do.explorer": {
+  "x-review": "machine",
+  "x-source": "db92ac3570"
+ },
+ "home.do.explorer.d": "Dips die het panel markeerde in de TESS-lichtcurves van de voorbeeldsterren, elk met een volledig dossier. Kandidaten, nooit bevestigde planeten.",
+ "@home.do.explorer.d": {
+  "x-review": "machine",
+  "x-source": "b2310d28d3"
+ },
+ "home.do.methods": "Leren hoe het werkt",
+ "@home.do.methods": {
+  "x-review": "machine",
+  "x-source": "e2c2e9609b"
+ },
+ "home.do.methods.d": "Vijftien geïllustreerde hoofdstukken over hoe planeten worden gevonden, van het wiebelen van een ster tot het lezen van een atmosfeer.",
+ "@home.do.methods.d": {
+  "x-review": "machine",
+  "x-source": "a4ab0f8d7a"
+ },
+ "home.do.sentinels": "Het bewijs bekijken",
+ "@home.do.sentinels": {
+  "x-review": "machine",
+  "x-source": "16cc8485e7"
+ },
+ "home.do.sentinels.d": "Hoe het panel scoort op echte, bekende objecten: de blinde benchmark, het openbare klassement en de kalibratie.",
+ "@home.do.sentinels.d": {
+  "x-review": "machine",
+  "x-source": "728efa2330"
+ },
+ "home.do.sky": "De hemel verkennen",
+ "@home.do.sky": {
+  "x-review": "machine",
+  "x-source": "0e734b0e38"
+ },
+ "home.do.sky.d": "Elke bekende exoplaneet op een 3D-kaart van de Melkweg, de hemel die TESS heeft bestreken en een doorzoekbare catalogus van bekende planeten.",
+ "@home.do.sky.d": {
+  "x-review": "machine",
+  "x-source": "33d22aaaf3"
+ },
+ "home.dohere": "Wat u hier kunt doen",
+ "@home.dohere": {
+  "x-review": "machine",
+  "x-source": "c2f1fa481b"
+ },
+ "home.examples": "Uitgewerkte voorbeelden: {n, plural, one {# ster} other {# sterren}}, één pijplijn",
+ "@home.examples": {
+  "x-review": "machine",
+  "x-source": "31c4bc580e"
+ },
+ "home.examples.p": "Elk is een opgeslagen run op openbare TESS-lichtcurves van MAST, met gehashte data, configuratie en code. Elke dip wordt geteld naar zijn uitkomst van de vetting; een kandidaat blijft onbevestigd, en een afgewezen dip is geen kandidaat.",
+ "@home.examples.p": {
+  "x-review": "machine",
+  "x-source": "d13aa1075e"
+ },
+ "home.hero.h1": "De hemel, beoordeeld.",
+ "@home.hero.h1": {
+  "x-review": "machine",
+  "x-source": "c537af3dcb"
+ },
+ "home.hero.more": "{n, plural, one {Bekijk # uitgewerkt voorbeeld ›} other {Bekijk # uitgewerkte voorbeelden ›}}",
+ "@home.hero.more": {
+  "x-review": "machine",
+  "x-source": "50e5398098"
+ },
+ "home.hero.sub": "SetuHQ doorzoekt de openbare lichtcurve van elke TESS-ster op transits. Een gekalibreerd panel van Sentinels (AI-beoordelaars) en Probes (deterministische detectoren) markeert de dips, en de vetting legt elk oordeel uit. Niets heet een planeet voordat het er een is.",
+ "@home.hero.sub": {
+  "x-review": "machine",
+  "x-source": "acf4d55d13"
+ },
+ "home.honest.archive": "<b>Alleen archiefwaarden.</b> Deze pagina claimt geen detectie. Een match met een TOI of het archief vergelijkt een opgeslagen periode met gepubliceerde waarden.",
+ "@home.honest.archive": {
+  "x-review": "machine",
+  "x-source": "9caca54a23"
+ },
+ "home.honest.h": "Wat deze pagina niet beweert",
+ "@home.honest.h": {
+  "x-review": "machine",
+  "x-source": "738097d05c"
+ },
+ "home.honest.image": "<b>Geen afbeelding van de planeet.</b> Planeetafbeeldingen zijn artistieke impressies, gekozen op gemeten straal en instraling; <a href=\"/docs/pictures/\">Hoe de afbeeldingen worden getekend ›</a>",
+ "@home.honest.image": {
+  "x-review": "machine",
+  "x-source": "e6974ba935"
+ },
+ "home.honest.panel": "Het panel bestaat uit de Sentinels en de Probes:",
+ "@home.honest.panel": {
+  "x-review": "machine",
+  "x-source": "a9433f2186"
+ },
+ "home.honest.people": "Geen mensen in het panel.",
+ "@home.honest.people": {
+  "x-review": "machine",
+  "x-source": "7ffee760a9"
+ },
+ "home.honest.planet": "<b>Geen bevestigde planeet.</b> Elke dip, elk signaal en elke feedvermelding hier is een {status}. De vetting doorstaan is geen bevestiging.{match, select, none {} other { De match met {match} zegt dat de planeet al bekend is, niet dat deze run hem heeft bevestigd.}}",
+ "@home.honest.planet": {
+  "x-review": "machine",
+  "x-source": "fddd51a0e3"
+ },
+ "home.honest.sizes": "<b>Geen planeetgroottes.</b> Er is geen sterstraal opgeslagen, dus een diepte geeft alleen een verhouding van de stralen van planeet en ster. De pagina met stralenverhoudingen toont de berekening.",
+ "@home.honest.sizes": {
+  "x-review": "machine",
+  "x-source": "99d745ec98"
+ },
+ "home.honest.weights": " Hun gewichten rusten op een kalibratie met elk {n} lichtcurves met ingevoegd signaal en {n} lege, dus ze zijn ruw.",
+ "@home.honest.weights": {
+  "x-review": "machine",
+  "x-source": "46497d8bc1"
+ },
+ "home.more.sky": "De hemel verkennen ›",
+ "@home.more.sky": {
+  "x-review": "machine",
+  "x-source": "86786f5a19"
+ },
+ "home.more.transit": "Hoe transits worden gevonden ›",
+ "@home.more.transit": {
+  "x-review": "machine",
+  "x-source": "04e504e9e8"
+ },
+ "home.proof": "Wat de referentierun laat zien",
+ "@home.proof": {
+  "x-review": "machine",
+  "x-source": "d58bf9bb5f"
+ },
+ "home.refcheck": "De referentiecontrole: {planet}, een bekende planeet, teruggevonden in run {run}",
+ "@home.refcheck": {
+  "x-review": "machine",
+  "x-source": "e700c0ebab"
+ },
+ "home.refrun": "De referentierun: {run}",
+ "@home.refrun": {
+  "x-review": "machine",
+  "x-source": "b698a243c0"
+ },
+ "honesty.attribution": "Sentinels draaien standaard op Claude (Anthropic); andere aanbieders worden ondersteund en aangeduid. Probes zijn deterministische matched-filterdetectoren.",
+ "@honesty.attribution": {
+  "x-review": "machine",
+  "x-source": "7793394412"
+ },
+ "honesty.cheops_disclaimer": "SetuHQ is onafhankelijk en is niet gelieerd aan, niet onderschreven door en wordt niet uitgevoerd namens ESA, de CHEOPS-missie of het CHEOPS-consortium.",
+ "@honesty.cheops_disclaimer": {
+  "x-review": "machine",
+  "x-source": "f163955866"
+ },
+ "honesty.embargo": "Signalen die bij geen enkele bekende TOI passen, worden achtergehouden voor een niet-openbare beoordeling; ze worden pas na beoordeling en melding gepubliceerd.",
+ "@honesty.embargo": {
+  "x-review": "machine",
+  "x-source": "7ab637a8c0"
+ },
+ "honesty.footer": "Elk resultaat van SetuHQ op deze site is een kandidaat, nooit een bevestigde planeet. Open source onder de AGPL-3.0; de data van SetuHQ onder CC BY 4.0. \"SetuHQ\" en het Setu-beeldmerk zijn handelsmerken van Ashforde OÜ.",
+ "@honesty.footer": {
+  "x-review": "machine",
+  "x-source": "69d7e6d4fb"
+ },
+ "honesty.no_detection": "Alleen archiefwaarden. Deze pagina claimt geen detectie.",
+ "@honesty.no_detection": {
+  "x-review": "machine",
+  "x-source": "fe680cebf0"
+ },
+ "honesty.none_confirmed": "Geen enkele is een bevestigde planeet totdat onafhankelijke vervolgwaarnemingen hem bevestigen.",
+ "@honesty.none_confirmed": {
+  "x-review": "machine",
+  "x-source": "3509876ac0"
+ },
+ "honesty.probes_only": "Alleen Probes; Sentinels zijn voor dit voorbeeld niet uitgevoerd",
+ "@honesty.probes_only": {
+  "x-review": "machine",
+  "x-source": "3cfb53c6a7"
+ },
+ "honesty.tess_pointing": "Richting volgens het gepubliceerde schema, geen live telemetrie",
+ "@honesty.tess_pointing": {
+  "x-review": "machine",
+  "x-source": "6faac5a432"
+ },
+ "honesty.transients_aid": "De transiëntenhulpmiddelen zijn een zoekhulp waarvan de kandidaten met het oog moeten worden gecontroleerd; hun detecties, klassehints en filters tegen vals alarm zijn niet gevalideerd.",
+ "@honesty.transients_aid": {
+  "x-review": "machine",
+  "x-source": "61272b381e"
+ },
+ "honesty.unconfirmed": "kandidaat, onbevestigd",
+ "@honesty.unconfirmed": {
+  "x-review": "machine",
+  "x-source": "fda6f263a4"
+ },
+ "i18n.mtnote": "Deze vertaling is met machinehulp gemaakt en nog niet door een moedertaalspreker nagekeken. <a rel=\"noopener\" href=\"https://github.com/ashfordeOU/SetuHQ/blob/main/docs/TRANSLATING.md\">Correcties zijn welkom</a>.",
+ "@i18n.mtnote": {
+  "x-review": "machine",
+  "x-source": "3803a5c5dc"
+ },
+ "i18n.picker.label": "Taal: {name}",
+ "@i18n.picker.label": {
+  "x-review": "machine",
+  "x-source": "d99eed9b59"
+ },
+ "i18n.picker.note": "Elke taal behalve Engels is met machinehulp vertaald en nog niet door een moedertaalspreker nagekeken. <a rel=\"noopener\" href=\"https://github.com/ashfordeOU/SetuHQ/blob/main/docs/TRANSLATING.md\">Correcties zijn welkom</a>.",
+ "@i18n.picker.note": {
+  "x-review": "machine",
+  "x-source": "b19e30478b"
+ },
+ "i18n.suggest.dismiss": "Sluiten",
+ "@i18n.suggest.dismiss": {
+  "x-review": "machine",
+  "x-source": "48845bff33"
+ },
+ "i18n.suggest.go": "Lees in het Nederlands",
+ "@i18n.suggest.go": {
+  "x-review": "machine",
+  "x-source": "a9d0b8e36c"
+ },
+ "i18n.suggest.label": "Taal",
+ "@i18n.suggest.label": {
+  "x-review": "machine",
+  "x-source": "a4fe65264e"
+ },
+ "i18n.suggest.text": "Deze pagina is ook in het Nederlands.",
+ "@i18n.suggest.text": {
+  "x-review": "machine",
+  "x-source": "4d512860c4"
+ },
+ "label.art": "Artistieke impressie",
+ "@label.art": {
+  "x-review": "machine",
+  "x-source": "8b1a9bc32a"
+ },
+ "label.illustration": "Illustratie",
+ "@label.illustration": {
+  "x-review": "machine",
+  "x-source": "c659a0d0ed"
+ },
+ "label.model": "Model uit opgeslagen waarden",
+ "@label.model": {
+  "x-review": "machine",
+  "x-source": "f99882758e"
+ },
+ "label.real": "Echte data, met bron",
+ "@label.real": {
+  "x-review": "machine",
+  "x-source": "6f75938cc8"
+ },
+ "label.speculative": "Speculatief model",
+ "@label.speculative": {
+  "x-review": "machine",
+  "x-source": "d1d38cf39a"
+ },
+ "lb.h1": "Methoden, blind beoordeeld op echte TOI's.",
+ "@lb.h1": {
+  "x-review": "machine",
+  "x-source": "d7943ed0f0"
+ },
+ "lb.intro": "Het openbare klassement op de bevroren benchmark met echte TOI's: de gedetecteerde gebeurtenissen van elke inzending, door het klassement zelf alleen op de achtergehouden helft beoordeeld, met Wilson-intervallen van 95%. Niet de drempelsweep met injecties (docs/threshold_sweep.md), die de drempels van de Probes afstelt op synthetische lichtcurves.",
+ "@lb.intro": {
+  "x-review": "machine",
+  "x-source": "8e62d2c060"
+ },
+ "lb.note": "Gemeten op een vermelde benchmark; niets hier is een ontdekking.",
+ "@lb.note": {
+  "x-review": "machine",
+  "x-source": "272d460db4"
+ },
+ "learn.again": "Opnieuw beginnen bij stap 1",
+ "@learn.again": {
+  "x-review": "machine",
+  "x-source": "1b91302a8f"
+ },
+ "learn.all": "Alle {n} stappen",
+ "@learn.all": {
+  "x-review": "machine",
+  "x-source": "e15530dfee"
+ },
+ "learn.back": "‹ Terug",
+ "@learn.back": {
+  "x-review": "machine",
+  "x-source": "9c47d2b08c"
+ },
+ "learn.cleared": "Voortgang van het leerpad gewist.",
+ "@learn.cleared": {
+  "x-review": "machine",
+  "x-source": "8b76618ea1"
+ },
+ "learn.complete": " · pad voltooid",
+ "@learn.complete": {
+  "x-review": "machine",
+  "x-source": "d1a143524c"
+ },
+ "learn.continue": "Verder: {step}",
+ "@learn.continue": {
+  "x-review": "machine",
+  "x-source": "859ee5370f"
+ },
+ "learn.count": "{k} van {n} bezocht",
+ "@learn.count": {
+  "x-review": "machine",
+  "x-source": "5475c68b5f"
+ },
+ "learn.finish": "Afronden ›",
+ "@learn.finish": {
+  "x-review": "machine",
+  "x-source": "d7473131de"
+ },
+ "learn.finish_label": "Het pad afronden",
+ "@learn.finish_label": {
+  "x-review": "machine",
+  "x-source": "b841a0b2c4"
+ },
+ "learn.h": "Leerpad",
+ "@learn.h": {
+  "x-review": "machine",
+  "x-source": "7f9d3aa634"
+ },
+ "learn.intro": "{n} stappen, van hoe een survey werkt tot elke bekende exoplaneet. Vrijblijvend: volg de volgorde of spring rond; elke pagina die je opent telt. De voortgang blijft in deze browser.",
+ "@learn.intro": {
+  "x-review": "machine",
+  "x-source": "b22e135d6a"
+ },
+ "learn.kind.catalogue": "Catalogus",
+ "@learn.kind.catalogue": {
+  "x-review": "machine",
+  "x-source": "1034513950"
+ },
+ "learn.kind.ch": "Methodehoofdstuk",
+ "@learn.kind.ch": {
+  "x-review": "machine",
+  "x-source": "8cb87af4b5"
+ },
+ "learn.kind.galaxy": "Melkweg",
+ "@learn.kind.galaxy": {
+  "x-review": "machine",
+  "x-source": "9b81c03539"
+ },
+ "learn.kind.run": "Run van SetuHQ",
+ "@learn.kind.run": {
+  "x-review": "machine",
+  "x-source": "12eeea4754"
+ },
+ "learn.leave": "Verlaten",
+ "@learn.leave": {
+  "x-review": "machine",
+  "x-source": "fc6e4a408d"
+ },
+ "learn.leave_label": "Het pad verlaten",
+ "@learn.leave_label": {
+  "x-review": "machine",
+  "x-source": "49324ad9ff"
+ },
+ "learn.left": "Het leerpad verlaten. Je voortgang blijft bewaard.",
+ "@learn.left": {
+  "x-review": "machine",
+  "x-source": "9ef4f1079c"
+ },
+ "learn.next": "Volgende",
+ "@learn.next": {
+  "x-review": "machine",
+  "x-source": "1ff57a29d7"
+ },
+ "learn.next_btn": "Volgende ›",
+ "@learn.next_btn": {
+  "x-review": "machine",
+  "x-source": "868d16703d"
+ },
+ "learn.next_label": "Volgende: {step}",
+ "@learn.next_label": {
+  "x-review": "machine",
+  "x-source": "19282226b1"
+ },
+ "learn.pos": "{i} van {n}",
+ "@learn.pos": {
+  "x-review": "machine",
+  "x-source": "2eb6f9a3c3"
+ },
+ "learn.progress": "Voortgang van het leerpad",
+ "@learn.progress": {
+  "x-review": "machine",
+  "x-source": "0e0d6f67aa"
+ },
+ "learn.reset": "Voortgang wissen",
+ "@learn.reset": {
+  "x-review": "machine",
+  "x-source": "0b026c02ba"
+ },
+ "learn.seen": ", bezocht",
+ "@learn.seen": {
+  "x-review": "machine",
+  "x-source": "bd1c8d37d4"
+ },
+ "learn.start": "Het pad beginnen",
+ "@learn.start": {
+  "x-review": "machine",
+  "x-source": "43f89ceb20"
+ },
+ "learn.step.catalogue": "Elk record, doorzoekbaar",
+ "@learn.step.catalogue": {
+  "x-review": "machine",
+  "x-source": "b6e0434eab"
+ },
+ "learn.step.galaxy": "Elke bekende exoplaneet, rond de zon",
+ "@learn.step.galaxy": {
+  "x-review": "machine",
+  "x-source": "633c7d2992"
+ },
+ "learn.step.transit": "De eigen transit van SetuHQ: het dossier",
+ "@learn.step.transit": {
+  "x-review": "machine",
+  "x-source": "e521fd3e8b"
+ },
+ "learn.unseen": ", nog niet bezocht",
+ "@learn.unseen": {
+  "x-review": "machine",
+  "x-source": "a9473125f4"
+ },
+ "limits.art": "Geen waarneming: een uiterlijk gekozen op gemeten straal en instraling.",
+ "@limits.art": {
+  "x-review": "machine",
+  "x-source": "ec71f17b2e"
+ },
+ "limits.caption": "zoals het bijschrift vermeldt",
+ "@limits.caption": {
+  "x-review": "machine",
+  "x-source": "dee533d112"
+ },
+ "limits.illustration": "Legt een idee uit; geen data.",
+ "@limits.illustration": {
+  "x-review": "machine",
+  "x-source": "c4c6c22d05"
+ },
+ "limits.model": "Een model uit opgeslagen getallen; geen afbeelding van het object.",
+ "@limits.model": {
+  "x-review": "machine",
+  "x-source": "9f137900ab"
+ },
+ "limits.real": "Opgeslagen metingen, gebind of gevouwen zoals opgeslagen.",
+ "@limits.real": {
+  "x-review": "machine",
+  "x-source": "1e9288318d"
+ },
+ "limits.source": "Bron: {s}.",
+ "@limits.source": {
+  "x-review": "machine",
+  "x-source": "cba3864e3a"
+ },
+ "limits.speculative": "Voorbij wat gemeten is: een mogelijkheid, geen resultaat.",
+ "@limits.speculative": {
+  "x-review": "machine",
+  "x-source": "3fe7418bc2"
+ },
+ "limits.summary": "Bron / grenzen",
+ "@limits.summary": {
+  "x-review": "machine",
+  "x-source": "ecbcc39e74"
+ },
+ "lu.cap": "Op schaal: één aardstraal is over de hele rij even breed, dus {big} is {x} keer zo breed als {small}. Elke afbeelding is een artistieke impressie, gekozen op basis van de gemeten straal en de berekende instraling; de samenstelling is niet gemeten. De aarde, Neptunus en Jupiter zijn de referenties uit het zonnestelsel (alleen de aarde is met oceanen getekend). Stralen: {src} (1 RJ = 11,209 R⊕).",
+ "@lu.cap": {
+  "x-review": "machine",
+  "x-source": "3cdd1c02b9"
+ },
+ "lu.earth": "de aarde",
+ "@lu.earth": {
+  "x-review": "machine",
+  "x-source": "b7c9b5ccd3"
+ },
+ "lu.jupiter": "Jupiter",
+ "@lu.jupiter": {
+  "x-review": "machine",
+  "x-source": "27ce2df068"
+ },
+ "lu.neptune": "Neptunus",
+ "@lu.neptune": {
+  "x-review": "machine",
+  "x-source": "d98d070c39"
+ },
+ "mc.intro": "Kies een ster in een willekeurig paneel; elk paneel en elk losgemaakt venster volgt.",
+ "@mc.intro": {
+  "x-review": "machine",
+  "x-source": "e6a5c8f840"
+ },
+ "mcp.honesty.candidate": "Een kandidaat, geen ontdekking: SetuHQ vindt en vet dips in openbare TESS-data. Een planeet bevestigen vraagt om vervolgwaarnemingen (radiële snelheden, beeldvorming, statistische validatie) door anderen.",
+ "@mcp.honesty.candidate": {
+  "x-review": "machine",
+  "x-source": "2109188b0d"
+ },
+ "mcp.honesty.catalogue": "Cataloguswaarden zijn de metingen van de bron, getoond zoals opgeslagen; een ontbrekende waarde is geen gok. SetuHQ heeft deze planeten niet ontdekt.",
+ "@mcp.honesty.catalogue": {
+  "x-review": "machine",
+  "x-source": "01e280f468"
+ },
+ "mcp.honesty.computed": "Nu berekend door de eigen code van SetuHQ uit de gegeven invoer; geen opgeslagen, beoordeeld resultaat.",
+ "@mcp.honesty.computed": {
+  "x-review": "machine",
+  "x-source": "8ba17ff89a"
+ },
+ "mcp.honesty.formula": "Een studieboekformule, uitgerekend zoals vermeld; ze beschrijft een geïdealiseerd geval, geen meting.",
+ "@mcp.honesty.formula": {
+  "x-review": "machine",
+  "x-source": "cd6187025a"
+ },
+ "mcp.honesty.panel": "Sentinels zijn AI-modellen, geen mensen (standaard Claude; andere aanbieders worden aangeduid). Alleen Claude is met de benchmark getest. Probes zijn deterministische matched-filterdetectoren.",
+ "@mcp.honesty.panel": {
+  "x-review": "machine",
+  "x-source": "9d2e4debf5"
+ },
+ "mcp.honesty.stored": "Gelezen uit opgeslagen bestanden; niets is opnieuw berekend.",
+ "@mcp.honesty.stored": {
+  "x-review": "machine",
+  "x-source": "333f8aa8d7"
+ },
+ "mcp.honesty.unreviewed": "Geen beoordelingspanel heeft hiernaar gekeken: het is alleen uitvoer van detector en vetting.",
+ "@mcp.honesty.unreviewed": {
+  "x-review": "machine",
+  "x-source": "832585f3e6"
+ },
+ "mcp.instructions": "SetuHQ doorzoekt openbare NASA-TESS-lichtcurves op transits met een beoordelingspanel van Sentinels (AI-modellen; standaard Claude, andere aanbieders aangeduid) en Probes (deterministische detectoren), en vet en fit daarna elke dip. Roep deze hulpmiddelen aan in plaats van te schatten: ze voeren de eigen code van SetuHQ uit of lezen de opgeslagen, beoordeelde resultaten. Elk antwoord draagt herkomst en eerlijkheidslabels; behoud die als u rapporteert. Alles wat SetuHQ vindt is een kandidaat, geen ontdekking. Dien niets in, publiceer niets en stuur niets naar buiten zonder uitdrukkelijke toestemming van de gebruiker.",
+ "@mcp.instructions": {
+  "x-review": "machine",
+  "x-source": "8dcede2e8e"
+ },
+ "mcp.tool.benchmark_results": "Een opgeslagen benchmark- of validatieresultaat: real_tois (de blinde benchmark met 662 TOI's), leaderboard (het klassement met echte TOI's), injection (injectie en terugvinden van de Probes), pi_men_validation, weights (kalibratie) of threshold_sweep (synthetisch, niet het klassement). Teruggegeven zoals opgeslagen.",
+ "@mcp.tool.benchmark_results": {
+  "x-review": "machine",
+  "x-source": "a8f12a0af7"
+ },
+ "mcp.tool.cheops_proposal_pack": "Een VOORBEREIDINGSpakket voor een voorstel in het CHEOPS Guest Observers-programma (``propose.pack.build_pack``) schrijven in een nieuwe runs/propose/<run_name> (geweigerd als die bestaat; er wordt niets daarbuiten geschreven, geen cache): de controle van de regels van de Running Call (baangrenzen, april/oktoberregel voor grote programma's, de volgende deadline in Parijse tijd, vroegste begin), de status van het doel (openbare Reserved Target List, openbare metadata van het CHEOPS-archief, J2000-coördinaten van SIMBAD/MAST), het opgeslagen bewijs van SetuHQ, ruwe SCHATTINGEN van precisie en banen, geanonimiseerde concepten met anonimiteitscontrole, en de stapsgewijze checklist van ESA. Leest alleen openbare pagina's; logt nooit in en dient nooit in. SetuHQ is onafhankelijk van ESA en de CHEOPS-missie: de officiële oproep en de hulpmiddelen van ESA zijn bepalend.",
+ "@mcp.tool.cheops_proposal_pack": {
+  "x-review": "machine",
+  "x-source": "d9fdc80788"
+ },
+ "mcp.tool.compute_fap": "De empirische vals-alarmkans van het sterkste periodieke signaal (``search.false_alarm_probability``): BLS-herhalingen met blok-bootstrap die rode ruis behouden. Begrensd: met N pogingen wordt ze nooit onder 1/(N + 1) gerapporteerd, en de Gumbel-staart is als indicatief gemarkeerd. N is begrensd op 2000 per aanroep.",
+ "@mcp.tool.compute_fap": {
+  "x-review": "machine",
+  "x-source": "01f4019412"
+ },
+ "mcp.tool.find_eclipsing_binary": "Bedekkingsveranderlijken en ellipsoïdale of reflectieveranderlijken in een lichtcurve (``binaries.analyse``): de baanperiode uit een box-zoektocht en een periodogram (verdubbeld bij een even/oneven-verschil of gelijke minima, en dan als dubbelzinnig vermeld), de primaire en secundaire bedekkingen (fase, diepte, breedte, significantie), de fase van de secundaire met de hint voor e·cosω, een heuristische morfologieklasse en een kandidaatvlag voor een bedekkingsveranderlijke met redenen. Met de periode, epoch en duur van een transitkandidaat geeft het ook adviserende vetting-hints (even/oneven diepten, een secundaire op elke fase, ellipsoïdale en reflectieamplitudes) die de vetting van SetuHQ niet gebruikt. Tijd in dagen (BTJD voor TESS).",
+ "@mcp.tool.find_eclipsing_binary": {
+  "x-review": "machine",
+  "x-source": "e45be3cbe7"
+ },
+ "mcp.tool.find_flares": "Stellaire flares in een lichtcurve detecteren en karakteriseren (``flares.detect_flares``): ontrending die flares behoudt, kandidaten via sigma-clipping (criteria van Chang et al. 2015), optionele ruisonderdrukking met wavelets (Poyatos et al. 2025), sjabloonfits van Mendoza et al. 2022 met meercomponentmodellen gekozen op BIC, stijg- en daaltijden, amplitude, FWHM, equivalente duur en energieën (zwart lichaam van 9000 K) als Teff en straal zijn gegeven. Voert ook de nultoets met omgekeerde flux uit. Tijd in dagen (BTJD voor TESS); de missie TESS of CHEOPS bepaalt de standaarden.",
+ "@mcp.tool.find_flares": {
+  "x-review": "machine",
+  "x-source": "d650c20040"
+ },
+ "mcp.tool.find_transients": "Niet-periodieke ophelderingen in een lichtcurve (``transients.find_transients``) op drie tijdschalen, elk met piek, amplitude, stijg- en daaltijden, FWHM en een klassehint (flare-achtig, als een extragalactische transiënt, als een planetoïdepassage, als een momentum dump, als strooilicht of als periodieke variabiliteit) met redenen; de laatste vier zijn waarschijnlijk vals alarm. difference_flux=True voor een lichtcurve uit verschilbeelden in e-/s. Tijden van momentum dumps en strooilicht (TESS-kwaliteitsbits 32, 2048, 4096) verscherpen de filters. Elke gebeurtenis is een transiëntkandidaat, nooit een nieuw of bevestigd object. Tijd in dagen (BTJD voor TESS).",
+ "@mcp.tool.find_transients": {
+  "x-review": "machine",
+  "x-source": "54243a74ac"
+ },
+ "mcp.tool.fit_transit": "Het randverduisterde transitmodel van SetuHQ (``transitfit.fit_transit``) rond één transit fitten: diepte, T14, impactparameter b, middentijd, Rp/R★ en de transitdichtheid ρ★, elk met fout en bereik. Randverduistering volgens Claret 2017 voor de Teff en log g van de ster (zonachtig als ze niet gegeven zijn). t0, duur en diepte zijn startwaarden.",
+ "@mcp.tool.fit_transit": {
+  "x-review": "machine",
+  "x-source": "3b77980915"
+ },
+ "mcp.tool.get_candidate": "Eén consensusdip met zijn volledige herkomst: de opgeslagen kandidaat (vetting, fit, FAP, controle van de markering van elke beoordelaar), het manifest van de run (code, configuratiehash, invoer met SHA-256, beoordelaars met aanbieder en model) en de opgeslagen classificatie van zijn segment door elke beoordelaar (label, markeringen, motivering, aanbieder, model).",
+ "@mcp.tool.get_candidate": {
+  "x-review": "machine",
+  "x-source": "78f0b83b1a"
+ },
+ "mcp.tool.get_cheops_lightcurve": "Openbare CHEOPS-DRP-lichtcurves van een doel uit het CHEOPS-archief via DACE (``cheops.get_cheops_lightcurve``; vereist ``pip install 'setuhq[cheops]'`` en netwerk, tenzij gecachet): bezoeken opgesomd per positie, eigendomsbezoeken overgeslagen, elk één keer opgehaald en gecachet, systematiek van rolhoek, achtergrond en zwaartepunt gedecorreleerd (termen gekozen op BIC). Geeft de herkomst van elk bezoek terug (programma, bestandssleutel, waarneem-id, vermelding), de samenvatting van de ontrending en, met include_points, de ontrende punten in BTJD. Draagt de dankbetuiging van ESA en de disclaimer van SetuHQ.",
+ "@mcp.tool.get_cheops_lightcurve": {
+  "x-review": "machine",
+  "x-source": "06ff3dcf79"
+ },
+ "mcp.tool.get_planet": "Het opgeslagen catalogusrecord van een planeet en dat van zijn moederster (exacte naammatch; gebruik eerst search_catalogue).",
+ "@mcp.tool.get_planet": {
+  "x-review": "machine",
+  "x-source": "97084f4fb5"
+ },
+ "mcp.tool.get_star": "Het opgeslagen record van een moederster en elke gecatalogiseerde planeet eromheen (exacte sternaam).",
+ "@mcp.tool.get_star": {
+  "x-review": "machine",
+  "x-source": "df7232ade1"
+ },
+ "mcp.tool.habitable_zone": "De randen van de bewoonbare zone in AE voor een ster (``methods.hz_distance_au``, Kopparapu et al. 2014, 1 M⊕): recente Venus en op hol geslagen broeikaseffect (binnen), maximaal broeikaseffect en vroege Mars (buiten).",
+ "@mcp.tool.habitable_zone": {
+  "x-review": "machine",
+  "x-source": "3608921db8"
+ },
+ "mcp.tool.list_candidates": "De consensusdips van een opgeslagen run, met of elk de vetting doorstond en zijn vlaggen (``candidates.json``).",
+ "@mcp.tool.list_candidates": {
+  "x-review": "machine",
+  "x-source": "0443efd099"
+ },
+ "mcp.tool.microlensing_magnification": "De versterking A(u) = (u² + 2) / (u √(u² + 4)) van een puntlens bij impactparameter u, in Einsteinstralen (``methods.paczynski``).",
+ "@mcp.tool.microlensing_magnification": {
+  "x-review": "machine",
+  "x-source": "29faa074dc"
+ },
+ "mcp.tool.pulsation_spectrum": "Frequentieanalyse van een lichtcurve (``pulsations.analyse``): Lomb-Scargle-amplitudespectrum, iteratieve prewhitening met een niet-lineaire multi-sinusrefit tot S/N 4 (Breger et al. 1993), vlaggen voor combinatiefrequenties, een granulatieachtergrond met Harvey-profiel, numax/Δν voor zonachtige oscillatoren en een heuristisch variabiliteitstype met zijn onzekerheid. Frequenties in d⁻¹ en µHz; tijd in dagen. n_surrogates > 0 voert de nultoets met rode ruis uit (hoogstens 20).",
+ "@mcp.tool.pulsation_spectrum": {
+  "x-review": "machine",
+  "x-source": "97767afcfb"
+ },
+ "mcp.tool.rotation_period": "Een stellaire rotatieperiode uit vlekmodulatie (``rotation.measure``): een Lomb-Scargle-periodogram en de autocorrelatiefunctie, met een onzekerheid, behandeling van halve en dubbele aliassen en een detectievlag. Eén TESS-sector kan geen perioden boven ongeveer 13 dagen meten; die worden als buiten de grens gerapporteerd. Geef één sector (of een zelf samengevoegde lichtcurve, met zorg voor verschuivingen tussen sectoren). Tijd in dagen.",
+ "@mcp.tool.rotation_period": {
+  "x-review": "machine",
+  "x-source": "2d6e72833f"
+ },
+ "mcp.tool.run_pipeline_csv": "De volledige pijplijn (``pipeline.run_pipeline``) draaien op een CSV-lichtcurve (time, flux[, flux_err]) en een nieuwe runmap schrijven, runs/mcp/<run_name> (geweigerd als die bestaat: er wordt nooit iets overschreven). Alleen Probes, tenzij sentinels=True; Sentinels draaien dan alleen waar hun sleutel, SDK of CLI aanwezig is (het manifest noemt de overgeslagen en waarom).",
+ "@mcp.tool.run_pipeline_csv": {
+  "x-review": "machine",
+  "x-source": "6a2a86935b"
+ },
+ "mcp.tool.run_pipeline_tess": "Een TESS-SPOC-lichtcurve van MAST downloaden (``loaders.load_tess``; vereist netwerk en ``pip install -e '.[tess]'``) voor een TIC-id en sectoren, en de pijplijn erop draaien in een nieuwe runs/mcp/<run_name> (nooit een bestaande map). Alleen Probes, tenzij sentinels=True.",
+ "@mcp.tool.run_pipeline_tess": {
+  "x-review": "machine",
+  "x-source": "421d6522fe"
+ },
+ "mcp.tool.rv_semi_amplitude": "De halve amplitude K (m/s) van de radiële snelheid van een ster met één planeet (``methods.rv_semi_amplitude``).",
+ "@mcp.tool.rv_semi_amplitude": {
+  "x-review": "machine",
+  "x-source": "0342cc898c"
+ },
+ "mcp.tool.search_catalogue": "De exoplanetencatalogus doorzoeken op planeet- of sternaam (of een andere naam, bijv. een TIC-id), optioneel op ontdekkingsmethode (``transit``, ``rv``, ``imaging``, ``microlensing``, ``astrometry``, ``timing``). Omhult ``catalogue.catalogue_filter``.",
+ "@mcp.tool.search_catalogue": {
+  "x-review": "machine",
+  "x-source": "27fc845629"
+ },
+ "mcp.tool.sentinel_providers": "De Sentinel-aanbieders die SetuHQ ondersteunt, hoe elk wordt geconfigureerd en of hij hier kan draaien (zijn sleutelvariabele is ingesteld, zijn SDK of CLI is aanwezig). Geeft nooit een sleutel terug.",
+ "@mcp.tool.sentinel_providers": {
+  "x-review": "machine",
+  "x-source": "d8e703706c"
+ },
+ "mcp.tool.transit_depth": "De diepte van een centrale transit: (Rp/R★)² geometrisch, en met kwadratische TESS-randverduistering voor de Teff van de ster (``methods.transit_flux`` bij z = 0, coëfficiënten van Claret 2017). Geef Rp/R★, of Rp in aardstralen en R★ in zonsstralen.",
+ "@mcp.tool.transit_depth": {
+  "x-review": "machine",
+  "x-source": "6b52c6ad8e"
+ },
+ "mcp.tool.vet_lightcurve": "Een lichtcurve doorzoeken op een periodieke transit (BLS, ``search.bls_search``) en één dip vetten met de vetting van SetuHQ (``vet.vet_event``: SNR, duur, randen, even/oneven diepten, secundaire bedekking). Geef de dip als t_start/t_end, of laat ze weg om de eerste transit van het sterkste periodieke signaal te vetten. De lichtcurve wordt voorbereid zoals de pijplijn dat doet (opschonen, ontrenden, binnen).",
+ "@mcp.tool.vet_lightcurve": {
+  "x-review": "machine",
+  "x-source": "645c79cc54"
+ },
+ "method.astrometry": "astrometrie",
+ "@method.astrometry": {
+  "x-review": "machine",
+  "x-source": "ec74d70d9e"
+ },
+ "method.imaging": "directe beeldvorming",
+ "@method.imaging": {
+  "x-review": "machine",
+  "x-source": "f6e9cec92c"
+ },
+ "method.microlensing": "microlensing",
+ "@method.microlensing": {
+  "x-review": "machine",
+  "x-source": "8f7b755044"
+ },
+ "method.other": "overig",
+ "@method.other": {
+  "x-review": "machine",
+  "x-source": "d9298a10d1"
+ },
+ "method.rv": "radiële snelheid",
+ "@method.rv": {
+  "x-review": "machine",
+  "x-source": "0ec51a755a"
+ },
+ "method.timing": "timing",
+ "@method.timing": {
+  "x-review": "machine",
+  "x-source": "f6cfb8c3f1"
+ },
+ "method.transit": "transit",
+ "@method.transit": {
+  "x-review": "machine",
+  "x-source": "068b7e6c97"
+ },
+ "methods.chapter_n": "Hoofdstuk {i} van {n}",
+ "@methods.chapter_n": {
+  "x-review": "machine",
+  "x-source": "417be5d799"
+ },
+ "methods.h1": "Hoe planeten worden gevonden.",
+ "@methods.h1": {
+  "x-review": "machine",
+  "x-source": "583ac6e306"
+ },
+ "methods.h1b": "En hoe SetuHQ ze vindt.",
+ "@methods.h1b": {
+  "x-review": "machine",
+  "x-source": "99b2b42598"
+ },
+ "methods.intro": "{n} hoofdstukken, elk een geanimeerde uitleg met de natuurkunde en de bronnen. Elke tekening zegt of ze een illustratie, een model uit opgeslagen waarden of echte data is, en hoeveel ze is overdreven. Alleen het transithoofdstuk beschrijft iets wat SetuHQ zelf doet.",
+ "@methods.intro": {
+  "x-review": "machine",
+  "x-source": "c0a3069175"
+ },
+ "methods.planets": "Planeten in dit hoofdstuk",
+ "@methods.planets": {
+  "x-review": "machine",
+  "x-source": "6be85af173"
+ },
+ "methods.sources": "Bronnen",
+ "@methods.sources": {
+  "x-review": "machine",
+  "x-source": "caf85b0888"
+ },
+ "mx.from": "Herkomst",
+ "@mx.from": {
+  "x-review": "machine",
+  "x-source": "2181976934"
+ },
+ "mx.numbers": "Getallen in dit hoofdstuk",
+ "@mx.numbers": {
+  "x-review": "machine",
+  "x-source": "2d0a4d13b4"
+ },
+ "mx.quantity": "Grootheid",
+ "@mx.quantity": {
+  "x-review": "machine",
+  "x-source": "822bab8d41"
+ },
+ "mx.speed": "Snelheid",
+ "@mx.speed": {
+  "x-review": "machine",
+  "x-source": "c372fee9b4"
+ },
+ "mx.value": "Waarde",
+ "@mx.value": {
+  "x-review": "machine",
+  "x-source": "8e37953d23"
+ },
+ "nav.candidates": "Kandidaten",
+ "@nav.candidates": {
+  "x-review": "machine",
+  "x-source": "fdc9c0f69d"
+ },
+ "nav.docs": "Docs",
+ "@nav.docs": {
+  "x-review": "machine",
+  "x-source": "7af023c430"
+ },
+ "nav.evidence": "Bewijs",
+ "@nav.evidence": {
+  "x-review": "machine",
+  "x-source": "03867aea70"
+ },
+ "nav.explore": "Verkennen",
+ "@nav.explore": {
+  "x-review": "machine",
+  "x-source": "3b73900b8d"
+ },
+ "nav.how": "Hoe het werkt",
+ "@nav.how": {
+  "x-review": "machine",
+  "x-source": "9c870aa6e5"
+ },
+ "nf.candidates": "Elke dip die de voorbeeldruns vonden, met de controles.",
+ "@nf.candidates": {
+  "x-review": "machine",
+  "x-source": "1347c55237"
+ },
+ "nf.docs": "SetuHQ installeren en zelf draaien.",
+ "@nf.docs": {
+  "x-review": "machine",
+  "x-source": "ae69454d62"
+ },
+ "nf.evidence": "De beoordelaars, de benchmark en de runs.",
+ "@nf.evidence": {
+  "x-review": "machine",
+  "x-source": "b14b42d506"
+ },
+ "nf.explore": "De hemel, de Melkweg en elke gecatalogiseerde planeet.",
+ "@nf.explore": {
+  "x-review": "machine",
+  "x-source": "05950074cc"
+ },
+ "nf.h1": "Deze pagina is er niet.",
+ "@nf.h1": {
+  "x-review": "machine",
+  "x-source": "3ba2f76d61"
+ },
+ "nf.home": "Naar de startpagina",
+ "@nf.home": {
+  "x-review": "machine",
+  "x-source": "adceddedfd"
+ },
+ "nf.how": "Vijftien hoofdstukken over hoe planeten worden gevonden.",
+ "@nf.how": {
+  "x-review": "machine",
+  "x-source": "b04ce55cc1"
+ },
+ "nf.intro": "Misschien is het adres verkeerd getypt, of is de pagina verplaatst toen de site werd heringericht. Oude adressen sturen vanzelf door; dit adres heeft geen nieuw thuis.",
+ "@nf.intro": {
+  "x-review": "machine",
+  "x-source": "76142af35c"
+ },
+ "nf.search": "Planeten, sterren en pagina's zoeken",
+ "@nf.search": {
+  "x-review": "machine",
+  "x-source": "36738611e1"
+ },
+ "obj.cls.bymass": " (op massa)",
+ "@obj.cls.bymass": {
+  "x-review": "machine",
+  "x-source": "0fefa83c19"
+ },
+ "obj.cls.earth": "Aardgrootte",
+ "@obj.cls.earth": {
+  "x-review": "machine",
+  "x-source": "793cad2691"
+ },
+ "obj.cls.giant": "Gasreus",
+ "@obj.cls.giant": {
+  "x-review": "machine",
+  "x-source": "dc4da1dee3"
+ },
+ "obj.cls.nep": "Neptunusachtig",
+ "@obj.cls.nep": {
+  "x-review": "machine",
+  "x-source": "d9aa819eb6"
+ },
+ "obj.cls.none": "klasse niet te bepalen (geen straal of massa opgeslagen)",
+ "@obj.cls.none": {
+  "x-review": "machine",
+  "x-source": "4c2ce50d4a"
+ },
+ "obj.cls.subnep": "Sub-Neptunus",
+ "@obj.cls.subnep": {
+  "x-review": "machine",
+  "x-source": "a17b446d03"
+ },
+ "obj.cls.super": "Superaarde",
+ "@obj.cls.super": {
+  "x-review": "machine",
+  "x-source": "c9402130b8"
+ },
+ "obj.discovered": "ontdekt in {year}",
+ "@obj.discovered": {
+  "x-review": "machine",
+  "x-source": "aeef0079ed"
+ },
+ "obj.discovered_none": "ontdekkingsjaar niet opgeslagen",
+ "@obj.discovered_none": {
+  "x-review": "machine",
+  "x-source": "ceb1245b3e"
+ },
+ "obj.host": "Zijn ster en andere planeten",
+ "@obj.host": {
+  "x-review": "machine",
+  "x-source": "c247cb467a"
+ },
+ "obj.nohost": "moederster niet opgeslagen",
+ "@obj.nohost": {
+  "x-review": "machine",
+  "x-source": "1309987b39"
+ },
+ "obj.params": "Opgeslagen parameters",
+ "@obj.params": {
+  "x-review": "machine",
+  "x-source": "a060be301b"
+ },
+ "obj.planets": "Zijn planeten",
+ "@obj.planets": {
+  "x-review": "machine",
+  "x-source": "0b1b4bc5af"
+ },
+ "obj.refs": "Ontdekking en referenties",
+ "@obj.refs": {
+  "x-review": "machine",
+  "x-source": "11a5acd988"
+ },
+ "obj.row.a": "Halve lange as",
+ "@obj.row.a": {
+  "x-review": "machine",
+  "x-source": "7a98cb0909"
+ },
+ "obj.row.b": "Impactparameter",
+ "@obj.row.b": {
+  "x-review": "machine",
+  "x-source": "c30e761341"
+ },
+ "obj.row.dec": "Dec. (J2000)",
+ "@obj.row.dec": {
+  "x-review": "machine",
+  "x-source": "31451795ef"
+ },
+ "obj.row.dist": "Afstand",
+ "@obj.row.dist": {
+  "x-review": "machine",
+  "x-source": "b7bdf7a2d6"
+ },
+ "obj.row.e": "Excentriciteit",
+ "@obj.row.e": {
+  "x-review": "machine",
+  "x-source": "3642eea73f"
+ },
+ "obj.row.incl": "Inclinatie",
+ "@obj.row.incl": {
+  "x-review": "machine",
+  "x-source": "e1a57232e1"
+ },
+ "obj.row.k": "RV-halve amplitude K",
+ "@obj.row.k": {
+  "x-review": "machine",
+  "x-source": "4bc68f8d51"
+ },
+ "obj.row.lambda": "Spin-baanhoek λ",
+ "@obj.row.lambda": {
+  "x-review": "machine",
+  "x-source": "f4a2329657"
+ },
+ "obj.row.mass": "Massa",
+ "@obj.row.mass": {
+  "x-review": "machine",
+  "x-source": "10a0c5f853"
+ },
+ "obj.row.msini": "Minimale massa (m sin i)",
+ "@obj.row.msini": {
+  "x-review": "machine",
+  "x-source": "0a0c24bec0"
+ },
+ "obj.row.period": "Omlooptijd",
+ "@obj.row.period": {
+  "x-review": "machine",
+  "x-source": "278785d733"
+ },
+ "obj.row.ra": "RA (J2000)",
+ "@obj.row.ra": {
+  "x-review": "machine",
+  "x-source": "9cee37a6a6"
+ },
+ "obj.row.radius": "Straal",
+ "@obj.row.radius": {
+  "x-review": "machine",
+  "x-source": "6fe0661c82"
+ },
+ "obj.row.sage": "Leeftijd",
+ "@obj.row.sage": {
+  "x-review": "machine",
+  "x-source": "39b7370f30"
+ },
+ "obj.row.smass": "Massa",
+ "@obj.row.smass": {
+  "x-review": "machine",
+  "x-source": "10a0c5f853"
+ },
+ "obj.row.smet": "Metalliciteit [Fe/H]",
+ "@obj.row.smet": {
+  "x-review": "machine",
+  "x-source": "b7e5ba6b1d"
+ },
+ "obj.row.srad": "Straal",
+ "@obj.row.srad": {
+  "x-review": "machine",
+  "x-source": "6fe0661c82"
+ },
+ "obj.row.steff": "Effectieve temperatuur",
+ "@obj.row.steff": {
+  "x-review": "machine",
+  "x-source": "bcd5903c63"
+ },
+ "obj.row.teq": "Evenwichtstemperatuur",
+ "@obj.row.teq": {
+  "x-review": "machine",
+  "x-source": "a3016009fd"
+ },
+ "obj.row.tmeas": "Gemeten temperatuur",
+ "@obj.row.tmeas": {
+  "x-review": "machine",
+  "x-source": "592546ce16"
+ },
+ "obj.row.vmag": "V-magnitude",
+ "@obj.row.vmag": {
+  "x-review": "machine",
+  "x-source": "963ef1a54e"
+ },
+ "obj.sysview": "Systeemweergave van",
+ "@obj.sysview": {
+  "x-review": "machine",
+  "x-source": "8f2681a95c"
+ },
+ "obj.units": "Eenheden zoals opgeslagen door {source}. Fouten zijn de opgeslagen onder- en bovengrenzen; waar niets is opgeslagen, wordt niets getoond.",
+ "@obj.units": {
+  "x-review": "machine",
+  "x-source": "1d415a6e1a"
+ },
+ "obj.where": "Waar hij staat",
+ "@obj.where": {
+  "x-review": "machine",
+  "x-source": "751c664982"
+ },
+ "out.dash.footer": "Gemaakt door SetuHQ. Resultaten op synthetische data zijn geen uitspraken over echte hemeldata.",
+ "@out.dash.footer": {
+  "x-review": "machine",
+  "x-source": "98762ed655"
+ },
+ "out.feed.candidates": "Dit zijn kandidaten.",
+ "@out.feed.candidates": {
+  "x-review": "machine",
+  "x-source": "ee9b7f2cdf"
+ },
+ "out.feed.h1": "Zoekfeed",
+ "@out.feed.h1": {
+  "x-review": "machine",
+  "x-source": "22bc3c8839"
+ },
+ "out.feed.held": "Achtergehouden voor beoordeling",
+ "@out.feed.held": {
+  "x-review": "machine",
+  "x-source": "57b7af20f8"
+ },
+ "out.feed.nights": "Vermeldingen per nacht",
+ "@out.feed.nights": {
+  "x-review": "machine",
+  "x-source": "6cd04f7bc5"
+ },
+ "out.plate.interval": "Het consensusinterval van een dip is waar hun markeringen overeenkomen.",
+ "@out.plate.interval": {
+  "x-review": "machine",
+  "x-source": "1780c6e536"
+ },
+ "out.plate.others": "Platen van de andere voorbeeldsterren",
+ "@out.plate.others": {
+  "x-review": "machine",
+  "x-source": "df7ef77948"
+ },
+ "out.plate.panel": "Het panel bestaat uit de Sentinels en de Probes, geen mensen.",
+ "@out.plate.panel": {
+  "x-review": "machine",
+  "x-source": "15066e34e3"
+ },
+ "out.report.benchmark": "Injectie en terugvinden",
+ "@out.report.benchmark": {
+  "x-review": "machine",
+  "x-source": "6da1d36286"
+ },
+ "out.report.candidates": "Kandidaten",
+ "@out.report.candidates": {
+  "x-review": "machine",
+  "x-source": "fdc9c0f69d"
+ },
+ "out.report.panel": "Beslissingen van het panel",
+ "@out.report.panel": {
+  "x-review": "machine",
+  "x-source": "a929a43913"
+ },
+ "out.report.panel.p": "Het antwoord van elke beoordelaar voor elk blind gecodeerd segment. Onenigheid blijft zichtbaar, want daar wordt de consensus verdiend.",
+ "@out.report.panel.p": {
+  "x-review": "machine",
+  "x-source": "da09405f36"
+ },
+ "out.report.pipeline": "Hoe een run werkt",
+ "@out.report.pipeline": {
+  "x-review": "machine",
+  "x-source": "baad56eb35"
+ },
+ "out.report.provenance": "Herkomst",
+ "@out.report.provenance": {
+  "x-review": "machine",
+  "x-source": "1c4b8ff605"
+ },
+ "out.report.validation": "Validatie op bekende planeten",
+ "@out.report.validation": {
+  "x-review": "machine",
+  "x-source": "4432fa961d"
+ },
+ "panel.both": "{s, plural, one {# Sentinel} other {# Sentinels}} en {p, plural, one {# Probe} other {# Probes}}",
+ "@panel.both": {
+  "x-review": "machine",
+  "x-source": "c6e6d6aa5e"
+ },
+ "panel.probes": "{p, plural, one {# Probe} other {# Probes}}",
+ "@panel.probes": {
+  "x-review": "machine",
+  "x-source": "5dce100851"
+ },
+ "panel.probes_sentinels": "Probes en Sentinels",
+ "@panel.probes_sentinels": {
+  "x-review": "machine",
+  "x-source": "300c2fe632"
+ },
+ "panel.sentinels": "{s, plural, one {# Sentinel} other {# Sentinels}}",
+ "@panel.sentinels": {
+  "x-review": "machine",
+  "x-source": "70f14c3441"
+ },
+ "pic.colour": "Sterkleur",
+ "@pic.colour": {
+  "x-review": "machine",
+  "x-source": "dfe6307835"
+ },
+ "pic.draw": "De ster en de transit",
+ "@pic.draw": {
+  "x-review": "machine",
+  "x-source": "e0d9fd74d5"
+ },
+ "pic.h1": "Hoe de afbeeldingen worden getekend.",
+ "@pic.h1": {
+  "x-review": "machine",
+  "x-source": "b56c1f91df"
+ },
+ "pic.intro": "Elke ster op SetuHQ wordt in zijn zwartlichaamkleur getekend op basis van zijn opgeslagen temperatuur. Elke planeet is een artistieke impressie: het uiterlijk wordt gekozen op twee gemeten grootheden, de straal (of zonder straal de massa) en het licht dat de planeet van zijn ster krijgt. Niets in een afbeelding is gemeten buiten die getallen, en de samenstelling nooit.",
+ "@pic.intro": {
+  "x-review": "machine",
+  "x-source": "3cf76ad409"
+ },
+ "pic.labels": "De vijf labels",
+ "@pic.labels": {
+  "x-review": "machine",
+  "x-source": "51668dd62a"
+ },
+ "pic.labels.p": "Elke afbeelding op de site draagt er een, op de afbeelding zelf.",
+ "@pic.labels.p": {
+  "x-review": "machine",
+  "x-source": "880b424ff6"
+ },
+ "pic.real": "Wat echt is en wat getekend",
+ "@pic.real": {
+  "x-review": "machine",
+  "x-source": "79bd58ea67"
+ },
+ "pic.rules": "De regels",
+ "@pic.rules": {
+  "x-review": "machine",
+  "x-source": "e3954c7ee3"
+ },
+ "pic.still": "Met minder beweging",
+ "@pic.still": {
+  "x-review": "machine",
+  "x-source": "a42e838475"
+ },
+ "pic.still.p": "Als uw apparaat om minder beweging vraagt, loopt niets in een lus: elke tekening toont één ontworpen beeld, en alles wat afspeelt wacht op zijn knop.",
+ "@pic.still.p": {
+  "x-review": "machine",
+  "x-source": "b12a8bfb34"
+ },
+ "pic.table": "De tabel met uiterlijken",
+ "@pic.table": {
+  "x-review": "machine",
+  "x-source": "5bf530d59d"
+ },
+ "pr.col.marked": "Markeerde deze dip",
+ "@pr.col.marked": {
+  "x-review": "machine",
+  "x-source": "4a7a39ecf8"
+ },
+ "pr.col.provider": "Aanbieder",
+ "@pr.col.provider": {
+  "x-review": "machine",
+  "x-source": "472590ae97"
+ },
+ "pr.col.reviewer": "Beoordelaar",
+ "@pr.col.reviewer": {
+  "x-review": "machine",
+  "x-source": "d29f46772c"
+ },
+ "pr.col.role": "Rol",
+ "@pr.col.role": {
+  "x-review": "machine",
+  "x-source": "14736a2eb9"
+ },
+ "pr.col.weight": "Gekalibreerd gewicht",
+ "@pr.col.weight": {
+  "x-review": "machine",
+  "x-source": "2ff00b5847"
+ },
+ "pr.h1": "Een CHEOPS-voorstel voorbereiden.",
+ "@pr.h1": {
+  "x-review": "machine",
+  "x-source": "c189d495dd"
+ },
+ "pr.intro": "<code>setuhq propose cheops</code> schrijft een voorbereidingspakket voor de CHEOPS Guest Observers Running Call: de gecontroleerde regels, de status van het doel, planningsschattingen, geanonimiseerde concepten en de zeven stappen van ESA als checklist. U voert de hulpmiddelen van ESA zelf uit en dient zelf in.",
+ "@pr.intro": {
+  "x-review": "machine",
+  "x-source": "6893d1fea2"
+ },
+ "pr.marked": "{k} van {n} markeerden hem · panelscore {score}, zoals opgeslagen",
+ "@pr.marked": {
+  "x-review": "machine",
+  "x-source": "59b2d88d9f"
+ },
+ "pr.marked_none": "{k} van {n} markeerden hem · panelscore niet opgeslagen",
+ "@pr.marked_none": {
+  "x-review": "machine",
+  "x-source": "6a75119056"
+ },
+ "pr.no": "nee",
+ "@pr.no": {
+  "x-review": "machine",
+  "x-source": "9390298f3f"
+ },
+ "pr.reviewers": "beoordelaars",
+ "@pr.reviewers": {
+  "x-review": "machine",
+  "x-source": "f49dd73f5c"
+ },
+ "pr.score": "panelscore",
+ "@pr.score": {
+  "x-review": "machine",
+  "x-source": "cf91ab41dd"
+ },
+ "pr.score_none": "score niet opgeslagen",
+ "@pr.score_none": {
+  "x-review": "machine",
+  "x-source": "4ac231ea2a"
+ },
+ "pr.table": "De markeringen en gewichten als tabel",
+ "@pr.table": {
+  "x-review": "machine",
+  "x-source": "7cf41c5c1b"
+ },
+ "pr.what.dip": "De opgeslagen markering van elke beoordelaar voor deze dip (doorgetrokken lijn: markeerde de dip; gestippeld: geen markering), elk geschaald naar zijn gekalibreerde gewicht; de ring vult zich tot de panelscore zoals de run die opsloeg.",
+ "@pr.what.dip": {
+  "x-review": "machine",
+  "x-source": "31dfe96fd5"
+ },
+ "pr.what.panel": "Elke beoordelaar in het panel, geschaald naar zijn gekalibreerde gewicht; er is geen dip geselecteerd, dus er wordt geen score getekend.",
+ "@pr.what.panel": {
+  "x-review": "machine",
+  "x-source": "881c9d4eaf"
+ },
+ "pr.yes": "ja",
+ "@pr.yes": {
+  "x-review": "machine",
+  "x-source": "8a798890fe"
+ },
+ "route.candidates.label": "Dossier",
+ "@route.candidates.label": {
+  "x-review": "machine",
+  "x-source": "d12f22e06a"
+ },
+ "route.candidates.title": "Dossier van {name} · Kandidaten · SetuHQ",
+ "@route.candidates.title": {
+  "x-review": "machine",
+  "x-source": "6265efaa30"
+ },
+ "route.catalogue.label": "Catalogus",
+ "@route.catalogue.label": {
+  "x-review": "machine",
+  "x-source": "1034513950"
+ },
+ "route.catalogue.title": "Catalogus van bekende exoplaneten · SetuHQ",
+ "@route.catalogue.title": {
+  "x-review": "machine",
+  "x-source": "1d55d9e531"
+ },
+ "route.docs.label": "Docs",
+ "@route.docs.label": {
+  "x-review": "machine",
+  "x-source": "7af023c430"
+ },
+ "route.docs.title": "Docs: aan de slag met SetuHQ · SetuHQ",
+ "@route.docs.title": {
+  "x-review": "machine",
+  "x-source": "273729a761"
+ },
+ "route.editions.label": "Edities",
+ "@route.editions.label": {
+  "x-review": "machine",
+  "x-source": "c6a48dcca4"
+ },
+ "route.editions.title": "Edities: open kern, SetuHQ Pro en maatwerkstudie · SetuHQ",
+ "@route.editions.title": {
+  "x-review": "machine",
+  "x-source": "facd044991"
+ },
+ "route.explorer.label": "Kandidaten",
+ "@route.explorer.label": {
+  "x-review": "machine",
+  "x-source": "fdc9c0f69d"
+ },
+ "route.explorer.title": "Kandidaten · SetuHQ",
+ "@route.explorer.title": {
+  "x-review": "machine",
+  "x-source": "3377897bfa"
+ },
+ "route.galaxy.label": "Melkweg",
+ "@route.galaxy.label": {
+  "x-review": "machine",
+  "x-source": "9b81c03539"
+ },
+ "route.galaxy.title": "Melkweg · Verkennen · SetuHQ",
+ "@route.galaxy.title": {
+  "x-review": "machine",
+  "x-source": "ad11918632"
+ },
+ "route.leaderboard.label": "Klassement",
+ "@route.leaderboard.label": {
+  "x-review": "machine",
+  "x-source": "31b4712158"
+ },
+ "route.leaderboard.title": "Klassement · Bewijs · SetuHQ",
+ "@route.leaderboard.title": {
+  "x-review": "machine",
+  "x-source": "2b687acd99"
+ },
+ "route.methods.label": "Hoe het werkt",
+ "@route.methods.label": {
+  "x-review": "machine",
+  "x-source": "9c870aa6e5"
+ },
+ "route.methods.title": "{name} · Hoe het werkt · SetuHQ",
+ "@route.methods.title": {
+  "x-review": "machine",
+  "x-source": "1cbf3454bd"
+ },
+ "route.mission.label": "Mission Control",
+ "@route.mission.label": {
+  "x-review": "machine",
+  "x-source": "1a9a658b5d"
+ },
+ "route.mission.title": "Mission Control · Verkennen · SetuHQ",
+ "@route.mission.title": {
+  "x-review": "machine",
+  "x-source": "3bbcc04226"
+ },
+ "route.notfound.label": "Pagina niet gevonden",
+ "@route.notfound.label": {
+  "x-review": "machine",
+  "x-source": "a469ab4ca4"
+ },
+ "route.notfound.title": "Pagina niet gevonden · SetuHQ",
+ "@route.notfound.title": {
+  "x-review": "machine",
+  "x-source": "9ba0459ab7"
+ },
+ "route.overview.label": "Start",
+ "@route.overview.label": {
+  "x-review": "machine",
+  "x-source": "3a78695388"
+ },
+ "route.overview.title": "SetuHQ: de hemel, beoordeeld",
+ "@route.overview.title": {
+  "x-review": "machine",
+  "x-source": "1159339ef0"
+ },
+ "route.pictures.label": "Hoe de afbeeldingen worden getekend",
+ "@route.pictures.label": {
+  "x-review": "machine",
+  "x-source": "e2d864dc53"
+ },
+ "route.pictures.title": "Hoe de afbeeldingen worden getekend · Docs · SetuHQ",
+ "@route.pictures.title": {
+  "x-review": "machine",
+  "x-source": "09b9052231"
+ },
+ "route.planet.label": "Planeet",
+ "@route.planet.label": {
+  "x-review": "machine",
+  "x-source": "b6e3957877"
+ },
+ "route.planet.title": "{name} · Planeten · SetuHQ",
+ "@route.planet.title": {
+  "x-review": "machine",
+  "x-source": "1fcbb7f176"
+ },
+ "route.planets.label": "Stralenverhoudingen",
+ "@route.planets.label": {
+  "x-review": "machine",
+  "x-source": "afcd4824b8"
+ },
+ "route.planets.title": "Stralenverhoudingen · Kandidaten · SetuHQ",
+ "@route.planets.title": {
+  "x-review": "machine",
+  "x-source": "ac2e38c1f9"
+ },
+ "route.plates.label": "Platen",
+ "@route.plates.label": {
+  "x-review": "machine",
+  "x-source": "4fb4c6f38a"
+ },
+ "route.propose.label": "CHEOPS-voorstellen",
+ "@route.propose.label": {
+  "x-review": "machine",
+  "x-source": "ad05c9e350"
+ },
+ "route.propose.title": "Een CHEOPS-voorstel voorbereiden · Docs · SetuHQ",
+ "@route.propose.title": {
+  "x-review": "machine",
+  "x-source": "6f87c679a9"
+ },
+ "route.report.label": "Runrapport",
+ "@route.report.label": {
+  "x-review": "machine",
+  "x-source": "6b5c209e01"
+ },
+ "route.runs.label": "Runs",
+ "@route.runs.label": {
+  "x-review": "machine",
+  "x-source": "848f54e896"
+ },
+ "route.runs.title": "Runs · Bewijs · SetuHQ",
+ "@route.runs.title": {
+  "x-review": "machine",
+  "x-source": "004653c043"
+ },
+ "route.sentinels.label": "Het panel",
+ "@route.sentinels.label": {
+  "x-review": "machine",
+  "x-source": "5326ad997a"
+ },
+ "route.sentinels.title": "Bewijs: het panel, gemeten · SetuHQ",
+ "@route.sentinels.title": {
+  "x-review": "machine",
+  "x-source": "789dfd2a1e"
+ },
+ "route.sky.label": "Hemelkaart",
+ "@route.sky.label": {
+  "x-review": "machine",
+  "x-source": "762d3baf8a"
+ },
+ "route.sky.title": "De hemel verkennen · SetuHQ",
+ "@route.sky.title": {
+  "x-review": "machine",
+  "x-source": "8b6fb90a8b"
+ },
+ "route.star.label": "Ster",
+ "@route.star.label": {
+  "x-review": "machine",
+  "x-source": "e357d39687"
+ },
+ "route.star.title": "{name} · Sterren · SetuHQ",
+ "@route.star.title": {
+  "x-review": "machine",
+  "x-source": "fbb83b9cf8"
+ },
+ "route.stellar.label": "Sterren",
+ "@route.stellar.label": {
+  "x-review": "machine",
+  "x-source": "4e44daeed5"
+ },
+ "route.stellar.title": "Sterren, gemeten: flares en pulsaties · Bewijs · SetuHQ",
+ "@route.stellar.title": {
+  "x-review": "machine",
+  "x-source": "67e92dbcd1"
+ },
+ "route.stellardocs.label": "Flares en pulsaties",
+ "@route.stellardocs.label": {
+  "x-review": "machine",
+  "x-source": "e5b12f44ff"
+ },
+ "route.stellardocs.title": "Flares, pulsaties en CHEOPS · Docs · SetuHQ",
+ "@route.stellardocs.title": {
+  "x-review": "machine",
+  "x-source": "ed9c362b70"
+ },
+ "route.tessnow.label": "Waar TESS nu is",
+ "@route.tessnow.label": {
+  "x-review": "machine",
+  "x-source": "fb060d8af7"
+ },
+ "route.tessnow.title": "Waar TESS naar kijkt · Verkennen · SetuHQ",
+ "@route.tessnow.title": {
+  "x-review": "machine",
+  "x-source": "b9141101d4"
+ },
+ "route.transit.label": "Kandidaat",
+ "@route.transit.label": {
+  "x-review": "machine",
+  "x-source": "b2452d1eba"
+ },
+ "route.transit.title": "{name} · Kandidaten · SetuHQ",
+ "@route.transit.title": {
+  "x-review": "machine",
+  "x-source": "e3d2dd556b"
+ },
+ "route.variables.label": "Alles wat dimt",
+ "@route.variables.label": {
+  "x-review": "machine",
+  "x-source": "4558adf410"
+ },
+ "route.variables.title": "Alles wat dimt · Catalogus · SetuHQ",
+ "@route.variables.title": {
+  "x-review": "machine",
+  "x-source": "85fdb3c494"
+ },
+ "route.vetter.label": "Beoordeel zelf",
+ "@route.vetter.label": {
+  "x-review": "machine",
+  "x-source": "e37b76fbec"
+ },
+ "route.vetter.title": "Beoordeel zelf · Kandidaten · SetuHQ",
+ "@route.vetter.title": {
+  "x-review": "machine",
+  "x-source": "f8e3bf1fc8"
+ },
+ "rr.h1": "Wat elke diepte zou betekenen, als het een planeet was.",
+ "@rr.h1": {
+  "x-review": "machine",
+  "x-source": "ff54ab4721"
+ },
+ "rr.intro": "Eén kaart per ster in de run of de feed. Elke vermelding is een {status}; de verhouding hieronder is wat de opgeslagen diepte betekent als het een planeet was.",
+ "@rr.intro": {
+  "x-review": "machine",
+  "x-source": "9889e603bf"
+ },
+ "run.casefile": "Het dossier van de run ›",
+ "@run.casefile": {
+  "x-review": "machine",
+  "x-source": "44cc301e33"
+ },
+ "run.plates": "Platen ›",
+ "@run.plates": {
+  "x-review": "machine",
+  "x-source": "3a05204bd6"
+ },
+ "run.report": "Runrapport ›",
+ "@run.report": {
+  "x-review": "machine",
+  "x-source": "3f0278c3ff"
+ },
+ "run.sectors": "Run {run}, TESS-{n, plural, one {sector} other {sectoren}} {list}.",
+ "@run.sectors": {
+  "x-review": "machine",
+  "x-source": "cdff019405"
+ },
+ "runs.h1": "Elke zoekrun, zijn fouten zoals opgeslagen, en de configuratie achter deze pagina's.",
+ "@runs.h1": {
+  "x-review": "machine",
+  "x-source": "db1e81a5b2"
+ },
+ "runs.hist": "Zoekruns",
+ "@runs.hist": {
+  "x-review": "machine",
+  "x-source": "26d6d37f90"
+ },
+ "runs.intro": "De geschiedenis van zoekruns uit de catalogus, en de configuratie van run {run}. Foutmeldingen worden getoond zoals opgeslagen.",
+ "@runs.intro": {
+  "x-review": "machine",
+  "x-source": "95d99973c5"
+ },
+ "sd.h1": "Flares, pulsaties en CHEOPS.",
+ "@sd.h1": {
+  "x-review": "machine",
+  "x-source": "a0c598f487"
+ },
+ "sd.intro": "Zes opdrachten kijken naar de ster in plaats van naar zijn planeten. Elke opdracht schrijft één JSON-record met het resultaat, de herkomst (versie, codevingerafdruk, sha256 van elke invoer) en de labels. Een flare of een frequentie wordt gedetecteerd met een vermelde significantie, nooit bevestigd; een variabiliteitstype is waarschijnlijk of een kandidaat.",
+ "@sd.intro": {
+  "x-review": "machine",
+  "x-source": "d9fdd750e3"
+ },
+ "search.hint": "↑ ↓ om te bewegen · Enter om te openen · Esc om te sluiten",
+ "@search.hint": {
+  "x-review": "machine",
+  "x-source": "4fefe7c452"
+ },
+ "search.placeholder": "Zoek planeten, sterren, pagina's",
+ "@search.placeholder": {
+  "x-review": "machine",
+  "x-source": "28a6ead8a4"
+ },
+ "search.results": "Resultaten",
+ "@search.results": {
+  "x-review": "machine",
+  "x-source": "219c4a6c86"
+ },
+ "sen.h1": "{n, plural, one {# beoordelaar.} other {# beoordelaars.}}",
+ "@sen.h1": {
+  "x-review": "machine",
+  "x-source": "18e2721f25"
+ },
+ "sen.h1b": "Elk verdient zijn stem.",
+ "@sen.h1b": {
+  "x-review": "machine",
+  "x-source": "67b1d265c9"
+ },
+ "sen.intro": "Het panel dat dips markeerde in run {run}: de Sentinels en de Probes, geen mensen.",
+ "@sen.intro": {
+  "x-review": "machine",
+  "x-source": "cfd243554e"
+ },
+ "shell.bootnote": "De interactieve onderdelen van deze pagina konden niet laden. De tekst hierboven is volledig; laad opnieuw om het nog eens te proberen.",
+ "@shell.bootnote": {
+  "x-review": "machine",
+  "x-source": "a2f1ab571c"
+ },
+ "shell.breadcrumb": "Kruimelpad",
+ "@shell.breadcrumb": {
+  "x-review": "machine",
+  "x-source": "2bd873d6c7"
+ },
+ "shell.copy_view": "Link naar deze weergave kopiëren",
+ "@shell.copy_view": {
+  "x-review": "machine",
+  "x-source": "709937ae3d"
+ },
+ "shell.home": "SetuHQ, startpagina",
+ "@shell.home": {
+  "x-review": "machine",
+  "x-source": "970b8e33a0"
+ },
+ "shell.in_section": "In dit onderdeel",
+ "@shell.in_section": {
+  "x-review": "machine",
+  "x-source": "a4b1dbff1e"
+ },
+ "shell.menu_close": "Menu sluiten",
+ "@shell.menu_close": {
+  "x-review": "machine",
+  "x-source": "d992820f3c"
+ },
+ "shell.menu_open": "Menu openen",
+ "@shell.menu_open": {
+  "x-review": "machine",
+  "x-source": "fc798c613b"
+ },
+ "shell.nav_main": "Hoofdmenu",
+ "@shell.nav_main": {
+  "x-review": "machine",
+  "x-source": "eb814be3ca"
+ },
+ "shell.search": "Planeten, sterren en pagina's zoeken (toets /)",
+ "@shell.search": {
+  "x-review": "machine",
+  "x-source": "781eaaf920"
+ },
+ "shell.search_title": "Zoeken (/)",
+ "@shell.search_title": {
+  "x-review": "machine",
+  "x-source": "bae77fae53"
+ },
+ "shell.skip": "Naar de inhoud",
+ "@shell.skip": {
+  "x-review": "machine",
+  "x-source": "ac576a66d4"
+ },
+ "shell.theme.dark": "donker",
+ "@shell.theme.dark": {
+  "x-review": "machine",
+  "x-source": "e6bb5689be"
+ },
+ "shell.theme.label": "Kleurthema: {t}. Wisselen naar {next}",
+ "@shell.theme.label": {
+  "x-review": "machine",
+  "x-source": "c4ccc7de70"
+ },
+ "shell.theme.light": "licht",
+ "@shell.theme.light": {
+  "x-review": "machine",
+  "x-source": "99a7026172"
+ },
+ "shell.theme.system": "de instelling van uw apparaat",
+ "@shell.theme.system": {
+  "x-review": "machine",
+  "x-source": "2b67477bad"
+ },
+ "shell.theme.title": "Thema: {t}",
+ "@shell.theme.title": {
+  "x-review": "machine",
+  "x-source": "79f90fbb1e"
+ },
+ "shell.view_link": "Link naar deze weergave",
+ "@shell.view_link": {
+  "x-review": "machine",
+  "x-source": "5fb2ec761c"
+ },
+ "showcase.tess-hd-15337-s4.caveat": "1 van de 5 transits van b en beide van c gevonden; geen van de gepubliceerde perioden werd teruggevonden (de BLS-periode van die dips is niet die van de planeet).",
+ "@showcase.tess-hd-15337-s4.caveat": {
+  "x-review": "machine",
+  "x-source": "492b8ee5d0"
+ },
+ "showcase.tess-hd-15337-s4.kind": "Kleine planeten bij de grens",
+ "@showcase.tess-hd-15337-s4.kind": {
+  "x-review": "machine",
+  "x-source": "decd7f2886"
+ },
+ "showcase.tess-hd-15337-s4.outcome": "HD 15337 b: 1 van 5 transits (1 kandidaat; BLS-periode niet die van de planeet); HD 15337 c: 2 van 2 transits (1 kandidaat, 1 gemarkeerd; BLS-periode niet die van de planeet).",
+ "@showcase.tess-hd-15337-s4.outcome": {
+  "x-review": "machine",
+  "x-source": "e894ab72ac"
+ },
+ "showcase.tess-hd-15337-s4.summary": "Een heldere K-dwerg met twee kleine bekende planeten: b (ongeveer 1,6 aardstralen, 4,8 dagen, zo'n 350 ppm diep) en c (17,2 dagen).",
+ "@showcase.tess-hd-15337-s4.summary": {
+  "x-review": "machine",
+  "x-source": "edc1d3e217"
+ },
+ "showcase.tess-hd-15337-s4.why": "Een kleine planeet waarvan de afzonderlijke transits dicht bij de ruis van één sector liggen: hij laat zien wat het panel en de vetting doen aan de rand van wat een op 10 minuten gebinde zoektocht kan zien, en de pagina zegt wat er gemist is.",
+ "@showcase.tess-hd-15337-s4.why": {
+  "x-review": "machine",
+  "x-source": "97542c5ae2"
+ },
+ "showcase.tess-pi-men-s1.kind": "Referentiecontrole",
+ "@showcase.tess-pi-men-s1.kind": {
+  "x-review": "machine",
+  "x-source": "70fa5c4aa7"
+ },
+ "showcase.tess-pi-men-s1.outcome": "Rp/R★ en T14 binnen 5% van Huang et al. 2018 (docs/results/pi_men_validation.md).",
+ "@showcase.tess-pi-men-s1.outcome": {
+  "x-review": "machine",
+  "x-source": "c09fef04d0"
+ },
+ "showcase.tess-pi-men-s1.summary": "Een zonachtige ster met een superaarde in een baan van 6,3 dagen: de run volledig vergeleken met Huang et al. 2018.",
+ "@showcase.tess-pi-men-s1.summary": {
+  "x-review": "machine",
+  "x-source": "27c4facb20"
+ },
+ "showcase.tess-pi-men-s1.why": "De referentiecontrole: de enige run met de Sentinels naast de Probes, zijn fit met randverduistering vergeleken met het ontdekkingsartikel in docs/results/pi_men_validation.md.",
+ "@showcase.tess-pi-men-s1.why": {
+  "x-review": "machine",
+  "x-source": "ae1c536ddb"
+ },
+ "showcase.tess-toi-236-s2.kind": "Bekende fout-positieve",
+ "@showcase.tess-toi-236-s2.kind": {
+  "x-review": "machine",
+  "x-source": "e01d094660"
+ },
+ "showcase.tess-toi-236-s2.outcome": "Opgemerkt: alle 6 dips op de TOI-efemeride zijn door de vetting afgewezen (secondary_any_phase, secondary_eclipse), dus geen enkele is een kandidaat.",
+ "@showcase.tess-toi-236-s2.outcome": {
+  "x-review": "machine",
+  "x-source": "d59f7be2fe"
+ },
+ "showcase.tess-toi-236-s2.summary": "Een TESS Object of Interest dat de TOI-tabel als fout-positief (FP) classificeert: een dip van 2,4% elke 4,5 dagen.",
+ "@showcase.tess-toi-236-s2.summary": {
+  "x-review": "machine",
+  "x-source": "35157a3066"
+ },
+ "showcase.tess-toi-236-s2.why": "Een test waarvoor SetuHQ moet zakken: TOI-236.01 hoort bij de fout-positieve set van de echte-TOI-benchmark. De pagina zegt wat de vetting ermee deed, wat het ook was.",
+ "@showcase.tess-toi-236-s2.why": {
+  "x-review": "machine",
+  "x-source": "50637bce9d"
+ },
+ "showcase.tess-toi-270-s5.caveat": "Alle 5 transits van c en beide van d gevonden; b niet gevonden; d twee keer gezien, geen periode (één transit per stuk van 13 dagen van de lichtcurve).",
+ "@showcase.tess-toi-270-s5.caveat": {
+  "x-review": "machine",
+  "x-source": "09f285b361"
+ },
+ "showcase.tess-toi-270-s5.kind": "Systeem met meerdere planeten",
+ "@showcase.tess-toi-270-s5.kind": {
+  "x-review": "machine",
+  "x-source": "7e5f73c9ed"
+ },
+ "showcase.tess-toi-270-s5.outcome": "TOI-270 b: geen van 6 transits; TOI-270 c: 5 van 5 transits (5 kandidaten); TOI-270 d: 2 van 2 transits (2 gemarkeerd; geen periode).",
+ "@showcase.tess-toi-270-s5.outcome": {
+  "x-review": "machine",
+  "x-source": "64bc9f9e61"
+ },
+ "showcase.tess-toi-270-s5.summary": "Een M-dwerg met drie bekende transiterende planeten op 3,4, 5,7 en 11,4 dagen: meerdere perioden in één ster.",
+ "@showcase.tess-toi-270-s5.summary": {
+  "x-review": "machine",
+  "x-source": "3f5bb74bc0"
+ },
+ "showcase.tess-toi-270-s5.why": "Eén lichtcurve, drie perioden. Hij laat zien wat de zoektocht doet als een ster meer dan één planeet heeft, en welke daarvan in een stuk van 13 dagen passen.",
+ "@showcase.tess-toi-270-s5.why": {
+  "x-review": "machine",
+  "x-source": "a6cb0e9faa"
+ },
+ "showcase.tess-wasp-126-s1.kind": "Hete Jupiter",
+ "@showcase.tess-wasp-126-s1.kind": {
+  "x-review": "machine",
+  "x-source": "f55d3631cf"
+ },
+ "showcase.tess-wasp-126-s1.outcome": "WASP-126 b: 8 van 8 transits (8 kandidaten).",
+ "@showcase.tess-wasp-126-s1.outcome": {
+  "x-review": "machine",
+  "x-source": "60440caba1"
+ },
+ "showcase.tess-wasp-126-s1.summary": "Een planeet zo groot als Jupiter in een baan van 3,3 dagen: diepe, makkelijke transits, in de zuidelijke continue zichtzone van TESS.",
+ "@showcase.tess-wasp-126-s1.summary": {
+  "x-review": "machine",
+  "x-source": "55d843f795"
+ },
+ "showcase.tess-wasp-126-s1.why": "Het makkelijke geval: een transit van zo'n 0,6% diep die elke zoektocht zou moeten vinden, die de hele weg van lichtcurve tot fit laat zien met weinig twijfel over het signaal.",
+ "@showcase.tess-wasp-126-s1.why": {
+  "x-review": "machine",
+  "x-source": "9768c89800"
+ },
+ "sky.all": "Alle",
+ "@sky.all": {
+  "x-review": "machine",
+  "x-source": "a52ace420f"
+ },
+ "sky.cap": "Elke stip is een gecatalogiseerde planeet op de positie van haar moederster (RA en Dec, J2000), gekleurd naar de methode waarmee ze gevonden is, en verschijnt in het jaar van ontdekking.",
+ "@sky.cap": {
+  "x-review": "machine",
+  "x-source": "f6c3623c32"
+ },
+ "sky.col.method": "Methode",
+ "@sky.col.method": {
+  "x-review": "machine",
+  "x-source": "52a0f9b65b"
+ },
+ "sky.col.planets": "Planeten",
+ "@sky.col.planets": {
+  "x-review": "machine",
+  "x-source": "c06c7c6bbd"
+ },
+ "sky.cov": "Surveydekking: TESS heeft {tess}% van de hemel waargenomen (sectoren 1–{last}); {unm}% lag nooit in het beeldveld van TESS, Kepler of K2. De arcering laat zien waar surveys keken, niet waar planeten zijn.",
+ "@sky.cov": {
+  "x-review": "machine",
+  "x-source": "7880d28ec6"
+ },
+ "sky.cov_label": "Surveydekking",
+ "@sky.cov_label": {
+  "x-review": "machine",
+  "x-source": "67b9a456c5"
+ },
+ "sky.cov_more": "Cijfers en bronnen in de Melkweg ›",
+ "@sky.cov_more": {
+  "x-review": "machine",
+  "x-source": "50afd0241b"
+ },
+ "sky.lc": "De lichtcurve van de run",
+ "@sky.lc": {
+  "x-review": "machine",
+  "x-source": "f6ebbca8e7"
+ },
+ "sky.legend": "Ontdekkingsmethode",
+ "@sky.legend": {
+  "x-review": "machine",
+  "x-source": "7f31ff7ee3"
+ },
+ "sky.nojs": "Dit stilstaande beeld toont er {k, number} (één op de {step}); de volledige kaart wordt getekend als het script van de pagina draait.",
+ "@sky.nojs": {
+  "x-review": "machine",
+  "x-source": "f5717a638d"
+ },
+ "sky.note.ecl": "gestippeld: de ecliptica",
+ "@sky.note.ecl": {
+  "x-review": "machine",
+  "x-source": "a57d25f4fc"
+ },
+ "sky.note.feed": "Sterren uit de feed niet getekend (posities niet opgeslagen)",
+ "@sky.note.feed": {
+  "x-review": "machine",
+  "x-source": "5d62afd4b7"
+ },
+ "sky.note.placed": "{star} geplaatst volgens SIMBAD (ICRS J2000)",
+ "@sky.note.placed": {
+  "x-review": "machine",
+  "x-source": "fc21ca6c11"
+ },
+ "sky.note.unplaced": "doel niet getekend (geen positie opgeslagen)",
+ "@sky.note.unplaced": {
+  "x-review": "machine",
+  "x-source": "2ba7ac0091"
+ },
+ "sky.open": "Openen ›",
+ "@sky.open": {
+  "x-review": "machine",
+  "x-source": "90fdccaabc"
+ },
+ "sky.pause": "Pauze",
+ "@sky.pause": {
+  "x-review": "machine",
+  "x-source": "858e4ba7a2"
+ },
+ "sky.play": "Afspelen",
+ "@sky.play": {
+  "x-review": "machine",
+  "x-source": "436e61016e"
+ },
+ "sky.shown": "{n, number} planeten getoond",
+ "@sky.shown": {
+  "x-review": "machine",
+  "x-source": "2f879fe4d1"
+ },
+ "sky.sweep": "De laag van de setuhq-sweep: één groene stip per doorzochte ster-sector ({n, number} tot nu toe, posities van MAST), amber waar er een vermelding is in een klasse die in dit deel haar nultoets overschrijdt ({found, select, none {geen} other {{found}}}).",
+ "@sky.sweep": {
+  "x-review": "machine",
+  "x-source": "6df4812450"
+ },
+ "sky.sweep_more": "Alles wat zwakker wordt ›",
+ "@sky.sweep_more": {
+  "x-review": "machine",
+  "x-source": "a15059214f"
+ },
+ "sky.table": "Planeten per ontdekkingsmethode, stand {y}",
+ "@sky.table": {
+  "x-review": "machine",
+  "x-source": "b101c75a14"
+ },
+ "sky.tl": "Planeten per jaar gevonden, per methode",
+ "@sky.tl": {
+  "x-review": "machine",
+  "x-source": "10dff603f9"
+ },
+ "sky.tonly": "Alleen transits",
+ "@sky.tonly": {
+  "x-review": "machine",
+  "x-source": "24f8dea1d4"
+ },
+ "sky.tonly_note": " (alleen transits)",
+ "@sky.tonly_note": {
+  "x-review": "machine",
+  "x-source": "8e198c9572"
+ },
+ "sky.valuetext": "{y}: {n, number} planeten",
+ "@sky.valuetext": {
+  "x-review": "machine",
+  "x-source": "17dd24a14c"
+ },
+ "sky.year": "Jaar",
+ "@sky.year": {
+  "x-review": "machine",
+  "x-source": "89f6832560"
+ },
+ "sky.zoom": "Inzoomen op het systeem {planet} ›",
+ "@sky.zoom": {
+  "x-review": "machine",
+  "x-source": "7c9d17cb1f"
+ },
+ "st.figs": "Wat de detectoren zien",
+ "@st.figs": {
+  "x-review": "machine",
+  "x-source": "ff3ec0553b"
+ },
+ "st.h1": "Sterren, gemeten.",
+ "@st.h1": {
+  "x-review": "machine",
+  "x-source": "ec1ba1f8f3"
+ },
+ "st.intro": "Naast planeten detecteert SetuHQ stellaire flares, haalt het pulsatiefrequenties naar boven, leest het openbare CHEOPS-lichtcurves en vindt het bedekkingsveranderlijken, rotatieperioden en transiënten. Elk vermogen is vergeleken met gepubliceerde resultaten volgens een protocol dat vóór de run was vastgelegd, en elke pagina en elke uitvoer van een hulpmiddel zegt hoe ver de validatie ging.",
+ "@st.intro": {
+  "x-review": "machine",
+  "x-source": "7f59c8f0fc"
+ },
+ "status.known": "{planet} · bekende planeet",
+ "@status.known": {
+  "x-review": "machine",
+  "x-source": "f5b7664b3d"
+ },
+ "status.open_cand": "Open · kandidaat, onbevestigd",
+ "@status.open_cand": {
+  "x-review": "machine",
+  "x-source": "d4f9806249"
+ },
+ "status.open_flagged": "Open · gemarkeerd voor beoordeling",
+ "@status.open_flagged": {
+  "x-review": "machine",
+  "x-source": "17cedf349f"
+ },
+ "status.rejected": "Afgewezen door de vetting",
+ "@status.rejected": {
+  "x-review": "machine",
+  "x-source": "402f943e20"
+ },
+ "story.both_passed": "Beide Sentinels lieten hem passeren.",
+ "@story.both_passed": {
+  "x-review": "machine",
+  "x-source": "240e9f6e70"
+ },
+ "story.feed": "vermeldingen van {stars, plural, one {# andere ster} other {# andere sterren}} in de zoekfeed, {new, plural, =0 {passend bij bekende TOI's.} one {# op een nieuwe periode.} other {# op een nieuwe periode.}} Aanwijzingen om te beoordelen, geen planeten.",
+ "@story.feed": {
+  "x-review": "machine",
+  "x-source": "7a2c50f550"
+ },
+ "story.no_probe": "Geen enkele Probe markeerde hem.",
+ "@story.no_probe": {
+  "x-review": "machine",
+  "x-source": "181249a8c6"
+ },
+ "story.open": "{n, plural, one {dip nog open.} other {dips nog open.}}",
+ "@story.open": {
+  "x-review": "machine",
+  "x-source": "76a0fd06d3"
+ },
+ "story.panel": "AI-Sentinels en Probes lezen de lichtcurve van deze run; elke stem telt zo zwaar als hij scoorde op geplante testtransits.",
+ "@story.panel": {
+  "x-review": "machine",
+  "x-source": "ca695f248f"
+ },
+ "story.probes_saw": "De Probes zagen hem ({k} van {n}).",
+ "@story.probes_saw": {
+  "x-review": "machine",
+  "x-source": "595da333cb"
+ },
+ "story.recovered": "transits van {planet} gevonden zonder te weten waar te zoeken, elk ongeveer {min} minuten van het gepubliceerde tijdstip. Een bekende planeet, teruggevonden.",
+ "@story.recovered": {
+  "x-review": "machine",
+  "x-source": "9d8d1e5460"
+ },
+ "story.recovered_period": "dips op de periode van {planet}, een bekende planeet. Teruggevonden, niet ontdekt.",
+ "@story.recovered_period": {
+  "x-review": "machine",
+  "x-source": "7aa74cf44f"
+ },
+ "story.sentinels": "{k} van {n} Sentinels markeerden hem.",
+ "@story.sentinels": {
+  "x-review": "machine",
+  "x-source": "c6be0b2e6b"
+ },
+ "subnav.candidates": "Dossiers",
+ "@subnav.candidates": {
+  "x-review": "machine",
+  "x-source": "379b0a5b2b"
+ },
+ "subnav.catalogue": "Catalogus",
+ "@subnav.catalogue": {
+  "x-review": "machine",
+  "x-source": "1034513950"
+ },
+ "subnav.docs": "Aan de slag",
+ "@subnav.docs": {
+  "x-review": "machine",
+  "x-source": "61e8d44ad4"
+ },
+ "subnav.editions": "Edities",
+ "@subnav.editions": {
+  "x-review": "machine",
+  "x-source": "c6a48dcca4"
+ },
+ "subnav.explorer": "Alle kandidaten",
+ "@subnav.explorer": {
+  "x-review": "machine",
+  "x-source": "e2df94228e"
+ },
+ "subnav.galaxy": "Melkweg",
+ "@subnav.galaxy": {
+  "x-review": "machine",
+  "x-source": "9b81c03539"
+ },
+ "subnav.leaderboard": "Klassement",
+ "@subnav.leaderboard": {
+  "x-review": "machine",
+  "x-source": "31b4712158"
+ },
+ "subnav.mission": "Mission Control",
+ "@subnav.mission": {
+  "x-review": "machine",
+  "x-source": "1a9a658b5d"
+ },
+ "subnav.pictures": "Hoe de afbeeldingen worden getekend",
+ "@subnav.pictures": {
+  "x-review": "machine",
+  "x-source": "e2d864dc53"
+ },
+ "subnav.planets": "Stralenverhoudingen",
+ "@subnav.planets": {
+  "x-review": "machine",
+  "x-source": "afcd4824b8"
+ },
+ "subnav.plates": "Platen",
+ "@subnav.plates": {
+  "x-review": "machine",
+  "x-source": "4fb4c6f38a"
+ },
+ "subnav.propose": "CHEOPS-voorstellen",
+ "@subnav.propose": {
+  "x-review": "machine",
+  "x-source": "ad05c9e350"
+ },
+ "subnav.report": "Runrapport",
+ "@subnav.report": {
+  "x-review": "machine",
+  "x-source": "6b5c209e01"
+ },
+ "subnav.runs": "Runs",
+ "@subnav.runs": {
+  "x-review": "machine",
+  "x-source": "848f54e896"
+ },
+ "subnav.sentinels": "Het panel",
+ "@subnav.sentinels": {
+  "x-review": "machine",
+  "x-source": "5326ad997a"
+ },
+ "subnav.sky": "Hemelkaart",
+ "@subnav.sky": {
+  "x-review": "machine",
+  "x-source": "762d3baf8a"
+ },
+ "subnav.stellar": "Sterren",
+ "@subnav.stellar": {
+  "x-review": "machine",
+  "x-source": "4e44daeed5"
+ },
+ "subnav.stellardocs": "Flares en pulsaties",
+ "@subnav.stellardocs": {
+  "x-review": "machine",
+  "x-source": "e5b12f44ff"
+ },
+ "subnav.tessnow": "Waar TESS nu is",
+ "@subnav.tessnow": {
+  "x-review": "machine",
+  "x-source": "fb060d8af7"
+ },
+ "subnav.transit": "Dips",
+ "@subnav.transit": {
+  "x-review": "machine",
+  "x-source": "25efb1bd33"
+ },
+ "subnav.variables": "Alles wat dimt",
+ "@subnav.variables": {
+  "x-review": "machine",
+  "x-source": "4558adf410"
+ },
+ "subnav.vetter": "Beoordeel zelf",
+ "@subnav.vetter": {
+  "x-review": "machine",
+  "x-source": "e37b76fbec"
+ },
+ "sweep.evidence": "Bekijk het bewijs ›",
+ "@sweep.evidence": {
+  "x-review": "machine",
+  "x-source": "17281a2fb3"
+ },
+ "sweep.line": "We hebben {n, number} sterren doorzocht op alles wat zwakker wordt; {k, plural, =0 {tot nu toe steekt niets boven het toeval uit} one {{list} steekt tot nu toe boven het toeval uit} other {{list} steken tot nu toe boven het toeval uit}}.",
+ "@sweep.line": {
+  "x-review": "machine",
+  "x-source": "2625a10311"
+ },
+ "tl.cap": "Planeten per ontdekkingsjaar, gestapeld naar de methode waarmee ze gevonden zijn.",
+ "@tl.cap": {
+  "x-review": "machine",
+  "x-source": "abe7e1b656"
+ },
+ "tl.hint": "Wijs een jaar aan, of focus de grafiek en gebruik de pijltjestoetsen.",
+ "@tl.hint": {
+  "x-review": "machine",
+  "x-source": "c0d70ad218"
+ },
+ "tl.noyear": "{n, number} records zonder jaar zijn niet getekend.",
+ "@tl.noyear": {
+  "x-review": "machine",
+  "x-source": "90f8af3261"
+ },
+ "tl.read": "{y}: {n, plural, one {# planeet} other {# planeten}}",
+ "@tl.read": {
+  "x-review": "machine",
+  "x-source": "7968ad0970"
+ },
+ "tl.table": "Planeten per jaar en methode",
+ "@tl.table": {
+  "x-review": "machine",
+  "x-source": "60ecd96d94"
+ },
+ "tl.table_link": "De aantallen per jaar en methode, als tabel ›",
+ "@tl.table_link": {
+  "x-review": "machine",
+  "x-source": "8d38020252"
+ },
+ "tn.h1": "Waar TESS naar kijkt.",
+ "@tn.h1": {
+  "x-review": "machine",
+  "x-source": "33a70ec6b1"
+ },
+ "tn.intro": "De NASA-satelliet TESS bekijkt ongeveer vier weken lang één strook hemel (een sector), met vier camera's van elk 24° bij 24°. Deze kaart toont de stroken volgens het gepubliceerde schema, en de sterren met bekende planeten erin.",
+ "@tn.intro": {
+  "x-review": "machine",
+  "x-source": "6cbf61a637"
+ },
+ "ts.hi": "Heetste ster, in kelvin",
+ "@ts.hi": {
+  "x-review": "machine",
+  "x-source": "8f287e3909"
+ },
+ "ts.lo": "Koelste ster, in kelvin",
+ "@ts.lo": {
+  "x-review": "machine",
+  "x-source": "ccde65937b"
+ },
+ "ts.src": "Sterkleur: een Planck-spectrum door de CIE 1931-kleurafstemmingsfuncties, in sRGB, genormaliseerd op het helderste kanaal (een tint, geen helderheid). Teff: de stellar.json van elke run (TESS Input Catalog v8.2, MAST); de zon 5772 K (nominale IAU-waarde 2015).",
+ "@ts.src": {
+  "x-review": "machine",
+  "x-source": "b9cdfdaa9f"
+ },
+ "ts.sun": "de zon",
+ "@ts.sun": {
+  "x-review": "machine",
+  "x-source": "c15630ef0d"
+ },
+ "ts.title": "Sterkleur van 2500 K tot 10.000 K, met elke ster gemarkeerd bij haar temperatuur",
+ "@ts.title": {
+  "x-review": "machine",
+  "x-source": "1fd7f02e9a"
+ },
+ "var.h1": "Alles wat dimt.",
+ "@var.h1": {
+  "x-review": "machine",
+  "x-source": "00cffacfe5"
+ },
+ "var.h1b": "{n, number} vermeldingen, niets weggegooid.",
+ "@var.h1b": {
+  "x-review": "machine",
+  "x-source": "af9b7536fe"
+ },
+ "var.intro": "Elke consensusdip van het panel, elke opheldering en de variabiliteit van elke ster uit de sweep, elk geclassificeerd volgens een vermelde regel, met betrouwbaarheid, aanwijzingen en herkomst: de markeringen, de gewichten en de eigen woorden van de Sentinels.",
+ "@var.intro": {
+  "x-review": "machine",
+  "x-source": "a3cde2962d"
+ },
+ "vt.h1": "Beoordeel zelf.",
+ "@vt.h1": {
+  "x-review": "machine",
+  "x-source": "bc56851e50"
+ },
+ "vt.intro": "Elke kaart is een echte dip die een van de voorbeeldruns van SetuHQ heeft opgeslagen. Bekijk de lichtcurve, de vouwing, de even en oneven diepten en de diepte een halve baan later, en beslis dan: geslaagd, gemarkeerd of afgewezen. Zie daarna wat de vetting besloot, en waarom.",
+ "@vt.intro": {
+  "x-review": "machine",
+  "x-source": "2d2a3a79d4"
+ }
+}

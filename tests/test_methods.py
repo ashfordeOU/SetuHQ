@@ -17,6 +17,7 @@ from setuhq.galaxy import DEFAULT_COVERAGE, galaxy_data, load_coverage
 
 from test_story import run_dir  # noqa: F401  (fixture)
 from conftest import served, site_bundle
+from setuhq.i18n import unkey
 
 PLAYWRIGHT = "/opt/node22/lib/node_modules/playwright"
 CHROMIUM = "/opt/pw-browsers/chromium"
@@ -546,7 +547,7 @@ def test_every_time_scrubber_speaks_in_its_visuals_unit(page_html):
 def test_label_art_exists_and_every_stage_call_passes_a_label():
     import ast
 
-    assert M.LABEL_ART == "Artist's impression" and M.honesty_label(M.LABEL_ART) == '<span class="mxlabel art">Artist&#x27;s impression</span>'
+    assert M.LABEL_ART == "Artist's impression" and unkey(M.honesty_label(M.LABEL_ART)) == '<span class="mxlabel art">Artist&#x27;s impression</span>'
     assert set(M.LABELS) == {M.LABEL_ART, M.LABEL_MODEL, M.LABEL_DATA, M.LABEL_ILL, M.LABEL_SPEC}
     tree = ast.parse(Path(M.__file__).read_text())
     calls = [n for n in ast.walk(tree) if isinstance(n, ast.Call) and getattr(n.func, "id", "") == "_stage"]
@@ -573,7 +574,7 @@ def test_the_transit_chapter_folds_pi_mens_light_curve_above_the_lab(page_html):
 
 
 def test_the_false_positive_chapter_shows_toi_236():
-    sec = M.methods_section(EX, None, {}, None, "", app={})
+    sec = unkey(M.methods_section(EX, None, {}, None, "", app={}))
     art = re.search(r'<article class="mxch" id="mx-falsepos".*?(?=<article class="mxch")', sec, re.S).group(0)
     assert "TOI-236: secondary eclipse at SNR 10.9; all 6 dips rejected by vetting." in art
     assert "occulter not identified" in art and '<span class="stage-tag">Illustration</span>' in art

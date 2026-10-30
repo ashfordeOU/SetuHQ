@@ -21,6 +21,8 @@ environment.
 
 from __future__ import annotations
 
+from setuhq.i18n import N_, SOURCE, current, tr
+
 import functools
 import hashlib
 import json
@@ -34,16 +36,16 @@ from setuhq import __version__
 
 # ---------------------------------------------------------------- honesty labels
 
-CANDIDATE = ("A candidate, not a discovery: SetuHQ finds and vets dips in public TESS data. Confirming a planet "
+CANDIDATE = N_("mcp.honesty.candidate", "A candidate, not a discovery: SetuHQ finds and vets dips in public TESS data. Confirming a planet "
              "needs follow-up (radial velocities, imaging, statistical validation) by others.")
-PANEL = ("Sentinels are AI models, not people (Claude by default; other providers are labelled). Only Claude has "
+PANEL = N_("mcp.honesty.panel", "Sentinels are AI models, not people (Claude by default; other providers are labelled). Only Claude has "
          "been benchmarked. Probes are deterministic matched-filter detectors.")
-STORED = "Read from stored files; nothing was recomputed."
-COMPUTED = "Computed now by SetuHQ's own code from the inputs given; not a stored, reviewed result."
-CATALOGUE = ("Catalogue values are the source's measurements, shown as stored; a missing value is not a guess. "
+STORED = N_("mcp.honesty.stored", "Read from stored files; nothing was recomputed.")
+COMPUTED = N_("mcp.honesty.computed", "Computed now by SetuHQ's own code from the inputs given; not a stored, reviewed result.")
+CATALOGUE = N_("mcp.honesty.catalogue", "Catalogue values are the source's measurements, shown as stored; a missing value is not a guess. "
              "SetuHQ did not discover these planets.")
-FORMULA = "A textbook formula evaluated as stated; it describes an idealised case, not a measurement."
-UNREVIEWED = "No reviewer panel looked at this: it is a detector and vetting output only."
+FORMULA = N_("mcp.honesty.formula", "A textbook formula evaluated as stated; it describes an idealised case, not a measurement.")
+UNREVIEWED = N_("mcp.honesty.unreviewed", "No reviewer panel looked at this: it is a detector and vetting output only.")
 
 DEFAULT_RUN = "runs/tess-pi-men-s1"
 # Where the tools write: one new directory per run, never an existing one, so a stored, reviewed run
@@ -66,6 +68,21 @@ BENCHMARKS = {
 
 class ToolError(ValueError):
     """A request the tool cannot serve (a bad path, a missing file, an argument out of range)."""
+
+
+HONESTY_IDS = {CANDIDATE: "mcp.honesty.candidate", PANEL: "mcp.honesty.panel", STORED: "mcp.honesty.stored", COMPUTED: "mcp.honesty.computed",
+               CATALOGUE: "mcp.honesty.catalogue", FORMULA: "mcp.honesty.formula", UNREVIEWED: "mcp.honesty.unreviewed"}
+
+
+def _say(label: str) -> str:
+    """An honesty label in the current language (setuhq.i18n; SETUHQ_LANG or the server's --lang), English when it
+    has no translation. The labels are human-facing text; every key and machine-read value stays English."""
+    if current() == SOURCE:
+        return label
+    from setuhq.stellar_tools import TRANSIENT_SEARCH_AID
+
+    mid = HONESTY_IDS.get(label) or ("honesty.transients_aid" if label == TRANSIENT_SEARCH_AID else None)
+    return tr(mid, label) if mid else label
 
 
 # ---------------------------------------------------------------- root, paths, provenance
@@ -121,7 +138,7 @@ def envelope(tool: str, result, *, sources: list[dict] = (), honesty: list[str] 
         "result": _plain(result),
         "provenance": {"setuhq_version": __version__, "code": _code(),
                        "computed_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "sources": list(sources)},
-        "honesty": list(honesty),
+        "honesty": [_say(h) for h in honesty],
     }
 
 
@@ -176,7 +193,7 @@ def _catalogue_meta(cat: dict, path: str) -> tuple[list[dict], list[str]]:
 def search_catalogue(query: str = "", method: str | None = None, limit: int = 20,
                      catalogue_path: str = DEFAULT_CATALOGUE) -> dict:
     """Search the exoplanet catalogue by planet or star name (or alternate name, e.g. a TIC id), optionally by
-    discovery method (transit, rv, imaging, microlensing, astrometry, timing). Wraps ``catalogue.catalogue_filter``."""
+    discovery method (``transit``, ``rv``, ``imaging``, ``microlensing``, ``astrometry``, ``timing``). Wraps ``catalogue.catalogue_filter``."""
     from setuhq.catalogue import catalogue_filter
 
     cat = _catalogue(catalogue_path)
@@ -441,9 +458,9 @@ def _panel(config_path: str, sentinels: bool):
     return config, build_reviewers(specs, cache_root=root() / "cache")
 
 
-def _new_run_dir(run_name: str) -> Path:
-    """A fresh directory runs/mcp/<run_name> under the data root. Refused if the name is not a plain name or
-    the directory already exists: a tool run adds, it never replaces."""
+def _new_run_dir(run_name: str, base_rel: str = TOOL_RUNS) -> Path:
+    """A fresh directory <base_rel>/<run_name> (runs/mcp by default) under the data root. Refused if the name is
+    not a plain name or the directory already exists: a tool run adds, it never replaces."""
     import re
 
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}", run_name or "") or ".." in run_name:
@@ -451,7 +468,7 @@ def _new_run_dir(run_name: str) -> Path:
     base = root()
     # Never follow a link: a symlinked runs/ or runs/mcp/, or anything already at the name (a dangling
     # symlink included), could redirect the run outside runs/mcp.
-    for rel in ("runs", TOOL_RUNS):
+    for rel in ("runs", base_rel):
         try:
             st = os.lstat(base / rel)
         except FileNotFoundError:
@@ -459,16 +476,16 @@ def _new_run_dir(run_name: str) -> Path:
         if stat.S_ISLNK(st.st_mode) or not stat.S_ISDIR(st.st_mode):
             raise ToolError(f"{rel} is a link or not a directory; tool runs are refused until it is a plain directory")
     try:
-        os.lstat(base / TOOL_RUNS / run_name)
+        os.lstat(base / base_rel / run_name)
     except FileNotFoundError:
         pass
     else:
-        raise ToolError(f"{TOOL_RUNS}/{run_name} already exists; a tool run never overwrites, pick a new run_name")
-    out = _path(f"{TOOL_RUNS}/{run_name}", must_exist=False)
+        raise ToolError(f"{base_rel}/{run_name} already exists; a tool run never overwrites, pick a new run_name")
+    out = _path(f"{base_rel}/{run_name}", must_exist=False)
     try:
         out.mkdir(parents=True, exist_ok=False)  # atomic: two calls cannot both claim one directory
     except FileExistsError:
-        raise ToolError(f"{TOOL_RUNS}/{run_name} already exists; a tool run never overwrites, pick a new run_name") from None
+        raise ToolError(f"{base_rel}/{run_name} already exists; a tool run never overwrites, pick a new run_name") from None
     return out
 
 
@@ -626,6 +643,48 @@ def sentinel_providers() -> dict:
                     honesty=[PANEL, "An uncalibrated provider votes at the floor weight until 'setuhq calibrate' measures it."])
 
 
+# ---------------------------------------------------------------- proposal preparation
+
+PROPOSE_RUNS = "runs/propose"
+
+
+def cheops_proposal_pack(target: str, run_name: str, programme: str = "regular", orbits: int | None = None,
+                         cycle: str | None = None, gmag: float | None = None, event: str = "transit",
+                         depth_ppm: float | None = None, duration_hours: float | None = None, target_snr: float = 10.0,
+                         efficiency: float = 0.7, offline: bool = False) -> dict:
+    """Write a CHEOPS Guest Observers proposal PREPARATION pack (``propose.pack.build_pack``) into a new
+    runs/propose/<run_name> (refused if it exists; nothing outside it is written, no cache): the Running Call's rules
+    check (orbit limits, April/October rule for Large programmes, the next deadline in Paris time, earliest start),
+    the target's status (public Reserved Target List, public CHEOPS archive metadata, SIMBAD/MAST J2000
+    coordinates), SetuHQ's stored evidence, rough precision and orbit ESTIMATES, anonymised drafts with an anonymity
+    lint, and ESA's step-by-step checklist. Reads public pages only; never logs in or submits. SetuHQ is independent
+    of ESA and the CHEOPS mission: the official call and ESA's tools govern."""
+    from setuhq.propose import draft, pack, rules, sources
+
+    try:
+        rules.programme(programme)
+    except ValueError as exc:
+        raise ToolError(str(exc)) from None
+    if event not in ("transit", "eclipse", "flare"):
+        raise ToolError("event must be transit, eclipse or flare")
+    out = _new_run_dir(run_name, PROPOSE_RUNS)  # claimed atomically; build_pack fills the empty directory
+    try:
+        p = pack.build_pack(target, out, root=root(), claimed=True, programme=programme, orbits=orbits, cycle=cycle,
+                            fetcher=sources.Fetcher(cache_dir=None, offline=offline), gmag=gmag, event=event,
+                            depth_ppm=depth_ppm, duration_hours=duration_hours, target_snr=target_snr,
+                            efficiency=efficiency, use_toi_table=not offline)
+    except ValueError as exc:
+        if out.is_dir() and not any(out.iterdir()):
+            out.rmdir()  # nothing was written: give the name back
+        raise ToolError(str(exc)) from None
+    result = {"pack_dir": _rel(out), "files": sorted(_rel(f) for f in out.rglob("*") if f.is_file()),
+              "cycle": p["cycle"], "programme": p["programme"], "target": p["target"], "status": p["status"],
+              "planning": p["planning"], "anonymity_warnings": sum(f["level"] == "warn" for f in p["anonymity_lint"]),
+              "network_errors": p["network_errors"]}
+    return envelope("cheops_proposal_pack", result, sources=p["sources"],
+                    honesty=[draft.DISCLAIMER, draft.PREP_ONLY, CANDIDATE, *p["honesty"][3:]])
+
+
 # What the MCP server registers, in this order. read_only: the tool writes nothing.
 TOOLS = [
     (search_catalogue, True), (get_planet, True), (get_star, True),
@@ -634,4 +693,10 @@ TOOLS = [
     (run_pipeline_csv, False), (run_pipeline_tess, False),
     (rv_semi_amplitude, True), (transit_depth, True), (microlensing_magnification, True), (habitable_zone, True),
     (benchmark_results, True), (sentinel_providers, True),
+    (cheops_proposal_pack, False),
 ]
+
+# The stellar tools (flares, pulsations, CHEOPS): setuhq.stellar_tools, imported last (it uses the helpers above).
+from setuhq.stellar_tools import STELLAR_TOOLS  # noqa: E402
+
+TOOLS += STELLAR_TOOLS

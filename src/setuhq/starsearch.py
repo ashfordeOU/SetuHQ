@@ -155,6 +155,10 @@ def stellar_json(star: dict, target: str) -> dict:
 
 def panel_weights(config, path: str | Path | None = DEFAULT_WEIGHTS) -> tuple[dict, str]:
     """Each reviewer's calibrated weight from ``path`` where it has one, else 1.0; and where they came from."""
+    if path == DEFAULT_WEIGHTS and not Path(path).exists():
+        from setuhq.panel import packaged_weights_path
+
+        path = packaged_weights_path() or path  # an installed wheel: the calibrated weights it ships
     stored = json.loads(Path(path).read_text()) if path and Path(path).exists() else {}
     ids = [str(s["id"]) for s in config.reviewers]
     w = {i: float(stored[i]) if i in stored else 1.0 for i in ids}

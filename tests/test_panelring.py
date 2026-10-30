@@ -18,6 +18,7 @@ import pytest
 from setuhq import docket as docket_mod
 from setuhq.names import ATTRIBUTION, PROBES_ONLY, dip_state
 from setuhq.viz import panelring as P
+from setuhq.i18n import unkey
 
 ROOT = Path(__file__).resolve().parents[1]
 WEIGHTS = ROOT / "docs/results/reviewer_weights_full_panel.json"
@@ -61,7 +62,7 @@ def test_marks_weights_and_score_are_the_stored_ones(data):
         assert {r["id"] for r in m["reviewers"] if r["marked"]} == {ln["id"] for ln in d["lanes"] if ln["counted"]}
         for r in m["reviewers"]:
             assert r["weight"] == weights.get(r["id"]), r["id"]
-        page = P.html(m)
+        page = unkey(P.html(m))
         # The table under the figure lists every reviewer with its stored mark and weight.
         rows = re.findall(r'<tr><th scope="row">.*?</tr>', page)
         assert len(rows) == len(m["reviewers"])
@@ -82,7 +83,7 @@ def test_the_marks_agree_with_the_runs_classifications(data):
 
 def test_pi_men_shows_three_probes_and_two_sentinels_with_the_attribution(data):
     d = data["story"]["dips"][0]
-    page = P.html(P.for_dip(data, d["id"]))
+    page = unkey(P.html(P.for_dip(data, d["id"])))
     assert page.count('class="prnode prb') == 3 and page.count('class="prnode sen') == 2
     assert ATTRIBUTION in page and PROBES_ONLY not in page
     assert '<span class="stage-tag">Real data, cited</span>' in page
@@ -91,7 +92,7 @@ def test_pi_men_shows_three_probes_and_two_sentinels_with_the_attribution(data):
 def test_a_probes_only_run_draws_no_sentinel(data):
     d = data["showcase_dips"][0]
     assert data["run_ctx"][d["run"]]["probes_only"]
-    page = P.html(P.for_dip(data, d["id"]))
+    page = unkey(P.html(P.for_dip(data, d["id"])))
     assert page.count('class="prnode prb') == 3 and 'prnode sen' not in page and "prline sen" not in page
     assert PROBES_ONLY in page and ATTRIBUTION not in page
     # Even a record that names Sentinels draws none of them when the run is Probes only: never greyed-out nodes.
@@ -105,7 +106,7 @@ def test_a_probes_only_run_draws_no_sentinel(data):
 def test_the_status_words_are_dip_states(data):
     seen = set()
     for d in _dips(data):
-        page = P.html(P.for_dip(data, d["id"]))
+        page = unkey(P.html(P.for_dip(data, d["id"])))
         word = re.search(r'data-verdict="([^"]*)"', page).group(1)
         assert word == dip_state(d["outcome"])[2]
         seen.add(d["outcome"])

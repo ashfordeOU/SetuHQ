@@ -11,6 +11,7 @@ import pytest
 
 from setuhq import design, viz
 from setuhq.viz import fold as F
+from setuhq.i18n import unkey
 
 ROOT = Path(__file__).resolve().parents[1]
 VAL = json.loads((ROOT / F.VALIDATION).read_text())
@@ -63,7 +64,7 @@ def test_the_folded_minimum_is_the_transit():
 def test_the_figure_states_its_numbers_label_and_source():
     with pytest.raises(ValueError):
         F.html({})
-    h = F.html({"source": "SetuHQ's stored run of pi Men"}, where="methods")
+    h = unkey(F.html({"source": "SetuHQ's stored run of pi Men"}, where="methods"))
     assert '<span class="stage-tag">Real data, cited</span>' in h and 'class="stage foldfig"' in h
     assert "3,485 points over BTJD 1325.3–1351.3" in h and "Folded on 6.2680 d, a 292 ppm dip of 3.07 h appears" in h
     assert "Source: SetuHQ&#x27;s stored run runs/tess-pi-men-s1" in h and "pi_men_validation.json" in h
@@ -71,7 +72,7 @@ def test_the_figure_states_its_numbers_label_and_source():
     assert '<button class="btn foldbtn" type="button" aria-pressed="false" hidden>' in h
     small = F.html({"source": "x"}, where="home", compact=True)
     # The home page's figure fits its budget: the label and the numbers with the run; the rest comes with its bins.
-    assert 'class="stage foldfig compact"' in small and "<svg" not in small and len(small) < 230 and len(h) < 16_000
+    assert 'class="stage foldfig compact"' in small and "<svg" not in small and len(unkey(small)) < 230 and len(h) < 16_000
     assert "3,485 points folded on 6.2680 d: a 292 ppm, 3.07 h dip. Source: runs/tess-pi-men-s1." in small and "Real data, cited" in small
     assert "split = true" in F.JS and "foldsrc" in F.JS
     for word in ("habitable", "confirmed", "discovered", "synthetic", "illustrative"):

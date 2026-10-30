@@ -11,16 +11,19 @@ and the pages keep each id beside its name (a tooltip or small mono text) so it 
 
 from __future__ import annotations
 
+from setuhq.i18n import N_
+
 # Every Sentinel config type. Claude (Anthropic) is the default; the others are supported and labelled.
 SENTINEL_KINDS = ("claude", "claude_code", "openai", "gemini", "openai_compatible")
 PROBE_KINDS = ("simulated",)
 
 # The attribution, word for word, on the Panel page and in the Docket's provenance.
-ATTRIBUTION = ("Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. "
-               "Probes are deterministic matched-filter detectors.")
+ATTRIBUTION = N_("honesty.attribution", "Sentinels run on Claude (Anthropic) by default; other providers are supported and labelled. "
+                 "Probes are deterministic matched-filter detectors.",
+                 note="The attribution line. Its meaning must not change: Sentinels and Probes stay as written; Claude (Anthropic) is named.")
 
 # A run whose configuration names no Sentinel: the label every page shows for it, and its manifest record.
-PROBES_ONLY = "Probes only; Sentinels not run on this example"
+PROBES_ONLY = N_("honesty.probes_only", "Probes only; Sentinels not run on this example", note="The label on every run made without AI reviewers.")
 
 
 def panel_mode(manifest: dict) -> str:
@@ -150,14 +153,58 @@ def reviewer_names(kinds: dict[str, str]) -> dict[str, dict]:
 # A dip's status from its vetting outcome: only a dip that passed vetting is a candidate. A rejected dip is never
 # called one; a flagged dip is open (waiting for review). (class, tag word, full phrase.) A search-feed entry passed
 # vetting to enter the feed (discover.py), so its statuses count as candidates.
-DIP_STATE = {"passed": ("cand", "candidate", "candidate, unconfirmed"),
-             "flagged": ("open", "flagged", "flagged for review, open"),
-             "rejected": ("rej", "rejected", "rejected by vetting, not a candidate")}
+DIP_STATE = {"passed": ("cand", N_("dip.tag.cand", "candidate"), N_("dip.state.cand", "candidate, unconfirmed")),
+             "flagged": ("open", N_("dip.tag.open", "flagged"), N_("dip.state.open", "flagged for review, open")),
+             "rejected": ("rej", N_("dip.tag.rej", "rejected"), N_("dip.state.rej", "rejected by vetting, not a candidate"))}
 FEED_STATUSES = ("new_candidate", "known_toi")
 
 
 def dip_state(outcome: str | None) -> tuple[str, str, str]:
     return DIP_STATE.get("passed" if outcome in FEED_STATUSES else outcome or "", DIP_STATE["flagged"])
+
+
+def status_html(label: str) -> str:
+    """A dip's status line (story.dip_status: "pi Men c · known planet", "Open · flagged for review", ...) as keyed markup."""
+    import html as _h
+
+    from setuhq.i18n import span
+
+    if label.endswith(" · known planet"):
+        return span("status.known", "{planet} · known planet", planet=label[:-len(" · known planet")])
+    for mid, en in (("status.rejected", "Rejected by vetting"), ("status.open_flagged", "Open · flagged for review"),
+                    ("status.open_cand", "Open · candidate, unconfirmed")):
+        if label == en:
+            return span(mid, en)
+    return _h.escape(label)
+
+
+N_("status.rejected", "Rejected by vetting")
+N_("status.open_flagged", "Open · flagged for review")
+N_("status.open_cand", "Open · candidate, unconfirmed")
+PROBES_AND_SENTINELS = N_("panel.probes_sentinels", "Probes and Sentinels")
+
+
+def panel_html(label: str) -> str:
+    """A run's panel ("Probes only; Sentinels not run on this example", or "Probes and Sentinels") as keyed markup."""
+    import html as _h
+
+    from setuhq.i18n import span
+
+    if label == PROBES_ONLY:
+        return span("honesty.probes_only", PROBES_ONLY)
+    return span("panel.probes_sentinels", PROBES_AND_SENTINELS) if label == PROBES_AND_SENTINELS else _h.escape(label)
+
+
+def dip_count_html(n: int, counts: dict[str, int]) -> str:
+    """:func:`dip_count` as keyed markup ("7 dips (5 candidates, 1 flagged, 1 rejected)"), each part its own message.
+    ``counts``: {"candidates": k, "flagged": k, "rejected": k}."""
+    from setuhq.i18n import span
+
+    parts = [span(mid, en, n=counts.get(key) or 0) for key, mid, en in (
+        ("candidates", "dips.cand", N_("dips.cand", "{n, plural, one {# candidate} other {# candidates}}")),
+        ("flagged", "dips.flag", N_("dips.flag", "{n, plural, other {# flagged}}")),
+        ("rejected", "dips.rej", N_("dips.rej", "{n, plural, other {# rejected}}"))) if counts.get(key)]
+    return span("dips.n", "{n, plural, one {# dip} other {# dips}}", n=n) + (f" ({', '.join(parts)})" if parts else "")
 
 
 def dip_count(outcomes: list[str | None]) -> str:

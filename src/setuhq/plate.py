@@ -26,6 +26,8 @@ plate starting on a new page and each figure and caption kept whole.
 
 from __future__ import annotations
 
+from setuhq.i18n import k as ik, localize_output, span, t
+
 import html
 import json
 import math
@@ -300,7 +302,9 @@ def plate_data(run_dir: str | Path, *, title: str, catalog_path: str | Path | No
     comparison = ((dock.get("crossmatch") or {}).get("comparison") or {}).get("by_candidate") or {}
     catalog = {}
     if catalog_path is not None and Path(catalog_path).exists():
-        catalog = json.loads(Path(catalog_path).read_text())
+        from setuhq.discover import load_public_catalog
+
+        catalog = load_public_catalog(catalog_path)  # the embargo: signals held for review never reach a plate
     feed = catalog.get("candidates") or []
 
     # Each run dip's name on the website ("pi Men, dip 5"), from the run's pinned addresses (setuhq.dipslugs); a dip
@@ -714,7 +718,7 @@ def plate_page(data: dict) -> str:
     cat = data["catalog"]
     run = data["run"]
     others = "".join(f'<li><a href="{_e(href)}">{_e(name)}</a></li>' for name, href in data.get("others") or [])
-    others = f'<h2 class="otherh">Plates of the other example stars</h2><ol>{others}</ol>' if others else ""
+    others = f'<h2 class="otherh"{ik("out.plate.others")}>{t("out.plate.others", "Plates of the other example stars")}</h2><ol>{others}</ol>' if others else ""
     return f"""<!doctype html>
 <html lang="en" data-theme="system"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -732,12 +736,12 @@ def plate_page(data: dict) -> str:
   <p>{dip_count([c.get("status") for s in stars for c in s["candidates"]])} on {len(stars)} star{"" if len(stars) == 1 else "s"}, one plate per star, from run {_e(run["name"])}{" and the search catalogue" if cat["path"] else ""}. Each dip that passed vetting is a candidate, unconfirmed, and is tagged so; a rejected or flagged dip is named by its status alone. Every number is a stored value.</p>
   <ul class="notes">
     <li>{_e(scope)}</li>
-    <li>The panel is the Sentinels and the Probes, no people. {_e(ATTRIBUTION)} A dip's consensus interval is where their marks agree.{f" {_e(data['panel_note'])}." if data.get("panel_note") else ""}</li>
+    <li>{span("out.plate.panel", "The panel is the Sentinels and the Probes, no people.")} <span{ik("honesty.attribution")}>{_e(ATTRIBUTION)}</span> {span("out.plate.interval", "A dip's consensus interval is where their marks agree.")}{f" <span{ik('honesty.probes_only')}>{_e(data['panel_note'])}</span>." if data.get("panel_note") else ""}</li>
     <li>{_e(NO_RADIUS)}</li>{f"<li><b>What this run did not recover:</b> {_e(data['caveat'])}</li>" if data.get("caveat") else ""}
     <li>Status is written as a word beside every colour.</li>
   </ul>
 </header>
-<nav class="toc" aria-label="Plates"><h2>Plates</h2><ol>{toc}</ol>{others}</nav>
+<nav class="toc" aria-label="Plates"><h2{ik("subnav.plates")}>Plates</h2><ol>{toc}</ol>{others}</nav>
 <section class="river" aria-labelledby="river-h">
   <h2 class="ptitle" id="river-h"><span class="num">River of time</span> the whole feed</h2>
   <p class="psub">One row per star, a tick per candidate. Height is log SNR; colour is status, and each row lists its statuses in words. Stretches of more than {RIVER_GAP_DAYS:.0f} days with no candidate are cut, so the segments are not drawn to a common time scale: each has its own, labelled at its start and end, with its span in days (d) beneath it. A known TOI period is an archive value: {_e(NO_DETECTION)}</p>
@@ -776,7 +780,7 @@ def build_plate(run_dir: str | Path, out_dir: str | Path, *, title: str, catalog
     from setuhq.codenote import code_note, with_code_note
 
     site_page = data["fonts_href"].startswith("/")
-    path.write_text(with_code_note(plate_page(data), code_note(run_dir)))
+    path.write_text(localize_output(with_code_note(plate_page(data), code_note(run_dir))))
     if not site_page:
         from setuhq.docket import copy_page_fonts
         copy_page_fonts(out)

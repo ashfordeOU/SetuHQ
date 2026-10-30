@@ -1,0 +1,68 @@
+{
+ "lang": "cs",
+ "about": "Fixed terms for this language (docs/TRANSLATING.md). 'en' is the English pattern; a translation of a message that has it must match 'target' (case-insensitive). 'keep' are written exactly as in English. 'claims': this language's words for discover and confirm, which a translation may use only where the English does.",
+ "keep": [
+  "SetuHQ",
+  "Sentinels",
+  "Sentinel",
+  "Probes",
+  "Probe",
+  "TOI",
+  "TESS",
+  "CHEOPS",
+  "ESA",
+  "NASA",
+  "MAST",
+  "Claude",
+  "Anthropic",
+  "MCP"
+ ],
+ "terms": [
+  {
+   "term_en": "transit",
+   "en": "\\btransits?\\b",
+   "term": "tranzit",
+   "target": "tranzit"
+  },
+  {
+   "term_en": "light curve",
+   "en": "\\blight[ -]curves?\\b",
+   "term": "světelná křivka",
+   "target": "světeln\\w* křiv"
+  },
+  {
+   "term_en": "candidate",
+   "en": "\\bcandidates?\\b",
+   "term": "kandidát",
+   "target": "kandidát"
+  },
+  {
+   "term_en": "flagged",
+   "en": "\\bflagged\\b",
+   "term": "označený",
+   "target": "označen"
+  },
+  {
+   "term_en": "rejected",
+   "en": "\\brejected\\b",
+   "term": "zamítnutý",
+   "target": "zamítnut"
+  },
+  {
+   "term_en": "false positive",
+   "en": "\\bfalse positives?\\b",
+   "term": "falešně pozitivní",
+   "target": "falešně pozitiv"
+  },
+  {
+   "term_en": "confirmed (as in 'not a confirmed planet')",
+   "en": "\\bconfirm",
+   "term": "potvrzený",
+   "target": "potvr"
+  }
+ ],
+ "claims": {
+  "confirm": "potvr",
+  "discover": "objev"
+ }
+}

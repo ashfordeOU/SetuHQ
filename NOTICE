@@ -111,6 +111,63 @@ WASP-39 b JWST spectrum (CC BY 4.0):
   docs/results/wasp39b_jwst_spectrum.json (scripts/fetch_wasp39b_spectrum.py)
   and drawn in the app's Methods chapter, which cites it.
 
+ESA CHEOPS (not covered by the AGPL, CC BY 4.0, the commercial licence or Pro):
+  Public CHEOPS Data Reduction Pipeline light curves, read through DACE (below),
+  in docs/results/stellar_validation_cheops.json and .md (all CHEOPS-derived
+  validation results; the main stellar_validation files keep only the CHEOPS
+  status and pass/fail labels) and in
+  tests/data/cheops_gj65_excerpt.json (a 140-point derived excerpt of visit
+  CH_PR100018_TG035201_V0300). Data in the ESA Space Science Archives are
+  distributed under the CC BY-NC 3.0 IGO licence; commercial use needs ESA's
+  prior authorisation (data.licences@esa.int). Credit: ESA, <proposal PI>, per
+  visit (CH_PR100010: Gyula SZABO; CH_PR100018: Isabella PAGANO).
+  Acknowledgement: CHEOPS is an ESA mission in partnership with Switzerland
+  with important contributions to the payload and the ground segment from
+  Austria, Belgium, France, Germany, Hungary, Italy, Portugal, Spain, Sweden,
+  and the United Kingdom. The CHEOPS Consortium would like to gratefully
+  acknowledge the support received by all the agencies, offices, universities,
+  and industries involved. Their flexibility and willingness to explore new
+  approaches were essential to the success of this mission. CHEOPS data
+  analysed in this article will be made available in the CHEOPS mission archive
+  (https://cheops.unige.ch/archive_browser/).
+  Cite Benz et al. 2021 (Exp. Astron. 51, 109), Hoyer et al. 2020 (A&A 635,
+  A24) and Fortier et al. 2024 (A&A 687, A302). SetuHQ is independent and is
+  not affiliated with, endorsed by or operated on behalf of ESA, the CHEOPS
+  mission or the CHEOPS Consortium.
+
+DACE (Data & Analysis Center for Exoplanets, University of Geneva):
+  The public API through which SetuHQ lists and fetches public CHEOPS light
+  curves (https://dace.unige.ch). Acknowledgement: This publication makes use of
+  The Data & Analysis Center for Exoplanets (DACE), which is a facility based at
+  the University of Geneva (CH) dedicated to extrasolar planets data
+  visualisation, exchange and analysis. DACE is a platform of the Swiss National
+  Centre of Competence in Research (NCCR) PlanetS, federating the Swiss expertise
+  in Exoplanet research. The DACE platform is available at
+  https://dace.unige.ch. Its Python client, dace-query (GPL-3.0), is the
+  optional [cheops] extra.
+
+SVO Filter Profile Service:
+  The TESS (TESS/TESS.Red) and CHEOPS (CHEOPS/CHEOPS.band) response curves in
+  src/setuhq/passbands.py, resampled to 10 nm. This research has made use of the
+  SVO Filter Profile Service "Carlos Rodrigo", funded by MCIN/AEI/10.13039/
+  501100011033/ through grant PID2023-146210NB-I00 (Rodrigo et al. 2012;
+  Rodrigo & Solano 2020).
+
+Published flare and pulsation catalogues (VizieR):
+  Günther et al. 2020 (J/AJ/159/60) and Medina et al. 2020 (J/ApJ/905/107) per-flare
+  tables, read for comparison only; published frequency lists and values in
+  docs/results/stellar_validation_references.json are cited there.
+
+Published eclipsing-binary, rotation and supernova catalogues (VizieR):
+  Prša et al. 2022 (J/ApJS/258/16), Canto Martins et al. 2020 (J/ApJS/250/20) and
+  Fausnaugh et al. 2023 (J/ApJ/956/108), transcribed into the protocol v4 file
+  docs/results/stellar_validation_protocol_v4.json for comparison only.
+
+TESScut:
+  Cutouts of TESS full-frame images (SPOC) through MAST's TESScut service
+  (Brasseur et al. 2019, ascl:1905.007) for the transient tools and validation;
+  the cutouts are not stored, only derived light curves and numbers.
+
 SIMBAD:
   The ICRS coordinates of pi Mensae (HD 39091) in docs/results/targets.json, used
   only to place the star on the sky map. This research has made use of the

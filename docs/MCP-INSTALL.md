@@ -159,11 +159,19 @@ gemini mcp add -e SETUHQ_ROOT=/path/to/SetuHQ setuhq /path/to/SetuHQ/.venv/bin/s
 | `habitable_zone` | Kopparapu et al. 2014 edges in AU | `methods.hz_distance_au` |
 | `benchmark_results` | The stored benchmarks: real TOIs, the real-TOI leaderboard, injection-recovery, pi Men, calibration, threshold sweep | `docs/results/`, `docs/leaderboard/`, `docs/threshold_sweep.json` |
 | `sentinel_providers` | Which Sentinel providers can run here (never shows a key) | `reviewers` |
+| `cheops_proposal_pack` | A CHEOPS Guest Observers proposal preparation pack in a new `runs/propose/<run_name>`: rules check, target status, estimates, anonymised drafts, checklist ([CHEOPS-PROPOSALS.md](CHEOPS-PROPOSALS.md)) | `propose.pack.build_pack` |
+| `find_flares` | Stellar flares in a light curve: detection (optional wavelet denoising), template morphology with multi-component fits chosen by BIC, ED, energies (9000 K blackbody) and the flux-inverted null | `flares.detect_flares` |
+| `pulsation_spectrum` | Frequency analysis: pre-whitening to S/N 4, combination flags, granulation background, numax/Δν, a heuristic type and an optional red-noise null | `pulsations.analyse` |
+| `get_cheops_lightcurve` | Public CHEOPS DRP light curves of a target (DACE public mode), detrended against roll angle, background and centroid, with ESA's acknowledgement and credit; needs network and `.[cheops]` unless cached (writes the cache, so over HTTP only with `--allow-writes`) | `cheops.get_cheops_lightcurve` |
+| `find_eclipsing_binary` | Eclipsing binaries and ellipsoidal or reflection variables: period (odd/even and equal-minima rules), primary and secondary eclipses, secondary phase with an e·cosω hint, a heuristic morphology and a candidate flag with reasons; optional advisory vetting hints that SetuHQ's vetting does not use | `binaries.analyse` |
+| `rotation_period` | A rotation period from spot modulation (Lomb-Scargle and ACF) with an uncertainty and half/double handling; periods beyond about 13 days are reported as beyond one sector's limit | `rotation.measure` |
+| `find_transients` | Non-periodic brightenings on three time scales: peak, amplitude, rise and decay, class hints (flare-like, extragalactic-transient-like) and false-alarm screens (momentum dumps, scattered light, asteroids, periodic stars); every event a candidate | `transients.find_transients` |
 
 Every tool returns `{"tool", "result", "provenance", "honesty"}`. Error messages give paths relative to the
 data root, never the server's absolute paths.
 
-Only the two `run_pipeline_*` tools write, and only into a **new** directory `runs/mcp/<run_name>`: a name
+Only the two `run_pipeline_*` tools and `cheops_proposal_pack` write, and only into a **new** directory
+`runs/mcp/<run_name>` (the pack: `runs/propose/<run_name>`, with no cache written elsewhere): a name
 that is not a plain name, or a directory that already exists, is refused, so a tool can never overwrite a
 stored, reviewed run (such as `runs/tess-pi-men-s1`) or anything else in the data root. They reach outside
 this computer: `run_pipeline_tess` downloads from MAST, and with `sentinels: true` a run may call a provider's
@@ -180,7 +188,7 @@ down by default:
 |---|---|
 | `--http PORT` or `--http HOST:PORT` | binds to `127.0.0.1` unless you name another host; keep it there, or behind your own authenticating proxy |
 | (default) | read-only tools only: the catalogue, stored runs, vetting, the fit, the FAP, the physics, the benchmarks |
-| `--allow-writes` | adds `run_pipeline_csv` and `run_pipeline_tess` (each creates a new `runs/mcp/<run_name>`), Probes only |
+| `--allow-writes` | adds `run_pipeline_csv` and `run_pipeline_tess` (each creates a new `runs/mcp/<run_name>`), Probes only, and `cheops_proposal_pack` (a new `runs/propose/<run_name>`; reads public SIMBAD, ESA and archive pages) |
 | `--allow-sentinels` | with `--allow-writes`: lets a run use Sentinels, which may spend the server's AI-provider keys |
 
 Over stdio the server is your own process and every tool is there (a pipeline run still uses Probes unless

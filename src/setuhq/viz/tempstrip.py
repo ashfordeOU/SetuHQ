@@ -20,11 +20,12 @@ from __future__ import annotations
 import html as _html
 
 from setuhq.looks import T_SUN, teff_rgb
+from setuhq.i18n import N_, k as ik, ka
 from setuhq.viz import require_source
 
 LO, HI, STEP = 2500, 10000, 250
 AXIS = (2500, 4000, 5500, 7000, 8500, 10000)
-SUN = {"name": "the Sun", "teff": T_SUN, "sun": True}
+SUN = {"name": N_("ts.sun", "the Sun"), "teff": T_SUN, "sun": True}
 GAP = 9.0  # % of the strip that two labels on one row keep between them (desktop)
 
 
@@ -77,8 +78,8 @@ def html(data: dict, **opts) -> str:
         rgb = teff_rgb(m["teff"])
         t = f"{round(m['teff']):,} K"
         pins.append(f'<span class="tsmark{" sun" if m.get("sun") else ""}" style="left:{x:.2f}%;--row:{r}" aria-hidden="true">'
-                    f'<b>{e(m["name"])}</b><i>{t}</i></span>')
-        name = f'<a href="{e(m["href"])}">{e(m["name"])}</a>' if m.get("href") else e(m["name"])
+                    f'<b{ik("ts.sun") if m.get("sun") else ""}>{e(m["name"])}</b><i>{t}</i></span>')
+        name = f'<a href="{e(m["href"])}">{e(m["name"])}</a>' if m.get("href") else (f'<span{ik("ts.sun")}>{e(m["name"])}</span>' if m.get("sun") else e(m["name"]))
         note = f' <span class="tsnote">{e(m["note"])}</span>' if m.get("note") else ""
         items.append(f'<li data-teff="{round(m["teff"])}"><i class="tsdot" style="background:#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}" aria-hidden="true"></i>'
                      f'<span>{name} <span class="tsk">{t}</span>{note}</span></li>')
@@ -87,15 +88,16 @@ def html(data: dict, **opts) -> str:
     if opts.get("filter"):
         lo, hi = int(opts.get("lo", LO)), int(opts.get("hi", HI))
         flag = ' data-filter="1"'
-        filt = (f'<div class="tsfilter"><label class="sr" for="ts-lo">Coolest star, in kelvin</label>'
+        filt = (f'<div class="tsfilter"><label class="sr" for="ts-lo"{ik("ts.lo")}>{N_("ts.lo", "Coolest star, in kelvin")}</label>'
                 f'<input id="ts-lo" type="range" min="{LO}" max="{HI}" step="50" value="{lo}" data-ts="lo" aria-valuetext="{lo:,} K">'
-                f'<label class="sr" for="ts-hi">Hottest star, in kelvin</label>'
+                f'<label class="sr" for="ts-hi"{ik("ts.hi")}>{N_("ts.hi", "Hottest star, in kelvin")}</label>'
                 f'<input id="ts-hi" type="range" min="{LO}" max="{HI}" step="50" value="{hi}" data-ts="hi" aria-valuetext="{hi:,} K"></div>')
-    title = data.get("title") or "Star colour from 2,500 K to 10,000 K, with each star marked at its temperature"
+    title = data.get("title") or N_("ts.title", "Star colour from 2,500 K to 10,000 K, with each star marked at its temperature")
+    tk = "" if data.get("title") else ka(aria_label="ts.title")
     ticks = "".join(f'<span class="tstick" style="left:{x:.2f}%" aria-hidden="true"></span>' for x in xs)
     return (f'<figure class="tstrip" data-viz="tempstrip"{flag} style="--rows:{max(lv) + 1}">'
             f'<div class="tsmarks">{"".join(pins)}</div>'
-            f'<div class="tsbar" role="img" aria-label="{e(title)}" style="background:{gradient()}">{ticks}{filt}</div>'
+            f'<div class="tsbar" role="img" aria-label="{e(title)}"{tk} style="background:{gradient()}">{ticks}{filt}</div>'
             f'<div class="tsaxis" aria-hidden="true">{axis}</div>'
             f'<figcaption><ul class="tslist">{"".join(items)}</ul><p class="tssrc">{data["source"]}</p></figcaption></figure>')
 

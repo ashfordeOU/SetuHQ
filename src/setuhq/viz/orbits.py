@@ -156,10 +156,15 @@ def html(data: dict, **opts) -> str:
     tr = "".join(tr_row(p) for p in ps)
     left = [r.get("name") for r in rows if r.get("name") not in {p["name"] for p in ps}]
     note = f" Not drawn (no period, or no a and no star mass): {e(', '.join(n for n in left if n))}." if left else ""
-    return (f'<figure class="orbits{" inset" if inset else ""}" id="{uid}" data-viz="orbits" data-params=\'{e(json.dumps(params, separators=(",", ":")), quote=False)}\'>'
+    return (f'<figure class="orbits{" inset" if inset else ""}" id="{uid}" data-hint="Sizes not to scale · phases illustrative" data-viz="orbits" data-params=\'{e(json.dumps(params, separators=(",", ":")), quote=False)}\'>'
             f'<div class="stage orbstage"><div class="orbbox">{static_svg(ps, teff or 0, star, label)}</div>'
-            f'<span class="stage-tag">Model from stored values</span>'
+            f'<span class="stage-tag" data-i18n="label.model">Model from stored values</span>'
             f'<div class="stage-ctrls"><button class="btn" type="button" data-orb="play" aria-pressed="false" hidden>Play</button></div></div>'
+            f'<div class="orbcam" role="group" aria-label="Camera: focus and zoom" hidden>'
+            + "".join(f'<button class="chip" type="button" data-oc="{k}" aria-pressed="{str(k == "all").lower()}">{e(t)}</button>'
+                      for k, t in [("all", "All"), ("star", "Star")] + [(str(i), _short(p["name"], star)) for i, p in enumerate(ps)])
+            + '<button class="chip" type="button" data-oc="in" aria-label="Zoom in">+</button><button class="chip" type="button" data-oc="out" '
+            'aria-label="Zoom out">−</button><button class="chip" type="button" data-oc="reset">Reset</button></div>'
             f'<figcaption class="skysrc">The {e(star)} system from above: each planet dips the star\'s light when it crosses the line of sight to the '
             f'observer. Orbit sizes are the stored semi-major axes (or Kepler\'s third law from the period and the star\'s mass); dip depth is '
             f'(Rp/R★)² from the stored radii. Circular orbits, star and planets not to scale, phases illustrative (no transit times are '
@@ -178,6 +183,7 @@ CSS = """
 .orbbox>svg,.orbbox>canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .orbbox>svg[hidden]{display:none}
 .orbstage .stage-ctrls [hidden]{display:none}
+.orbcam{display:flex;flex-wrap:wrap;gap:6px}.orbcam[hidden]{display:none}.orbcam .chip,.gxcam .chip{min-width:44px}
 .orbtable table{width:100%;table-layout:fixed;font-size:12.5px}
 .orbtable th,.orbtable td{overflow-wrap:anywhere}
 .orbtable td{font-family:var(--mono);font-variant-numeric:tabular-nums}
@@ -195,7 +201,7 @@ JS = r"""
     const cv = document.createElement('canvas'); if (!cv.getContext) return;
     cv.setAttribute('role', 'img'); cv.setAttribute('aria-label', svg.getAttribute('aria-label'));
     box.classList.add('cv'); box.appendChild(cv); svg.setAttribute('hidden', '');
-    const S = fig._orb = {t: 0, playing: !RM(), vis: false, raf: 0, last: 0};
+    const S = fig._orb = {t: 0, playing: !RM(), vis: false, raf: 0, last: 0, fo: 'all', zm: 1}, cam = fig.querySelector('.orbcam');
     const ps = p.planets, T = ps[ps.length - 1].P, amax = Math.max(...ps.map(q => q.a)), dmax = Math.max(1, ...ps.map(q => q.d || 0));
     const rgb = window.SetuRender ? SetuRender.teffRGB(p.teff || 5772) : [255, 241, 234];
     function draw(){
@@ -203,22 +209,29 @@ JS = r"""
       if (cv.width !== w || cv.height !== h){ cv.width = w; cv.height = h; }
       const c = cv.getContext('2d'), narrow = w / d < 600, days = S.t * p.speed, ph = (days % T) / T;
       c.setTransform(1, 0, 0, 1, 0, 0); c.fillStyle = '#000'; c.fillRect(0, 0, w, h);
-      const cx = narrow ? w * .5 : w * .23, cy = narrow ? h * .25 : h * .48, R = narrow ? Math.min(w * .4, h * .18) : Math.min(h * .42, w * .2);
+      const R = narrow ? Math.min(w * .4, h * .18) : Math.min(h * .42, w * .2), k = S.zm * (S.fo === 'all' ? 1 : Math.min(40, amax / ps[S.fo === 'star' ? 0 : S.fo].a * (S.fo === 'star' ? .8 : 2.5)));
+      const pos = (q, i) => { const a = Math.PI / 2 + TAU * (days / q.P + q.f), r = R * q.a / amax * k; return [r * Math.cos(a), r * Math.sin(a), a, r]; }, fp = S.fo > -1 && ps[S.fo] ? pos(ps[S.fo], S.fo) : [0, 0];
+      const cx = (narrow ? w * .5 : w * .23) - fp[0], cy = (narrow ? h * .25 : h * .48) - fp[1];
+      c.save(); c.beginPath(); c.rect(0, 0, narrow ? w : w * .47, narrow ? h * .5 : h); c.clip();
       c.font = `${11 * d}px ${getComputedStyle(fig).fontFamily}`; c.lineWidth = d;
       c.strokeStyle = 'rgba(255,179,64,.5)'; c.setLineDash([4 * d, 5 * d]); c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx, cy + R + 22 * d); c.stroke(); c.setLineDash([]);
       c.fillStyle = '#FFB340'; c.fillText('to the observer', cx + 8 * d, cy + R + 20 * d);
       const sR = Math.max(5 * d, R * .06);
       if (window.SetuRender) SetuRender.drawStar2D(c, cx, cy, sR, p.teff || 5772, 0, {flat: true, glow: 2.2}); else { c.fillStyle = `rgb(${rgb})`; c.beginPath(); c.arc(cx, cy, sR, 0, TAU); c.fill(); }
-      const gx = narrow ? w * .06 : w * .5, gw = narrow ? w * .88 : w * .46, top = narrow ? h * .58 : h * .14, lane = Math.min(64 * d, (narrow ? h * .27 : h * .78) / ps.length);
-      c.fillStyle = '#9AA3B5'; c.fillText(`one ${T.toFixed(2)}-day period · depth k² (ppm), one scale`, gx, top - 8 * d);
-      ps.forEach((q, i) => {
-        const rr = R * q.a / amax, th = Math.PI / 2 + TAU * (days / q.P + q.f), x = cx + rr * Math.cos(th), y = cy + rr * Math.sin(th);
+      const ons = ps.map((q, i) => {
+        const [px, py, th, rr] = pos(q, i), x = cx + px, y = cy + py;
         c.strokeStyle = 'rgba(255,255,255,.14)'; c.beginPath(); c.arc(cx, cy, rr, 0, TAU); c.stroke();
         const off = Math.abs(Math.atan2(Math.sin(th - Math.PI / 2), Math.cos(th - Math.PI / 2))), on = off < Math.max(.05, Math.PI * (q.w || 1) / 24 / q.P);
         c.fillStyle = q.c; c.beginPath(); c.arc(x, y, 4.5 * d, 0, TAU); c.fill();
         if (on){ c.strokeStyle = q.c; c.beginPath(); c.arc(x, y, 10 * d, 0, TAU); c.stroke(); }
         c.fillStyle = '#ECEFF5'; c.fillText(q.n, x + 8 * d, y - 7 * d);
-        const base = top + 18 * d + i * lane, hh = q.d ? Math.max(2 * d, q.d / dmax * (lane - 30 * d)) : 0, ww = Math.max(2 * d, (q.w || 1) / 24 / T * gw);
+        return on;
+      });
+      c.restore();
+      const gx = narrow ? w * .06 : w * .5, gw = narrow ? w * .88 : w * .46, top = narrow ? h * .58 : h * .14, lane = Math.min(64 * d, (narrow ? h * .27 : h * .78) / ps.length);
+      c.font = `${11 * d}px ${getComputedStyle(fig).fontFamily}`; c.fillStyle = '#9AA3B5'; c.fillText(`one ${T.toFixed(2)}-day period · depth k² (ppm), one scale`, gx, top - 8 * d);
+      ps.forEach((q, i) => {
+        const on = ons[i], base = top + 18 * d + i * lane, hh = q.d ? Math.max(2 * d, q.d / dmax * (lane - 30 * d)) : 0, ww = Math.max(2 * d, (q.w || 1) / 24 / T * gw);
         c.strokeStyle = q.c; c.lineWidth = 1.6 * d; c.beginPath(); c.moveTo(gx, base);
         for (let n = Math.ceil(q.f - 1e-9); (n - q.f) * q.P <= T; n++){ const tc = (n - q.f) * q.P; if (tc < 0 || !q.d) continue; const xc = gx + tc / T * gw; c.lineTo(xc - ww / 2, base); c.lineTo(xc - ww / 2, base + hh); c.lineTo(xc + ww / 2, base + hh); c.lineTo(xc + ww / 2, base); }
         c.lineTo(gx + gw, base); c.stroke(); c.lineWidth = d;
@@ -230,6 +243,9 @@ JS = r"""
     function frame(now){ S.raf = 0; if (!S.playing || !S.vis || document.hidden) return; S.t += Math.min(.1, (now - (S.last || now)) / 1000); S.last = now; draw(); S.raf = requestAnimationFrame(frame); }
     function kick(){ if (!S.raf && S.playing && S.vis && !document.hidden){ S.last = 0; S.raf = requestAnimationFrame(frame); } }
     btn.addEventListener('click', () => { S.playing = !S.playing; setBtn(); kick(); });
+    if (cam){ cam.hidden = false; cam.addEventListener('click', e => { const b = e.target.closest('[data-oc]'); if (!b) return; const o = b.dataset.oc;
+      if (o === 'in' || o === 'out') S.zm = Math.max(.5, Math.min(8, S.zm * (o === 'in' ? 1.5 : 1 / 1.5))); else { S.fo = o === 'reset' ? 'all' : isNaN(o) ? o : +o; S.zm = 1; }
+      cam.querySelectorAll('[aria-pressed]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.oc === String(S.fo)))); draw(); }); }
     if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { S.vis = e.isIntersecting; if (S.vis){ draw(); kick(); } }), {rootMargin: '80px'}).observe(box);
     else { S.vis = true; kick(); }
     document.addEventListener('visibilitychange', () => { if (!document.hidden) kick(); });

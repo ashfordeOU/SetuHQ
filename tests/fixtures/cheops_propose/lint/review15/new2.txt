@@ -1,0 +1,48 @@
+Building on the authors' prior work, we refine the ephemeris.
+
+L2 This extends the proposers' earlier CHEOPS programme.
+
+L3 The present team obtained the discovery light curve.
+
+L4 See arXiv:2401.01234 (Paper I of this series).
+
+L5 As shown in Paper I of this series, the planet is inflated.
+
+L6 The team at UNIGE built the pipeline.
+
+L7 We collaborate with Geneva Observatory colleagues.
+
+L8 Data from the IAA-CSIC and the OCA are used.
+
+L9 Our previous wоrk (Cyrillic o in work) showed this.
+
+L10 Оur previous work (Cyrillic O in Our) showed this.
+
+L11 Our previous w​ork with zero-width space.
+
+L12 Ｏｕｒ previous work in fullwidth.
+
+L13 Dr Jаne Dоe (Cyrillic a and o) leads this.
+
+L14 Contact jane.doe＠unige.ch (fullwidth at).
+
+L15 My homepage https://cheops.unige.ch/~jdoe/ has the code.
+
+L16 Author page: https://arxiv.org/a/doe_j_1 lists the papers.
+
+L17 Personal site unige.ch/~doe and www.astro.example.edu/~jdoe.
+
+L18 See https://dace.unige.ch/profile/jdoe for our tools.
+
+L19 We previously published this result (Doe 2023).
+
+L20 In a previous paper by this team (2023), the planet was found.
+
+L21 Using the code we developed (ref. 12) we fit the data.
+
+L22 We thank the Swiss National Science Foundation for support.
+
+L23 jdoe@unige.ch
+
+L24 I am the first author of TOI-1987 b's confirmation paper.
+
