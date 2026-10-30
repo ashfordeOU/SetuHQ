@@ -94,10 +94,10 @@
         "methods-strip-dark.svg"
       ],
       "sources": {
-        "src/setuhq/methods.py": "6ac08e91c593444fe55a936ab066a78784ec9c274a222a34c4df8134022244aa",
+        "src/setuhq/methods.py": "ba8a3ff7736f636207b20b6453e31890b8d8aff9db881ffcba22c2a1d6b75fde",
         "docs/results/methods_examples.json": "5190fc392d23af5ca9446ed4b06bdd24948a23534f2eefe763a47d31adec4974"
       },
-      "commit": "784db33"
+      "commit": "2c729e1"
     }
   },
   "brand": {
