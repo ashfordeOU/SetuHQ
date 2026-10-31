@@ -2564,10 +2564,41 @@
       ],
       "reclassified": 0,
       "n_targets": 16
+    },
+    {
+      "time": "2026-10-31T06:27:19+00:00",
+      "errors": [
+        "TIC 364007087: LookupError: no SPOC 120s light curves found for 'TIC 364007087'",
+        "TIC 364192929: RemoteServiceError: Request failed.  If this problem persists, please notify archive[at]stsci.edu.'",
+        "TIC 364267778: RemoteServiceError: Request failed.  If this problem persists, please notify archive[at]stsci.edu.'",
+        "TIC 364393429: RemoteServiceError: Request failed.  If this problem persists, please notify archive[at]stsci.edu.'",
+        "TIC 364395234: RemoteServiceError: Request failed.  If this problem persists, please notify archive[at]stsci.edu.'",
+        "TIC 364408162: RemoteServiceError: Request failed.  If this problem persists, please notify archive[at]stsci.edu.'",
+        "TIC 364427226: RemoteServiceError: Request failed.  If this problem persists, please notify archive[at]stsci.edu.'",
+        "TIC 364431259: RemoteServiceError: Request failed.  If this problem persists, please notify archive[at]stsci.edu.'",
+        "TIC 364571121: RemoteServiceError: Request failed.  If this problem persists, please notify archive[at]stsci.edu.'"
+      ],
+      "known": 0,
+      "filtered_deep": 17,
+      "filtered_single": 3,
+      "tracebacks": [
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 364007087'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 64, in load_tess\n    search = lk.search_lightcurve(target, author=author, exptime=exptime)\nastroquery.exceptions.RemoteServiceError: Request failed.  If this problem persists, please notify archive[at]stsci.edu.'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 64, in load_tess\n    search = lk.search_lightcurve(target, author=author, exptime=exptime)\nastroquery.exceptions.RemoteServiceError: Request failed.  If this problem persists, please notify archive[at]stsci.edu.'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 64, in load_tess\n    search = lk.search_lightcurve(target, author=author, exptime=exptime)\nastroquery.exceptions.RemoteServiceError: Request failed.  If this problem persists, please notify archive[at]stsci.edu.'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 64, in load_tess\n    search = lk.search_lightcurve(target, author=author, exptime=exptime)\nastroquery.exceptions.RemoteServiceError: Request failed.  If this problem persists, please notify archive[at]stsci.edu.'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 64, in load_tess\n    search = lk.search_lightcurve(target, author=author, exptime=exptime)\nastroquery.exceptions.RemoteServiceError: Request failed.  If this problem persists, please notify archive[at]stsci.edu.'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 64, in load_tess\n    search = lk.search_lightcurve(target, author=author, exptime=exptime)\nastroquery.exceptions.RemoteServiceError: Request failed.  If this problem persists, please notify archive[at]stsci.edu.'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 64, in load_tess\n    search = lk.search_lightcurve(target, author=author, exptime=exptime)\nastroquery.exceptions.RemoteServiceError: Request failed.  If this problem persists, please notify archive[at]stsci.edu.'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 64, in load_tess\n    search = lk.search_lightcurve(target, author=author, exptime=exptime)\nastroquery.exceptions.RemoteServiceError: Request failed.  If this problem persists, please notify archive[at]stsci.edu.'\n"
+      ],
+      "filtered_one_sector": 1,
+      "reclassified": 0,
+      "n_targets": 11
     }
   ],
-  "targets_reviewed": 351,
-  "updated": "2026-10-31T00:40:14+00:00",
+  "targets_reviewed": 362,
+  "updated": "2026-10-31T06:27:19+00:00",
   "config": "discovery",
   "config_sha256": "74e9c44e0319c6fd652a1fa875dc96bc2c827a6173668aa69bb8735ab1dff8f8",
   "embargo": true
