@@ -49,6 +49,54 @@
       "toi_match_rule": "mid-time on a predicted transit"
     },
     {
+      "tic": 365733349,
+      "sector_span": [
+        83,
+        85
+      ],
+      "t_center": 3621.136625049793,
+      "time_unit": "BTJD",
+      "duration_hours": 2.0976538454742695,
+      "depth_ppm": 2277.369658624129,
+      "snr": 18.43032956475751,
+      "score": 1.0,
+      "n_reviewers": 3,
+      "period_days": 2.70133551303061,
+      "n_transits": 3,
+      "fap": 0.0004997501249375312,
+      "candidate_id": "tess-349e5f4da897-002",
+      "found": "2026-11-01T00:48:02+00:00",
+      "status_note": "candidate only, not confirmed",
+      "status": "known_toi",
+      "toi_match": "1288.01",
+      "toi_offset_hours": -0.05435881018638611,
+      "toi_match_rule": "mid-time on a predicted transit"
+    },
+    {
+      "tic": 365733349,
+      "sector_span": [
+        83,
+        85
+      ],
+      "t_center": 3631.9350452624008,
+      "time_unit": "BTJD",
+      "duration_hours": 2.2827884647485917,
+      "depth_ppm": 2238.0838508553325,
+      "snr": 18.04233943024186,
+      "score": 1.0,
+      "n_reviewers": 3,
+      "period_days": 2.701400316365102,
+      "n_transits": 4,
+      "fap": 0.0004997501249375312,
+      "candidate_id": "tess-728269ebf9ba-001",
+      "found": "2026-11-01T00:48:02+00:00",
+      "status_note": "candidate only, not confirmed",
+      "status": "known_toi",
+      "toi_match": "1288.01",
+      "toi_offset_hours": -0.07589609920978546,
+      "toi_match_rule": "mid-time on a predicted transit"
+    },
+    {
       "tic": 364186197,
       "sector_span": [
         85,
@@ -94,6 +142,54 @@
       "status": "known_toi",
       "toi_match": "1408.01",
       "toi_offset_hours": -0.2100188210606575,
+      "toi_match_rule": "mid-time on a predicted transit"
+    },
+    {
+      "tic": 365733349,
+      "sector_span": [
+        83,
+        85
+      ],
+      "t_center": 3634.636402469925,
+      "time_unit": "BTJD",
+      "duration_hours": 1.710737834455358,
+      "depth_ppm": 2247.8586064003102,
+      "snr": 16.669023229757563,
+      "score": 1.0,
+      "n_reviewers": 3,
+      "period_days": 2.701400316365102,
+      "n_transits": 4,
+      "fap": 0.0004997501249375312,
+      "candidate_id": "tess-728269ebf9ba-011",
+      "found": "2026-11-01T00:48:02+00:00",
+      "status_note": "candidate only, not confirmed",
+      "status": "known_toi",
+      "toi_match": "1288.01",
+      "toi_offset_hours": -0.039228715002536774,
+      "toi_match_rule": "mid-time on a predicted transit"
+    },
+    {
+      "tic": 365733349,
+      "sector_span": [
+        83,
+        85
+      ],
+      "t_center": 3583.3408644170413,
+      "time_unit": "BTJD",
+      "duration_hours": 1.9534446236903023,
+      "depth_ppm": 2356.104945169024,
+      "snr": 16.547708378093798,
+      "score": 1.0,
+      "n_reviewers": 3,
+      "period_days": 2.698226857652108,
+      "n_transits": 4,
+      "fap": 0.0004997501249375312,
+      "candidate_id": "tess-26a6e789f4e9-004",
+      "found": "2026-11-01T00:48:02+00:00",
+      "status_note": "candidate only, not confirmed",
+      "status": "known_toi",
+      "toi_match": "1288.01",
+      "toi_offset_hours": -0.009935583919286728,
       "toi_match_rule": "mid-time on a predicted transit"
     },
     {
@@ -169,6 +265,126 @@
       "toi_match_rule": "mid-time on a predicted transit"
     },
     {
+      "tic": 365733349,
+      "sector_span": [
+        83,
+        85
+      ],
+      "t_center": 3629.2297707307976,
+      "time_unit": "BTJD",
+      "duration_hours": 1.9559973283394356,
+      "depth_ppm": 2036.4046275432868,
+      "snr": 15.772463008719312,
+      "score": 1.0,
+      "n_reviewers": 3,
+      "period_days": 2.701400316365102,
+      "n_transits": 4,
+      "fap": 0.0004997501249375312,
+      "candidate_id": "tess-728269ebf9ba-003",
+      "found": "2026-11-01T00:48:02+00:00",
+      "status_note": "candidate only, not confirmed",
+      "status": "known_toi",
+      "toi_match": "1288.01",
+      "toi_offset_hours": -0.20657925680279732,
+      "toi_match_rule": "mid-time on a predicted transit"
+    },
+    {
+      "tic": 365733349,
+      "sector_span": [
+        83,
+        85
+      ],
+      "t_center": 3618.439128774333,
+      "time_unit": "BTJD",
+      "duration_hours": 1.7407759772177087,
+      "depth_ppm": 2210.2205519776153,
+      "snr": 15.687852873920125,
+      "score": 1.0,
+      "n_reviewers": 3,
+      "period_days": 2.70133551303061,
+      "n_transits": 3,
+      "fap": 0.0004997501249375312,
+      "candidate_id": "tess-349e5f4da897-010",
+      "found": "2026-11-01T00:48:02+00:00",
+      "status_note": "candidate only, not confirmed",
+      "status": "known_toi",
+      "toi_match": "1288.01",
+      "toi_offset_hours": 0.0016361810266971588,
+      "toi_match_rule": "mid-time on a predicted transit"
+    },
+    {
+      "tic": 365733349,
+      "sector_span": [
+        83,
+        85
+      ],
+      "t_center": 3567.131331333255,
+      "time_unit": "BTJD",
+      "duration_hours": 1.8207516682632559,
+      "depth_ppm": 2176.9513295972765,
+      "snr": 15.426868247993106,
+      "score": 1.0,
+      "n_reviewers": 3,
+      "period_days": 2.6966195556745287,
+      "n_transits": 4,
+      "fap": 0.0004997501249375312,
+      "candidate_id": "tess-e75d0123b8dd-009",
+      "found": "2026-11-01T00:48:02+00:00",
+      "status_note": "candidate only, not confirmed",
+      "status": "known_toi",
+      "toi_match": "1288.01",
+      "toi_offset_hours": -0.2632959969341755,
+      "toi_match_rule": "mid-time on a predicted transit"
+    },
+    {
+      "tic": 365733349,
+      "sector_span": [
+        83,
+        85
+      ],
+      "t_center": 3615.733211779018,
+      "time_unit": "BTJD",
+      "duration_hours": 1.5281160614904366,
+      "depth_ppm": 2260.2008486694026,
+      "snr": 15.21935275182593,
+      "score": 1.0,
+      "n_reviewers": 3,
+      "period_days": 2.70133551303061,
+      "n_transits": 3,
+      "fap": 0.0004997501249375312,
+      "candidate_id": "tess-349e5f4da897-014",
+      "found": "2026-11-01T00:48:02+00:00",
+      "status_note": "candidate only, not confirmed",
+      "status": "known_toi",
+      "toi_match": "1288.01",
+      "toi_offset_hours": -0.1444661021232605,
+      "toi_match_rule": "mid-time on a predicted transit"
+    },
+    {
+      "tic": 365733349,
+      "sector_span": [
+        83,
+        85
+      ],
+      "t_center": 3564.43320164356,
+      "time_unit": "BTJD",
+      "duration_hours": 1.9459239344178059,
+      "depth_ppm": 2007.0529237176115,
+      "snr": 14.855324940189561,
+      "score": 1.0,
+      "n_reviewers": 3,
+      "period_days": 2.6966195556745287,
+      "n_transits": 4,
+      "fap": 0.0004997501249375312,
+      "candidate_id": "tess-e75d0123b8dd-005",
+      "found": "2026-11-01T00:48:02+00:00",
+      "status_note": "candidate only, not confirmed",
+      "status": "known_toi",
+      "toi_match": "1288.01",
+      "toi_offset_hours": -0.222502950578928,
+      "toi_match_rule": "mid-time on a predicted transit"
+    },
+    {
       "tic": 363661031,
       "sector_span": [
         101,
@@ -217,6 +433,54 @@
       "toi_match_rule": "mid-time on a predicted transit"
     },
     {
+      "tic": 365733349,
+      "sector_span": [
+        83,
+        85
+      ],
+      "t_center": 3561.7424051799235,
+      "time_unit": "BTJD",
+      "duration_hours": 2.328175615588407,
+      "depth_ppm": 1824.2868038941263,
+      "snr": 14.584442843734669,
+      "score": 1.0,
+      "n_reviewers": 3,
+      "period_days": 2.6966195556745287,
+      "n_transits": 4,
+      "fap": 0.0004997501249375312,
+      "candidate_id": "tess-e75d0123b8dd-000",
+      "found": "2026-11-01T00:48:02+00:00",
+      "status_note": "candidate only, not confirmed",
+      "status": "known_toi",
+      "toi_match": "1288.01",
+      "toi_offset_hours": -0.00571247935295105,
+      "toi_match_rule": "mid-time on a predicted transit"
+    },
+    {
+      "tic": 365733349,
+      "sector_span": [
+        83,
+        85
+      ],
+      "t_center": 3572.533378478929,
+      "time_unit": "BTJD",
+      "duration_hours": 1.8563357265738887,
+      "depth_ppm": 2057.8986672855626,
+      "snr": 14.453306542110079,
+      "score": 1.0,
+      "n_reviewers": 3,
+      "period_days": 2.698226857652108,
+      "n_transits": 4,
+      "fap": 0.0004997501249375312,
+      "candidate_id": "tess-26a6e789f4e9-007",
+      "found": "2026-11-01T00:48:02+00:00",
+      "status_note": "candidate only, not confirmed",
+      "status": "known_toi",
+      "toi_match": "1288.01",
+      "toi_offset_hours": -0.205975703895092,
+      "toi_match_rule": "mid-time on a predicted transit"
+    },
+    {
       "tic": 363661031,
       "sector_span": [
         101,
@@ -241,6 +505,54 @@
       "toi_match_rule": "mid-time on a predicted transit"
     },
     {
+      "tic": 365733349,
+      "sector_span": [
+        83,
+        85
+      ],
+      "t_center": 3623.8434627186866,
+      "time_unit": "BTJD",
+      "duration_hours": 1.6320099263612065,
+      "depth_ppm": 2000.886737842378,
+      "snr": 14.147096791968822,
+      "score": 1.0,
+      "n_reviewers": 3,
+      "period_days": 2.701400316365102,
+      "n_transits": 4,
+      "fap": 0.0004997501249375312,
+      "candidate_id": "tess-728269ebf9ba-012",
+      "found": "2026-11-01T00:48:02+00:00",
+      "status_note": "candidate only, not confirmed",
+      "status": "known_toi",
+      "toi_match": "1288.01",
+      "toi_offset_hours": 0.11383964493870735,
+      "toi_match_rule": "mid-time on a predicted transit"
+    },
+    {
+      "tic": 365733349,
+      "sector_span": [
+        83,
+        85
+      ],
+      "t_center": 3575.2349311127705,
+      "time_unit": "BTJD",
+      "duration_hours": 1.8448593573339167,
+      "depth_ppm": 2012.3638169858848,
+      "snr": 14.133500149213955,
+      "score": 1.0,
+      "n_reviewers": 3,
+      "period_days": 2.698226857652108,
+      "n_transits": 4,
+      "fap": 0.0004997501249375312,
+      "candidate_id": "tess-26a6e789f4e9-008",
+      "found": "2026-11-01T00:48:02+00:00",
+      "status_note": "candidate only, not confirmed",
+      "status": "known_toi",
+      "toi_match": "1288.01",
+      "toi_offset_hours": -0.1646180972456932,
+      "toi_match_rule": "mid-time on a predicted transit"
+    },
+    {
       "tic": 363661031,
       "sector_span": [
         101,
@@ -262,6 +574,54 @@
       "status": "known_toi",
       "toi_match": "3185.01",
       "toi_offset_hours": -0.3040468320250511,
+      "toi_match_rule": "mid-time on a predicted transit"
+    },
+    {
+      "tic": 365733349,
+      "sector_span": [
+        83,
+        85
+      ],
+      "t_center": 3580.630597129544,
+      "time_unit": "BTJD",
+      "duration_hours": 1.5992479001106403,
+      "depth_ppm": 1983.4991651277444,
+      "snr": 13.282471945881571,
+      "score": 1.0,
+      "n_reviewers": 3,
+      "period_days": 2.698226857652108,
+      "n_transits": 4,
+      "fap": 0.0004997501249375312,
+      "candidate_id": "tess-26a6e789f4e9-013",
+      "found": "2026-11-01T00:48:02+00:00",
+      "status_note": "candidate only, not confirmed",
+      "status": "known_toi",
+      "toi_match": "1288.01",
+      "toi_offset_hours": -0.26044488698244095,
+      "toi_match_rule": "mid-time on a predicted transit"
+    },
+    {
+      "tic": 365733349,
+      "sector_span": [
+        83,
+        85
+      ],
+      "t_center": 3569.8298775718076,
+      "time_unit": "BTJD",
+      "duration_hours": 1.9436315387647483,
+      "depth_ppm": 1793.5370534517547,
+      "snr": 13.274974170558867,
+      "score": 1.0,
+      "n_reviewers": 3,
+      "period_days": 2.6966195556745287,
+      "n_transits": 4,
+      "fap": 0.0004997501249375312,
+      "candidate_id": "tess-e75d0123b8dd-006",
+      "found": "2026-11-01T00:48:02+00:00",
+      "status_note": "candidate only, not confirmed",
+      "status": "known_toi",
+      "toi_match": "1288.01",
+      "toi_offset_hours": -0.2940918803215027,
       "toi_match_rule": "mid-time on a predicted transit"
     },
     {
@@ -2656,10 +3016,31 @@
       ],
       "reclassified": 0,
       "n_targets": 3
+    },
+    {
+      "time": "2026-11-01T00:48:02+00:00",
+      "errors": [
+        "TIC 364700298: LookupError: no SPOC 120s light curves found for 'TIC 364700298'",
+        "TIC 364955057: LookupError: no SPOC 120s light curves found for 'TIC 364955057'",
+        "TIC 365389353: LookupError: no SPOC 120s light curves found for 'TIC 365389353'",
+        "TIC 365712006: LookupError: no SPOC 120s light curves found for 'TIC 365712006'"
+      ],
+      "known": 15,
+      "tracebacks": [
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 364700298'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 364955057'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 365389353'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 365712006'\n"
+      ],
+      "filtered_one_sector": 33,
+      "filtered_deep": 35,
+      "filtered_single": 1,
+      "reclassified": 0,
+      "n_targets": 16
     }
   ],
-  "targets_reviewed": 383,
-  "updated": "2026-10-31T18:22:05+00:00",
+  "targets_reviewed": 399,
+  "updated": "2026-11-01T00:48:02+00:00",
   "config": "discovery",
   "config_sha256": "74e9c44e0319c6fd652a1fa875dc96bc2c827a6173668aa69bb8735ab1dff8f8",
   "embargo": true
