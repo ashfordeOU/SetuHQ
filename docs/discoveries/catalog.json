@@ -4691,10 +4691,27 @@
       "filtered_single": 1,
       "reclassified": 0,
       "n_targets": 19
+    },
+    {
+      "time": "2026-11-05T12:28:07+00:00",
+      "errors": [
+        "TIC 368678195: HTTPError: 502 Server Error: Bad Gateway for url: https://mast.stsci.edu/portal/Mashup/Mashup.asmx/columnsconfig",
+        "TIC 369581703: LookupError: no SPOC 120s light curves found for 'TIC 369581703'"
+      ],
+      "known": 0,
+      "tracebacks": [
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 64, in load_tess\n    search = lk.search_lightcurve(target, author=author, exptime=exptime)\nrequests.exceptions.HTTPError: 502 Server Error: Bad Gateway for url: https://mast.stsci.edu/portal/Mashup/Mashup.asmx/columnsconfig\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 369581703'\n"
+      ],
+      "filtered_deep": 14,
+      "filtered_one_sector": 5,
+      "filtered_single": 1,
+      "reclassified": 0,
+      "n_targets": 18
     }
   ],
-  "targets_reviewed": 667,
-  "updated": "2026-11-05T06:30:57+00:00",
+  "targets_reviewed": 685,
+  "updated": "2026-11-05T12:28:07+00:00",
   "config": "discovery",
   "config_sha256": "74e9c44e0319c6fd652a1fa875dc96bc2c827a6173668aa69bb8735ab1dff8f8",
   "embargo": true
