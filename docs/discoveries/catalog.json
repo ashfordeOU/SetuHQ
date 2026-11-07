@@ -5685,10 +5685,40 @@
       "filtered_deep": 24,
       "reclassified": 0,
       "n_targets": 15
+    },
+    {
+      "time": "2026-11-07T19:04:08+00:00",
+      "errors": [
+        "TIC 371315483: LookupError: no SPOC 120s light curves found for 'TIC 371315483'",
+        "TIC 371443216: TimeoutError: Timeout limit of 600 exceeded.",
+        "TIC 371470493: TimeoutError: Timeout limit of 600 exceeded.",
+        "TIC 371573539: TimeoutError: Timeout limit of 600 exceeded.",
+        "TIC 371579161: LookupError: no SPOC 120s light curves found for 'TIC 371579161'",
+        "TIC 371596277: TimeoutError: Timeout limit of 600 exceeded.",
+        "TIC 371673488: LookupError: no SPOC 120s light curves found for 'TIC 371673488'",
+        "TIC 371909591: LookupError: no SPOC 120s light curves found for 'TIC 371909591'",
+        "TIC 372077289: LookupError: no SPOC 120s light curves found for 'TIC 372077289'"
+      ],
+      "known": 0,
+      "tracebacks": [
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 371315483'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 64, in load_tess\n    search = lk.search_lightcurve(target, author=author, exptime=exptime)\nTimeoutError: Timeout limit of 600 exceeded.\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 64, in load_tess\n    search = lk.search_lightcurve(target, author=author, exptime=exptime)\nTimeoutError: Timeout limit of 600 exceeded.\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 64, in load_tess\n    search = lk.search_lightcurve(target, author=author, exptime=exptime)\nTimeoutError: Timeout limit of 600 exceeded.\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 371579161'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 64, in load_tess\n    search = lk.search_lightcurve(target, author=author, exptime=exptime)\nTimeoutError: Timeout limit of 600 exceeded.\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 371673488'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 371909591'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 372077289'\n"
+      ],
+      "filtered_deep": 23,
+      "filtered_one_sector": 1,
+      "reclassified": 0,
+      "n_targets": 11
     }
   ],
-  "targets_reviewed": 805,
-  "updated": "2026-11-07T12:25:08+00:00",
+  "targets_reviewed": 816,
+  "updated": "2026-11-07T19:04:08+00:00",
   "config": "discovery",
   "config_sha256": "74e9c44e0319c6fd652a1fa875dc96bc2c827a6173668aa69bb8735ab1dff8f8",
   "embargo": true
