@@ -193,6 +193,30 @@
       "toi_match_rule": "mid-time on a predicted transit"
     },
     {
+      "tic": 380907135,
+      "sector_span": [
+        43,
+        70
+      ],
+      "t_center": 3210.7290036451177,
+      "time_unit": "BTJD",
+      "duration_hours": 5.720066009831498,
+      "depth_ppm": 4716.8144078950645,
+      "snr": 42.467778685564774,
+      "score": 1.0,
+      "n_reviewers": 3,
+      "period_days": 4.048939730257731,
+      "n_transits": 2,
+      "fap": 0.0004997501249375312,
+      "candidate_id": "tess-4935cc0546f8-003",
+      "found": "2026-11-15T00:44:58+00:00",
+      "status_note": "candidate only, not confirmed",
+      "status": "known_toi",
+      "toi_match": "4536.01",
+      "toi_offset_hours": -1.0229461155831814,
+      "toi_match_rule": "mid-time on a predicted transit"
+    },
+    {
       "tic": 372264750,
       "sector_span": [
         78,
@@ -433,6 +457,30 @@
       "toi_match_rule": "mid-time on a predicted transit"
     },
     {
+      "tic": 380907135,
+      "sector_span": [
+        43,
+        70
+      ],
+      "t_center": 2494.591930753727,
+      "time_unit": "BTJD",
+      "duration_hours": 8.527202066568861,
+      "depth_ppm": 3587.3783868830556,
+      "snr": 37.13769810985349,
+      "score": 1.0,
+      "n_reviewers": 3,
+      "period_days": 4.053453820123379,
+      "n_transits": 2,
+      "fap": 0.0004997501249375312,
+      "candidate_id": "tess-be2c9d31f5a0-000",
+      "found": "2026-11-15T00:44:58+00:00",
+      "status_note": "candidate only, not confirmed",
+      "status": "known_toi",
+      "toi_match": "4536.01",
+      "toi_offset_hours": -0.6311243064701557,
+      "toi_match_rule": "mid-time on a predicted transit"
+    },
+    {
       "tic": 372264750,
       "sector_span": [
         78,
@@ -550,6 +598,30 @@
       "status": "known_toi",
       "toi_match": "1163.01",
       "toi_offset_hours": 0.12111587449908257,
+      "toi_match_rule": "mid-time on a predicted transit"
+    },
+    {
+      "tic": 380907135,
+      "sector_span": [
+        43,
+        70
+      ],
+      "t_center": 2490.489558541208,
+      "time_unit": "BTJD",
+      "duration_hours": 6.6243171644891845,
+      "depth_ppm": 3641.695864387673,
+      "snr": 33.06509623542912,
+      "score": 1.0,
+      "n_reviewers": 3,
+      "period_days": 4.053453820123379,
+      "n_transits": 2,
+      "fap": 0.0004997501249375312,
+      "candidate_id": "tess-be2c9d31f5a0-002",
+      "found": "2026-11-15T00:44:58+00:00",
+      "status_note": "candidate only, not confirmed",
+      "status": "known_toi",
+      "toi_match": "4536.01",
+      "toi_offset_hours": -1.9825118109583855,
       "toi_match_rule": "mid-time on a predicted transit"
     },
     {
@@ -2161,6 +2233,30 @@
       "toi_match_rule": "mid-time on a predicted transit"
     },
     {
+      "tic": 381789320,
+      "sector_span": [
+        103,
+        104
+      ],
+      "t_center": 4183.885482894365,
+      "time_unit": "BTJD",
+      "duration_hours": 4.201239946531132,
+      "depth_ppm": 4656.933388308859,
+      "snr": 12.327521459952946,
+      "score": 1.0,
+      "n_reviewers": 3,
+      "period_days": 3.494563420550858,
+      "n_transits": 4,
+      "fap": 0.0004997501249375312,
+      "candidate_id": "tess-059bce150d1a-000",
+      "found": "2026-11-15T00:44:58+00:00",
+      "status_note": "candidate only, not confirmed",
+      "status": "known_toi",
+      "toi_match": "3304.01",
+      "toi_offset_hours": 0.09280546009540558,
+      "toi_match_rule": "mid-time on a predicted transit"
+    },
+    {
       "tic": 363661031,
       "sector_span": [
         101,
@@ -2686,6 +2782,30 @@
       "status": "known_toi",
       "toi_match": "1987.01",
       "toi_offset_hours": -0.1787821166217327,
+      "toi_match_rule": "mid-time on a predicted transit"
+    },
+    {
+      "tic": 381789320,
+      "sector_span": [
+        103,
+        104
+      ],
+      "t_center": 4166.399188527091,
+      "time_unit": "BTJD",
+      "duration_hours": 4.0957631745695835,
+      "depth_ppm": 4713.940586164255,
+      "snr": 10.541977314862699,
+      "score": 1.0,
+      "n_reviewers": 3,
+      "period_days": 3.4944543481435675,
+      "n_transits": 4,
+      "fap": 0.0004997501249375312,
+      "candidate_id": "tess-4e071149d065-001",
+      "found": "2026-11-15T00:44:58+00:00",
+      "status_note": "candidate only, not confirmed",
+      "status": "known_toi",
+      "toi_match": "3304.01",
+      "toi_offset_hours": -0.4117073491215706,
       "toi_match_rule": "mid-time on a predicted transit"
     },
     {
@@ -7107,10 +7227,20 @@
       ],
       "reclassified": 0,
       "n_targets": 16
+    },
+    {
+      "time": "2026-11-15T00:44:58+00:00",
+      "errors": [],
+      "known": 5,
+      "filtered_one_sector": 13,
+      "filtered_deep": 113,
+      "filtered_single": 1,
+      "reclassified": 0,
+      "n_targets": 20
     }
   ],
-  "targets_reviewed": 1194,
-  "updated": "2026-11-14T18:22:01+00:00",
+  "targets_reviewed": 1214,
+  "updated": "2026-11-15T00:44:58+00:00",
   "config": "discovery",
   "config_sha256": "74e9c44e0319c6fd652a1fa875dc96bc2c827a6173668aa69bb8735ab1dff8f8",
   "embargo": true
