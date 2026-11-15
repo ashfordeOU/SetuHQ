@@ -7237,10 +7237,20 @@
       "filtered_single": 1,
       "reclassified": 0,
       "n_targets": 20
+    },
+    {
+      "time": "2026-11-15T06:28:56+00:00",
+      "errors": [],
+      "known": 0,
+      "filtered_one_sector": 13,
+      "filtered_deep": 113,
+      "filtered_single": 1,
+      "reclassified": 0,
+      "n_targets": 20
     }
   ],
-  "targets_reviewed": 1214,
-  "updated": "2026-11-15T00:44:58+00:00",
+  "targets_reviewed": 1234,
+  "updated": "2026-11-15T06:28:56+00:00",
   "config": "discovery",
   "config_sha256": "74e9c44e0319c6fd652a1fa875dc96bc2c827a6173668aa69bb8735ab1dff8f8",
   "embargo": true
