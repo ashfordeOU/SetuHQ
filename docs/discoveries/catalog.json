@@ -7378,10 +7378,31 @@
       "filtered_fap": 3,
       "reclassified": 0,
       "n_targets": 16
+    },
+    {
+      "time": "2026-11-17T06:31:53+00:00",
+      "errors": [
+        "TIC 382521476: LookupError: no SPOC 120s light curves found for 'TIC 382521476'",
+        "TIC 383358873: LookupError: no SPOC 120s light curves found for 'TIC 383358873'",
+        "TIC 383364626: LookupError: no SPOC 120s light curves found for 'TIC 383364626'",
+        "TIC 383666033: LookupError: no SPOC 120s light curves found for 'TIC 383666033'"
+      ],
+      "known": 0,
+      "tracebacks": [
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 382521476'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 383358873'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 383364626'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 383666033'\n"
+      ],
+      "filtered_deep": 69,
+      "filtered_one_sector": 5,
+      "filtered_fap": 3,
+      "reclassified": 0,
+      "n_targets": 16
     }
   ],
-  "targets_reviewed": 1270,
-  "updated": "2026-11-17T00:42:03+00:00",
+  "targets_reviewed": 1286,
+  "updated": "2026-11-17T06:31:53+00:00",
   "config": "discovery",
   "config_sha256": "74e9c44e0319c6fd652a1fa875dc96bc2c827a6173668aa69bb8735ab1dff8f8",
   "embargo": true
