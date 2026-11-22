@@ -7507,10 +7507,28 @@
       "filtered_one_sector": 5,
       "reclassified": 0,
       "n_targets": 17
+    },
+    {
+      "time": "2026-11-22T12:27:46+00:00",
+      "errors": [
+        "TIC 388130235: LookupError: no SPOC 120s light curves found for 'TIC 388130235'",
+        "TIC 388371132: LookupError: no SPOC 120s light curves found for 'TIC 388371132'",
+        "TIC 389238529: LookupError: no SPOC 120s light curves found for 'TIC 389238529'"
+      ],
+      "known": 0,
+      "tracebacks": [
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 388130235'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 388371132'\n",
+        "Traceback (most recent call last):\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/discover.py\", line 417, in run_discovery\n    curves = load_tess(label)\n  File \"/home/runner/work/SetuHQ/SetuHQ/src/setuhq/loaders.py\", line 66, in load_tess\n    raise LookupError(f\"no {author} {exptime}s light curves found for {target!r}\")\nLookupError: no SPOC 120s light curves found for 'TIC 389238529'\n"
+      ],
+      "filtered_deep": 26,
+      "filtered_one_sector": 5,
+      "reclassified": 0,
+      "n_targets": 17
     }
   ],
-  "targets_reviewed": 1336,
-  "updated": "2026-11-22T06:29:18+00:00",
+  "targets_reviewed": 1353,
+  "updated": "2026-11-22T12:27:46+00:00",
   "config": "discovery",
   "config_sha256": "74e9c44e0319c6fd652a1fa875dc96bc2c827a6173668aa69bb8735ab1dff8f8",
   "embargo": true
